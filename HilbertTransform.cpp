@@ -8,12 +8,14 @@
 
 #include <algorithm>
 
+#include <dsperados/math/spline.hpp>
+
 #include "FourierTransform.hpp"
 #include "HilbertTransform.hpp"
 #include "Parallel.hpp"
-#include "Spline.hpp"
 
 using namespace gsl;
+using namespace math;
 using namespace std;
 
 namespace bear::dsp
@@ -50,8 +52,6 @@ namespace bear::dsp
         return inverseFourierTransformComplex(spectrum);
     }
     
-    
-
     vector<float> findIntrinsicModeFunction(span<const float> input)
     {
         vector<float> sift(input.begin(), input.end());

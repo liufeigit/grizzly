@@ -8,11 +8,9 @@ include_directories(/usr/local/include)
 add_library(grizzly SHARED "")
 
 set(HEADERS
-    Access.hpp
 	AnalogEnvelope.hpp
 	AnalogLadderFilter.hpp
 	AnalogOnePoleFilter.hpp
-	AnalogLadderFilter.hpp
     AnalogStateVariableFilter.hpp
 	AnalyticTransform.hpp
 	Biquad.hpp
@@ -33,13 +31,10 @@ set(HEADERS
 	HaarWaveletTransform.hpp
 	HilbertTransform.hpp
 	InputStream.hpp
-    Interpolation.hpp
-    Math.hpp
-    MathConstants.hpp
     Oscillator.hpp
     Parallel.hpp
     Ramp.hpp
-    Spline.hpp
+    Transfer.hpp
 	UpSample.hpp
 	WaveShaper.hpp
 	WeightedSum.hpp
@@ -50,7 +45,6 @@ set(SOURCES
 	FastFourierTransform.cpp
 	FourierTransform.cpp
 	HilbertTransform.cpp
-    Math.cpp
     Parallel.cpp
 	Window.cpp)
 
