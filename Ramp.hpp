@@ -9,10 +9,11 @@
 #ifndef BEAR_DSP_RAMP_HPP
 #define BEAR_DSP_RAMP_HPP
 
+#include <functional>
 #include <stdexcept>
 #include <unit/hertz.hpp>
 
-#include "Math.hpp"
+#include <dsperados/math/utility.hpp>
 
 namespace bear::dsp
 {
@@ -42,7 +43,10 @@ namespace bear::dsp
         //! Set the ramp value for next callback
         void setState(const T& value)
         {
-            y = wrap(value, min, max);
+            if (value >= range.max())
+                end();
+            
+            y = math::wrap(value, min, max);
         }
         
         //! Output the current ramp value, increment and wrap (if necessary) for next callback
@@ -53,6 +57,9 @@ namespace bear::dsp
             
             return output;
         }
+        
+    public:
+        std::function<void(void)> end;
 
     private:
         //! The minimal value of the range

@@ -13,6 +13,20 @@
 
 namespace bear::dsp
 {
+    //! Generate a bipolar sine wave given a normalised phase
+    template <typename T>
+    constexpr T generateSine(T phase)
+    {
+        return std::sin(TWO_PI<T> * phase);
+    }
+
+    //! Generate a unipolar sine wave given a normalised phase
+    template <typename T>
+    constexpr T generateUnipolarSine(T phase)
+    {
+        return std::sin(TWO_PI<T> * phase) * 0.5 + 0.5;
+    }
+    
     //! Generate a bipolar saw wave given a normalised phase
     template <typename T>
     constexpr T generateSaw(T phase)
