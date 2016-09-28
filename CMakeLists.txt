@@ -20,6 +20,7 @@ set(HEADERS
 	Convolution.hpp
 	Delay.hpp
 	DownSample.hpp
+	Envelope.hpp
 	EnvelopeDetector.hpp
 	FastFourierTransform.hpp
 	Filter.hpp
@@ -30,21 +31,27 @@ set(HEADERS
 	GordonSmithOscillator.hpp
 	HaarWaveletTransform.hpp
 	HilbertTransform.hpp
+	HighFrequencyContent.hpp
 	InputStream.hpp
+	MidSide.hpp MidSide.cpp
     Oscillator.hpp
     Parallel.hpp
     Ramp.hpp
+    SpectralCentroid.hpp
     Transfer.hpp
 	UpSample.hpp
 	WaveShaper.hpp
 	WeightedSum.hpp
-	Window.hpp)
+	Window.hpp
+	YinPitchDetection.hpp)
 
 set(SOURCES
 	AnalyticTransform.cpp
+	Envelope.cpp
 	FastFourierTransform.cpp
 	FourierTransform.cpp
 	HilbertTransform.cpp
+	MidSide.cpp
     Parallel.cpp
 	Window.cpp)
 
