@@ -9,7 +9,7 @@
 #ifndef BEAR_DSP_WINDOW_HPP
 #define BEAR_DSP_WINDOW_HPP
 
-#include <gsl/gsl.h>
+#include <gsl/gsl>
 #include <vector>
 
 namespace bear::dsp

@@ -10,7 +10,7 @@
 #define FAST_FOURIER_TRANSFORM_HPP
 
 #include <complex>
-#include <gsl/span.h>
+#include <gsl/span>
 #include <vector>
 
 #ifdef __APPLE__

@@ -10,7 +10,7 @@
 #define BEAR_HILBERT_TRANSFORM_HPP
 
 #include <complex>
-#include <gsl/span.h>
+#include <gsl/span>
 #include <vector>
 
 namespace bear::dsp

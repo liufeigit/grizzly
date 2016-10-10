@@ -10,7 +10,7 @@
 #define BEAR_DSP_FOURIER_TRANSFORM_HPP
 
 #include <complex>
-#include <gsl/span.h>
+#include <gsl/span>
 #include <vector>
 
 #include "FastFourierTransform.hpp"
