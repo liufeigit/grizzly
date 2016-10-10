@@ -10,7 +10,6 @@
 #define BEAR_DSP_WINDOW_HPP
 
 #include <gsl/span>
-#include <vector>
 
 namespace bear::dsp
 {
