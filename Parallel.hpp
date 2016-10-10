@@ -12,7 +12,7 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
-#include <gsl/gsl.h>
+#include <gsl/gsl>
 #include <vector>
 
 // #ifdef __APPLE__

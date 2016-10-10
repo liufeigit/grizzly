@@ -11,7 +11,7 @@
 
 #include "FirstOrderCoefficients.hpp"
 #include "FirstOrderFilter.hpp"
-#include "Math.hpp"
+#include <dsperados/math/utility.hpp>
 
 namespace bear::dsp
 {

@@ -12,7 +12,7 @@
 #include <functional>
 #include <vector>
 
-#include "Math.hpp"
+#include <dsperados/math/utility.hpp>
 #include "Range.hpp"
 
 namespace bear

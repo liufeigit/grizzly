@@ -13,7 +13,7 @@
 #include <unit/amplitude.hpp>
 #include <unit/hertz.hpp>
 
-#include "MathConstants.hpp"
+#include <dsperados/math/constants.hpp>
 
 namespace bear::dsp
 {

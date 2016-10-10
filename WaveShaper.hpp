@@ -11,7 +11,7 @@
 
 #include <stdexcept>
 
-#include "Math.hpp"
+#include <dsperados/math/utility.hpp>
 
 namespace bear::dsp
 {

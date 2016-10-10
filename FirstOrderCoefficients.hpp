@@ -13,7 +13,7 @@
 #include <unit/hertz.hpp>
 #include <unit/time.hpp>
 
-#include "MathConstants.hpp"
+#include <dsperados/math/constants.hpp>
 
 namespace bear::dsp
 {
@@ -44,7 +44,7 @@ namespace bear::dsp
     template <typename T1, typename T2, typename T3>
     constexpr void lowPassOnePole(FirstOrderCoefficients<T1>& coefficients, unit::hertz<T2> sampleRate, unit::hertz<T3> cutOff)
     {
-        const auto w = 2.0 * PI<T3> * cutOff / static_cast<long double>(sampleRate);
+        const auto w = 2.0 * math::PI<T3> * cutOff / static_cast<long double>(sampleRate);
         
         coefficients.b1 = exp(-w);
         coefficients.a0 = 1.0 - coefficients.b1;
@@ -73,7 +73,7 @@ namespace bear::dsp
     template <typename T1, typename T2, typename T3>
     constexpr void lowPassOnePoleZero(FirstOrderCoefficients<T1>& coefficients, unit::hertz<T2> sampleRate, unit::hertz<T3> cutOff)
     {
-        const auto w = 2.0 * PI<T3> * cutOff / static_cast<long double>(sampleRate);
+        const auto w = 2.0 * math::PI<T3> * cutOff / static_cast<long double>(sampleRate);
         
         coefficients.b1 = exp(-w);
         coefficients.a0 = (1.0 - coefficients.b1) / 2;
@@ -84,7 +84,7 @@ namespace bear::dsp
     template <typename T1, typename T2, typename T3>
     constexpr void highPassOnePoleZero(FirstOrderCoefficients<T1>& coefficients, unit::hertz<T2> sampleRate, unit::hertz<T3> cutOff)
     {
-        const auto w = 2.0 * PI<T3> * cutOff / static_cast<long double>(sampleRate);
+        const auto w = 2.0 * math::PI<T3> * cutOff / static_cast<long double>(sampleRate);
         
         coefficients.b1 = exp(-w);
         coefficients.a0 = (1 + coefficients.b1) / 2;

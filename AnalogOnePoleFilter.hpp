@@ -12,7 +12,7 @@
 #include <experimental/optional>
 #include <unit/hertz.hpp>
 
-#include "Math.hpp"
+#include <dsperados/math/utility.hpp>
 
 namespace bear::dsp
 {

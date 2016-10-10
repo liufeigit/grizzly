@@ -11,7 +11,7 @@
 
 #include <unit/hertz.hpp>
 
-#include "../Dsp/Centroid.hpp"
+#include "Centroid.hpp"
 
 namespace bear::audio
 {

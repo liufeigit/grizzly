@@ -10,7 +10,7 @@
 #define BEAR_AUDIO_MID_SIDE_HPP
 
 #include <array>
-#include <gsl/span.h>
+#include <gsl/span>
 #include <vector>
 
 namespace bear::audio

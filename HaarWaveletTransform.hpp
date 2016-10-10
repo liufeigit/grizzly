@@ -11,11 +11,11 @@
 
 #include <cmath>
 #include <cstddef>
-#include <gsl/span.h>
+#include <gsl/span>
 #include <stdexcept>
 #include <vector>
 
-#include "Math.hpp"
+#include <dsperados/math/utility.hpp>
 
 namespace bear::dsp
 {

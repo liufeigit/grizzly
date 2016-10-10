@@ -14,7 +14,7 @@
 #include <unit/hertz.hpp>
 
 #include "AnalogOnePoleFilter.hpp"
-#include "Math.hpp"
+#include <dsperados/math/utility.hpp>
 
 namespace bear::dsp
 {

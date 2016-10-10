@@ -10,7 +10,7 @@
 #define BEAR_DSP_UP_SAMPLE_HPP
 
 #include <cstddef>
-#include <gsl/span.h>
+#include <gsl/span>
 #include <stdexcept>
 #include <vector>
 
