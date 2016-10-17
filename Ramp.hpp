@@ -37,13 +37,13 @@ namespace bear::dsp
             if (max < min)
                 throw std::invalid_argument("negative range not allowed");
             
-            setState(range.offset);
+            setState(min);
         }
         
         //! Set the ramp value for next callback
         void setState(const T& value)
         {
-            if (value >= range.max())
+            if (value >= max)
                 end();
             
             y = math::wrap(value, min, max);
