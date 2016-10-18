@@ -6,6 +6,7 @@ add_definitions(-std=c++1z -Wall)
 include_directories(/usr/local/include)
 
 add_library(grizzly SHARED "")
+install(TARGETS grizzly DESTINATION lib)
 
 set(HEADERS
 	AnalogEnvelope.hpp
