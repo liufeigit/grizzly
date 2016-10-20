@@ -10,8 +10,7 @@
 #define BEAR_DSP_DELAY_HPP
 
 #include <boost/circular_buffer.hpp>
-
-#include "Interpolation.hpp"
+#include <dsperados/math/interpolation.hpp>
 
 namespace bear::dsp
 {
@@ -37,10 +36,10 @@ namespace bear::dsp
         }
         
         //! Read from the delay line
-        template <class Index, class Interpolator = LinearInterpolation>
+        template <class Index, class Interpolator = math::LinearInterpolation>
         T read (Index index, Interpolator interpolator = Interpolator()) const
         {
-            return interpolate(data.begin(), data.end(), index, interpolator, ClampedAccess());
+            return interpolate(data.begin(), data.end(), index, interpolator, math::ClampedAccess());
         }
         
         //! Set the maximum delay
