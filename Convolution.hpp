@@ -12,7 +12,7 @@
 
 #include <algorithm>
 #include <initializer_list>
-#include <gsl/gsl.h>
+#include <gsl/gsl>
 #include <vector>
 
 #include "Delay.hpp"
@@ -66,6 +66,27 @@ namespace bear::dsp
         {
             this->kernel.assign(kernel.begin(), kernel.end());
             delay.resize(kernel.size());
+        }
+        
+        //! Convolve two buffers, return a buffer with size input + kernel - 1
+        static std::vector<float> convolve(gsl::span<T> input, gsl::span<T> kernel)
+        {
+            std::vector<T> output(input.size() + kernel.size() - 1);
+            
+            for (auto sample = 0; sample < output.size(); ++sample)
+            {
+                for (auto h = 0; h < kernel.size(); ++h)
+                {
+                    if (sample - h < 0)
+                        continue;
+                    if (sample - h >= input.size())
+                        continue;
+                    
+                    output[sample] += kernel[h] * input[sample - h];
+                }
+            }
+            
+            return output;
         }
         
     private:
