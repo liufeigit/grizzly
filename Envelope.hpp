@@ -66,7 +66,8 @@ namespace bear::dsp
         //! Process, return the envelope output
         T operator()()
         {
-            if (index == 2) goToSegment(1);
+            
+            //if (index == 2) goToSegment(1);
             
             // End of the envelope, return 0
             if (index >= segments.size())
