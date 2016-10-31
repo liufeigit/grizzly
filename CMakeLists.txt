@@ -42,7 +42,6 @@ set(HEADERS
     Transfer.hpp
 	UpSample.hpp
 	WaveShaper.hpp
-	WeightedSum.hpp
 	Window.hpp
 	YinPitchDetection.hpp)
 
