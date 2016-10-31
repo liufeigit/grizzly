@@ -43,7 +43,7 @@ namespace bear::dsp
         //! Set the ramp value for next callback
         void setState(const T& value)
         {
-            if (value >= max)
+            if (value >= max && end)
                 end();
             
             y = math::wrap(value, min, max);
@@ -59,7 +59,7 @@ namespace bear::dsp
         }
         
     public:
-        std::function<void(void)> end;
+        std::function<void(void)> end = [](){};
 
     private:
         //! The minimal value of the range

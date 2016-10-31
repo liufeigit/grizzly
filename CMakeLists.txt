@@ -48,7 +48,6 @@ set(HEADERS
 
 set(SOURCES
 	AnalyticTransform.cpp
-	Envelope.cpp
 	FastFourierTransform.cpp
 	FourierTransform.cpp
 	HilbertTransform.cpp
