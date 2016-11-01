@@ -17,7 +17,7 @@ namespace bear::dsp
     {
     public:
         //! Virtual destructor
-        virtual ~Filter() {}
+        virtual ~Filter() = default;
         
         //! Take a sample and produce another
         Out operator()(const In& x) { return process(x); }

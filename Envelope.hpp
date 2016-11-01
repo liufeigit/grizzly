@@ -63,24 +63,70 @@ namespace bear::dsp
             holdPoints.erase(time);
         }
         
+        //! Go to the next segment, up the index and recompute increment
+        void goToNextSegment()
+        {
+            index++;
+            computeIncrement(index);
+        }
+        
+        //! Go to a segment, up the index and recompute increment
+        void goToSegment(size_t index)
+        {
+            this->index = index;
+            computeIncrement(index);
+        }
+        
+        //! Set loop indecies
+        void setLoop(size_t fromIndex, size_t toIndex)
+        {
+            loopIndecies[0] = fromIndex;
+            loopIndecies[1] = toIndex;
+        }
+        
         //! Process, return the envelope output
         T operator()()
         {
+            // Loop
+            if (loop && index == loopIndecies[1])
+            {
+                goToSegment(loopIndecies[0]);
+                
+                // Reset time in envelope
+                timeInEnvelope = 0;
+                
+                //add durations of previous segments before the loop start index
+                for (auto segment = 0; segment < loopIndecies[0]; ++segment)
+                    timeInEnvelope += segments[segment].duration;
+                
+                // Reset hold-points to true within the loop indecies,
+                for (auto iterator = holdPoints.begin(); iterator != holdPoints.end(); ++iterator)
+                {
+                    auto holdTime = iterator->first;
+                    auto timeInEnvelopeAtLoopEnd = timeInEnvelope + segments[loopIndecies[1]].duration;
+                    
+                    if (holdTime >= timeInEnvelope && holdTime < timeInEnvelopeAtLoopEnd)
+                        iterator->second = true;
+                }
+            }
             
-            //if (index == 2) goToSegment(1);
-            
-            // End of the envelope, return 0
+            // End of the envelope, reset hold-points to true and return 0
             if (index >= segments.size())
+            {
+                for (auto iterator = holdPoints.begin(); iterator != holdPoints.end(); ++iterator)
+                    iterator->second = true;
+                
                 return 0;
+            }
             
             // Iterate over the hold points
             for (auto iterator = holdPoints.begin(); iterator != holdPoints.end(); ++iterator)
             {
-                auto time = iterator->first;
+                auto holdTime = iterator->first;
                 auto& value = iterator->second;
                 
                 // hold if the current time > hold time and set the hold value to false to trigger this action just once
-                if (timeInEnvelope >= time && value)
+                if (timeInEnvelope >= holdTime && value)
                 {
                     value = false;
                     onHold = true;
@@ -97,22 +143,12 @@ namespace bear::dsp
             return segments[index].behaviour(ramp(increment));
         }
         
-        //! Go to the next segment, up the index and recompute increment
-        void goToNextSegment()
-        {
-            index++;
-            computeIncrement(index);
-        }
-        
-        void goToSegment(size_t index)
-        {
-            this->index = index;
-            computeIncrement(index);
-        }
-        
     public:
         //! Boolian for (un)holding
         bool onHold = false;
+        
+        //! Loop on/off
+        bool loop = false;
         
     private:
         //! Segment class to define the behaviour and time for each segment
@@ -159,6 +195,9 @@ namespace bear::dsp
         
         //! The hold points
         std::map<T, bool> holdPoints;
+        
+        //! Loop indecies
+        size_t loopIndecies[2] = {0, 0};
     };
 }
 
