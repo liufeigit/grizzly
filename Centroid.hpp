@@ -23,11 +23,9 @@ namespace bear::dsp
         // Accumulator
         T indexWeightedSum = 0;
         
-        // Multiply each value with its index number and accumulate
-        for (auto index = 0; index < values.size(); ++index)
-        {
+        // Multiply each value with its index number and accumulate, skip index 0
+        for (auto index = 1; index < values.size(); ++index)
             indexWeightedSum += index * values[index];
-        }
         
         return indexWeightedSum / sum<T>(values);
     }

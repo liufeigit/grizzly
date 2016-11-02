@@ -40,6 +40,8 @@ namespace bear::dsp
         coefficients.b1 = 0;
     }
     
+    
+    
     //! Set filter to low pass filtering using one pole, given a samplerate and a cutoff
     template <typename T1, typename T2, typename T3>
     constexpr void lowPassOnePole(FirstOrderCoefficients<T1>& coefficients, unit::hertz<T2> sampleRate, unit::hertz<T3> cutOff)

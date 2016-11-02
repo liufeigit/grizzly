@@ -40,7 +40,7 @@ namespace bear::dsp
     
     //! Set biquad to through pass
     template <typename T>
-    constexpr void biquardThroughPass(BiquadCoefficients<T>& coefficients)
+    constexpr void biquadThroughPass(BiquadCoefficients<T>& coefficients)
     {
         coefficients.a0 = 1;
         coefficients.a1 = 0;
@@ -53,7 +53,7 @@ namespace bear::dsp
     template <class T, class Q>
     constexpr void lowPass(BiquadCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff, const Q& q)
     {
-        const auto w = 2 * PI<float> * cutOff / sampleRate;
+        const auto w = 2 * math::PI<float> * cutOff / sampleRate;
         const auto sinw = sin(w);
         const auto cosw = cos(w);
         const auto alpha = sinw / (2 * q);
@@ -72,7 +72,7 @@ namespace bear::dsp
     template <class T, class Q>
     constexpr void highPass(BiquadCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff, const Q& q)
     {
-        const auto w = 2 * PI<float> * cutOff / sampleRate;
+        const auto w = 2 * math::PI<float> * cutOff / sampleRate;
         const auto sinw = sin(w);
         const auto cosw = cos(w);
         const auto alpha = sinw / (2 * q);
@@ -91,7 +91,7 @@ namespace bear::dsp
     template <class T, class Q>
     constexpr void bandPassConstantSkirt(BiquadCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff, const Q& q)
     {
-        const auto w = 2 * PI<float> * cutOff / sampleRate;
+        const auto w = 2 * math::PI<float> * cutOff / sampleRate;
         const auto sinw = sin(w);
         const auto cosw = cos(w);
         const auto alpha = sinw / (2 * q);
@@ -110,7 +110,7 @@ namespace bear::dsp
     template <class T, class Q>
     constexpr void bandPassConstantPeak(BiquadCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff, const Q& q)
     {
-        const auto w = 2 * PI<float> * cutOff / sampleRate;
+        const auto w = 2 * math::PI<float> * cutOff / sampleRate;
         const auto sinw = sin(w);
         const auto cosw = cos(w);
         const auto alpha = sinw / (2 * q);
@@ -129,7 +129,7 @@ namespace bear::dsp
     template <class T, class Q, class Gain>
     constexpr void peakConstantSkirt(BiquadCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff, const Q& q, const unit::decibel<Gain>& gain)
     {
-        const auto w = 2 * PI<float> * cutOff / sampleRate;
+        const auto w = 2 * math::PI<float> * cutOff / sampleRate;
         const auto sinw = sin(w);
         const auto cosw = cos(w);
         const auto alpha = sinw / (2 * q);
@@ -149,7 +149,7 @@ namespace bear::dsp
     template <class T, class Q, class Gain>
     constexpr void peakConstantQ(BiquadCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff, const Q& q, const unit::decibel<Gain>& gain)
     {
-        const auto w = 2 * PI<float> * cutOff / sampleRate;
+        const auto w = 2 * math::PI<float> * cutOff / sampleRate;
         const auto sinw = sin(w);
         const auto cosw = cos(w);
         const auto alpha = sinw / (2 * q);
@@ -183,7 +183,7 @@ namespace bear::dsp
     template <class T, class Q, class Gain>
     constexpr void lowShelf(BiquadCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff, const Q& q, const unit::decibel<Gain>& gain)
     {
-        const auto w = 2 * PI<float> * cutOff / sampleRate;
+        const auto w = 2 * math::PI<float> * cutOff / sampleRate;
         const auto sinw = sin(w);
         const auto cosw = cos(w);
         const auto alpha = sinw / (2 * q);
@@ -204,7 +204,7 @@ namespace bear::dsp
     template <class T, class Q, class Gain>
     constexpr void highShelf(BiquadCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff, const Q& q, const unit::decibel<Gain>& gain)
     {
-        const auto w = 2 * PI<float> * cutOff / sampleRate;
+        const auto w = 2 * math::PI<float> * cutOff / sampleRate;
         const auto sinw = sin(w);
         const auto cosw = cos(w);
         const auto alpha = sinw / (2 * q);
@@ -225,7 +225,7 @@ namespace bear::dsp
     template <class T, class Q>
     constexpr void notch(BiquadCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff, const Q& q)
     {
-        const auto w = 2 * PI<float> * cutOff / sampleRate;
+        const auto w = 2 * math::PI<float> * cutOff / sampleRate;
         const auto sinw = sin(w);
         const auto cosw = cos(w);
         const auto alpha = sinw / (2 * q);
@@ -243,7 +243,7 @@ namespace bear::dsp
     template <class T, class Q>
     constexpr void allPass(BiquadCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff, const Q& q)
     {
-        const auto w = 2 * PI<float> * cutOff / sampleRate;
+        const auto w = 2 * math::PI<float> * cutOff / sampleRate;
         const auto sinw = sin(w);
         const auto cosw = cos(w);
         const auto alpha = sinw / (2 * q);
