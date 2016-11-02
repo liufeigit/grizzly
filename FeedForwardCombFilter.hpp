@@ -29,9 +29,9 @@ namespace bear::dsp
         //! Process function, take an input
         T process (const T& x) final override
         {
-            delayLine.delayWrite(x);
+            delayLine.write(x);
             
-            const auto d = delayLine.delayRead();
+            const auto d = delayLine.read();
             const auto y = x + feedForward * (postDelay ? postDelay(d) : d);
             
             return y;
@@ -48,7 +48,9 @@ namespace bear::dsp
         
         double feedForward;
         
+    private:
         DelayLine<T> delayLine;
+        
     };
 }
 #endif /* GRIZZLY_FEED_FORWARD_COMB_FILTER_HPP */

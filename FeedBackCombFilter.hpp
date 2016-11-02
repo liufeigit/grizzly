@@ -29,10 +29,10 @@ namespace bear::dsp
         //! Process function, take an input
         T process (const T& x) final override
         {
-            const auto d = delayLine.delayRead();
+            const auto d = delayLine.read();
             const auto y = x + feedBack * (postDelay ? postDelay(d) : d);
             
-            delayLine.delayWrite(y);
+            delayLine.write(y);
             
             return y;
         }
@@ -46,9 +46,11 @@ namespace bear::dsp
         //! PostDelay function
         std::function<T(const T&)> postDelay;
         
+        double feedBack = 0;
+        
+    private:
         DelayLine<T> delayLine;
         
-        double feedBack = 0;
     };
 }
 #endif /* GRIZZLY_FEED_BACK_COMB_FILTER_HPP */
