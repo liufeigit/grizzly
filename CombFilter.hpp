@@ -15,8 +15,8 @@
 #include <numeric>
 #include <vector>
 
-#include "grizzly/Delay.hpp"
-#include "grizzly/Filter.hpp"
+#include "Delay.hpp"
+#include "Filter.hpp"
 
 
 namespace bear::dsp
