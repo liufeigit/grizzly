@@ -6,8 +6,8 @@
 //  Copyright © 2016 Yuri Wilmering. All rights reserved.
 //
 
-#include "grizzly-development/Delay.hpp"
-#include "grizzly-development/Filter.hpp"
+#include "Delay.hpp"
+#include "Filter.hpp"
 #include <vector>
 
 using namespace bear;
@@ -27,7 +27,7 @@ namespace bear::dsp
             delayTime(maxDelayTime),
             gain(gain)
         {
-          
+
         }
 
         T process(const T& x) final override
