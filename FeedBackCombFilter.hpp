@@ -9,17 +9,17 @@
 #ifndef GRIZZLY_FEED_BACK_COMB_FILTER_HPP
 #define GRIZZLY_FEED_BACK_COMB_FILTER_HPP
 
-#include "CombFilter.hpp"
+#include "DelayedFilter.hpp"
 
 namespace bear::dsp
 {
     //! Feedforward Comb Filter
     template <class T>
-    class FeedBackCombFilter : public dsp::CombFilter<T>
+    class FeedBackCombFilter : public dsp::DelayedFilter<T>
     {
     public:
         FeedBackCombFilter (const std::size_t maxDelay, const double delayTime, double feedback):
-        CombFilter<T>(maxDelay,delayTime),
+        DelayedFilter<T>(maxDelay,delayTime),
         feedback(feedback)
         {
             

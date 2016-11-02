@@ -1,13 +1,13 @@
 //
-//  CombFilter.hpp
+//  DelayedFilter.hpp
 //  octoSandbox1
 //
 //  Created by Vincent Pruijn on 01/11/16.
 //  Copyright © 2016 Dsperados. All rights reserved.
 //
 
-#ifndef GRIZZLY_COMB_FILTER_HPP
-#define GRIZZLY_COMB_FILTER_HPP
+#ifndef GRIZZLY_DELAYED_FILTER_HPP
+#define GRIZZLY_DELAYED_FILTER_HPP
 
 
 #include <cstddef>
@@ -21,14 +21,14 @@
 
 namespace bear::dsp
 {
-    //! Comb Filter
+    //! Delayed Filter
     template <class T>
-    class CombFilter : public dsp::Filter<T>
+    class DelayedFilter : public dsp::Filter<T>
     {
         
     public:
         //! Create a CombFilter
-        CombFilter (const std::size_t maxDelay, const double delayTime) :
+        DelayedFilter (const std::size_t maxDelay, const double delayTime) :
         maxDelay(maxDelay),
         delay(maxDelay),
         delayTime(delayTime)
@@ -69,4 +69,4 @@ namespace bear::dsp
 }
 
 
-#endif /* GRIZZLY_COMB_FILTER_HPP */
+#endif /* GRIZZLY_DELAYED_FILTER_HPP */
