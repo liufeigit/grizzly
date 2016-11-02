@@ -5,10 +5,10 @@
 //  Created by Yuri Wilmering on 01/11/16.
 //  Copyright © 2016 Yuri Wilmering. All rights reserved.
 //
-
-#include "Delay.hpp"
-#include "Filter.hpp"
 #include <vector>
+
+#include "DelayLine.hpp"
+#include "Filter.hpp"
 
 using namespace bear;
 using namespace std;
@@ -23,8 +23,7 @@ namespace bear::dsp
     {
     public:
         AllPassFilter(std::size_t maxDelayTime, float gain=0.618) :
-            delay(maxDelayTime),
-            delayTime(maxDelayTime),
+            delayLine(maxDelayTime),
             gain(gain)
         {
 
@@ -32,20 +31,24 @@ namespace bear::dsp
 
         T process(const T& x) final override
         {
-            const auto w = gain * delay.read(delayTime) + x;
-            const auto y = gain * w - delay.read(delayTime);
+            const auto w = gain * delayLine.read() + x;
+            const auto y = gain * w - delayLine.read();
 
-            delay.write(w);
+            delayLine.write(w);
 
             return y;
         }
 
+        void setDelayTime(T delayTime)
+        {
+          delayLine.delayTime = delayTime;
+        }
+
     public:
-        float delayTime = 1;
         float gain = 0;
 
     private:
-        Delay<T> delay;
+        DelayLine<T> delayLine;
     };
 }
 
