@@ -29,9 +29,9 @@ namespace bear::dsp
         //! Process function, take an input
         T process (const T& x) final override
         {
-            const auto d = this->delay.read(this->delayTime);
+            const auto d = this->delayRead(this->delayTime);
             const auto y = x + this->feedback * (this->postDelay ? this->postDelay(d) : d);
-            this->delay.write(y);
+            this->delayWrite(y);
             return y;
         }
         
@@ -40,7 +40,10 @@ namespace bear::dsp
             this->feedback = feedback;
         }
         
-    private:
+    public:
+        //! PostDelay function
+        std::function<T(const T&)> postDelay;
+        
         double feedback;
         
     };

@@ -22,7 +22,7 @@ namespace bear::dsp
         DelayedFilter<T>(maxDelay,delayTime),
         feedforward(feedforward)
         {
-        
+            
         }
         
         
@@ -30,8 +30,8 @@ namespace bear::dsp
         T process (const T& x) final override
         {
             
-            this->delay.write(x);
-            const auto d = this->delay.read(this->delayTime);
+            this->delayWrite(x);
+            const auto d = this->delayRead(this->delayTime);
             const auto y = x + this->feedforward * (this->postDelay ? this->postDelay(d) : d);
             
             return y;
@@ -42,7 +42,10 @@ namespace bear::dsp
             this->feedforward = feedforward;
         }
         
-    private:
+    public:
+        //! PostDelay function
+        std::function<T(const T&)> postDelay;
+        
         double feedforward;
         
     };

@@ -36,6 +36,9 @@ namespace bear::dsp
             
         }
         
+        //! Virtual destructor for polymorhic purposes
+        virtual ~DelayedFilter () = default;
+        
         //! Resize the delay buffer
         void resize (const std::size_t maxDelay)
         {
@@ -52,17 +55,25 @@ namespace bear::dsp
         //! Get the size of the delay buffer
         const std::size_t getMaxDelaySize () const
         {
-            return maxDelay;
+            return delay.getMaxDelay();
         }
-        
-    protected:
-        //! PostDelay function
-        std::function<T(const T&)> postDelay;
         
         double delayTime;
         
-        std::size_t maxDelay;
+    protected:
+        //! Access the delay
+        delayRead(T delayTime)
+        {
+            return delay.read(delayTime);
+        }
         
+        //! Access the delay
+        delayWrite(T sample)
+        {
+            return delay.write(sample);
+        }
+        
+    private:
         //! The single delay buffer that will be used for all stages
         dsp::Delay<T> delay;
     };
