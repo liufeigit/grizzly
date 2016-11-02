@@ -1,13 +1,13 @@
 //
-//  DelayedFilter.hpp
+//  DelayLine.cpp
 //  octoSandbox1
 //
 //  Created by Vincent Pruijn on 01/11/16.
 //  Copyright © 2016 Dsperados. All rights reserved.
 //
 
-#ifndef GRIZZLY_DELAYED_FILTER_HPP
-#define GRIZZLY_DELAYED_FILTER_HPP
+#ifndef GRIZZLY_DELAY_LINE_HPP
+#define GRIZZLY_DELAY_LINE_HPP
 
 
 #include <cstddef>
@@ -16,27 +16,22 @@
 #include <vector>
 
 #include "Delay.hpp"
-#include "Filter.hpp"
-
 
 namespace bear::dsp
 {
-    //! Delayed Filter
+    //! Delay interface
     template <class T>
-    class DelayedFilter : public dsp::Filter<T>
+    class DelayLine
     {
         
     public:
-        //! Create a CombFilter
-        DelayedFilter (const std::size_t maxDelay) :
+        //! Create a Delay interface
+        DelayLine (const std::size_t maxDelay) :
             delay(maxDelay),
             delayTime(maxDelay)
         {
             
         }
-        
-        //! Virtual destructor for polymorhic purposes
-        virtual ~DelayedFilter () = default;
         
         //! Resize the delay buffer
         void resize (const std::size_t maxDelay)
@@ -56,23 +51,23 @@ namespace bear::dsp
             return delay.getMaxDelay();
         }
         
-    public:
-        //! The delay that will be used to read from the buffer
-        /*! If delayTime > maxDelay given in the constructor, it will be clamped to the maximum delay time */
-        double delayTime;
-        
-    protected:
         //! Access the delay
-        delayRead()
+        T delayRead()
         {
             return delay.read(delayTime);
         }
         
         //! Access the delay
-        delayWrite(T sample)
+        void delayWrite(T sample)
         {
-            return delay.write(sample);
+            delay.write(sample);
         }
+        
+        
+    public:
+        //! The delay that will be used to read from the buffer
+        /*! If delayTime > maxDelay given in the constructor, it will be clamped to the maximum delay time */
+        double delayTime;
         
     private:
         //! The single delay buffer that will be used for all stages
@@ -81,4 +76,4 @@ namespace bear::dsp
 }
 
 
-#endif /* GRIZZLY_DELAYED_FILTER_HPP */
+#endif /* GRIZZLY_DELAY_LINE_HPP */

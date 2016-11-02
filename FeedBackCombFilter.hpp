@@ -9,17 +9,18 @@
 #ifndef GRIZZLY_FEED_BACK_COMB_FILTER_HPP
 #define GRIZZLY_FEED_BACK_COMB_FILTER_HPP
 
-#include "DelayedFilter.hpp"
+#include "DelayLine.hpp"
+#include "Filter.hpp"
 
 namespace bear::dsp
 {
     //! Feedforward Comb Filter
     template <class T>
-    class FeedBackCombFilter : public dsp::DelayedFilter<T>
+    class FeedBackCombFilter : public dsp::Filter<T>
     {
     public:
         FeedBackCombFilter (const std::size_t maxDelay, double feedBack = 0):
-            DelayedFilter<T>(maxDelay),
+            delayLine(maxDelay),
             feedBack(feedBack)
         {
             
@@ -28,17 +29,24 @@ namespace bear::dsp
         //! Process function, take an input
         T process (const T& x) final override
         {
-            const auto d = this->delayRead();
-            const auto y = x + feedBack * (this->postDelay ? this->postDelay(d) : d);
+            const auto d = delayLine.delayRead();
+            const auto y = x + feedBack * (postDelay ? postDelay(d) : d);
             
-            this->delayWrite(y);
+            delayLine.delayWrite(y);
             
             return y;
+        }
+        
+        void setDelayTime(T delayTime)
+        {
+            delayLine.delayTime = delayTime;
         }
         
     public:
         //! PostDelay function
         std::function<T(const T&)> postDelay;
+        
+        DelayLine<T> delayLine;
         
         double feedBack = 0;
     };
