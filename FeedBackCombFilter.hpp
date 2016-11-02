@@ -18,34 +18,29 @@ namespace bear::dsp
     class FeedBackCombFilter : public dsp::DelayedFilter<T>
     {
     public:
-        FeedBackCombFilter (const std::size_t maxDelay, const double delayTime, double feedback):
-        DelayedFilter<T>(maxDelay,delayTime),
-        feedback(feedback)
+        FeedBackCombFilter (const std::size_t maxDelay, double feedBack = 0):
+            DelayedFilter<T>(maxDelay),
+            feedBack(feedBack)
         {
             
         }
         
-        
         //! Process function, take an input
         T process (const T& x) final override
         {
-            const auto d = this->delayRead(this->delayTime);
-            const auto y = x + this->feedback * (this->postDelay ? this->postDelay(d) : d);
+            const auto d = this->delayRead();
+            const auto y = x + feedBack * (this->postDelay ? this->postDelay(d) : d);
+            
             this->delayWrite(y);
+            
             return y;
-        }
-        
-        void setFeedBack(double feedback)
-        {
-            this->feedback = feedback;
         }
         
     public:
         //! PostDelay function
         std::function<T(const T&)> postDelay;
         
-        double feedback;
-        
+        double feedBack = 0;
     };
 }
 #endif /* GRIZZLY_FEED_BACK_COMB_FILTER_HPP */

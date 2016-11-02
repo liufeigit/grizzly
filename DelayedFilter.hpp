@@ -28,10 +28,9 @@ namespace bear::dsp
         
     public:
         //! Create a CombFilter
-        DelayedFilter (const std::size_t maxDelay, const double delayTime) :
-        maxDelay(maxDelay),
-        delay(maxDelay),
-        delayTime(delayTime)
+        DelayedFilter (const std::size_t maxDelay) :
+            delay(maxDelay),
+            delayTime(maxDelay)
         {
             
         }
@@ -42,7 +41,6 @@ namespace bear::dsp
         //! Resize the delay buffer
         void resize (const std::size_t maxDelay)
         {
-            this->maxDelay = maxDelay;
             delay.resize(maxDelay);
         }
         
@@ -58,11 +56,14 @@ namespace bear::dsp
             return delay.getMaxDelay();
         }
         
+    public:
+        //! The delay that will be used to read from the buffer
+        /*! If delayTime > maxDelay given in the constructor, it will be clamped to the maximum delay time */
         double delayTime;
         
     protected:
         //! Access the delay
-        delayRead(T delayTime)
+        delayRead()
         {
             return delay.read(delayTime);
         }

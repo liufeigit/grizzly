@@ -18,35 +18,29 @@ namespace bear::dsp
     class FeedForwardCombFilter : public dsp::DelayedFilter<T>
     {
     public:
-        FeedForwardCombFilter (const std::size_t maxDelay, const double delayTime, double feedforward):
-        DelayedFilter<T>(maxDelay,delayTime),
-        feedforward(feedforward)
+        FeedForwardCombFilter (const std::size_t maxDelay, double feedForward = 0):
+            DelayedFilter<T>(maxDelay),
+            feedForward(feedForward)
         {
             
         }
-        
         
         //! Process function, take an input
         T process (const T& x) final override
         {
-            
             this->delayWrite(x);
-            const auto d = this->delayRead(this->delayTime);
-            const auto y = x + this->feedforward * (this->postDelay ? this->postDelay(d) : d);
+            
+            const auto d = this->delayRead();
+            const auto y = x + feedForward * (this->postDelay ? this->postDelay(d) : d);
             
             return y;
-        }
-        
-        void setFeedForward(double feedforward)
-        {
-            this->feedforward = feedforward;
         }
         
     public:
         //! PostDelay function
         std::function<T(const T&)> postDelay;
         
-        double feedforward;
+        double feedForward;
         
     };
 }
