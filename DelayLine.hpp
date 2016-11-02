@@ -33,10 +33,12 @@ namespace bear::dsp
             
         }
         
-        T read(){
-            return this->read(delayTime);
+        //! Read from the delay line
+        template <class Interpolator = math::LinearInterpolation>
+        T read(Interpolator interpolator = Interpolator()) const
+        {
+            return this->read(delayTime, interpolator);
         }
-        
         
     public:
         //! The delay that will be used to read from the buffer
