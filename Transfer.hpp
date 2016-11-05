@@ -66,24 +66,45 @@ namespace bear
         };
     }
     
+    //! Return the frequency response of a transfer function (H(z)) for a single frequency
+    /*! @param angularFrequency The frequency in radians
+     @param transferFunction The transfer function (H(z)) of an impulse response
+     */
+    template <typename T>
+    static inline auto frequencyResponse(const T& angularFrequency, std::function<std::complex<T>(T)> transferFunction)
+    {
+        return transferFunction(angularFrequency);
+    }
+    
     //! Return the frequency response of an impulse response for a single frequency
+    /*! @param angularFrequency The frequency in radians
+     @param impulseResponse The system impluse response
+     */
     template <typename T>
     static inline auto frequencyResponse(const T& angularFrequency, gsl::span<T> impulseResponse)
     {
         return zTransform(impulseResponse)(angularFrequency);
     }
     
-    //! Return the frequency response of an impulse response for a list of frequencies
+    //! Return the frequency responses of a transfer function (H(z)) for a list of frequencies
     template <typename T>
-    static inline auto frequencyResponse(gsl::span<T> angularFrequencies, gsl::span<T> impulseResponse)
+    static inline auto frequencyResponse(gsl::span<T> angularFrequencies, std::function<std::complex<T>(T)> transferFunction)
     {
         std::vector<std::complex<T>> output;
         output.reserve(angularFrequencies.size());
         
         for (auto& frequency: angularFrequencies)
-            output.emplace_back(frequencyResponse(frequency, impulseResponse));
+            output.emplace_back(frequencyResponse(frequency, transferFunction));
         
         return output;
+    }
+    
+    //! Return the frequency responses of an impulse response for a list of frequencies
+    template <typename T>
+    static inline auto frequencyResponse(gsl::span<T> angularFrequencies, gsl::span<T> impulseResponse)
+    {
+        std::function<std::complex<T>(T)> transferFunction = zTransform(impulseResponse); // Can't use auto or fill in directly as 2nd argument for some reason..?
+        return frequencyResponse(angularFrequencies, transferFunction);
     }
     
     // Create an impulse response given a filter and a size
