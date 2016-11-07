@@ -15,13 +15,13 @@
 #include <stdexcept>
 
 #include <dsperados/math/utility.hpp>
+#include <unit/radian.hpp>
 
 namespace bear
 {
     //! Generate a curve from a range
-    /*! @param range Range for transfer
-        @param resolution The number of entry points (equally placed) in range, determines output size
-        @param transferFunction A unary function which transforms x -> y for each entry point */
+    /*! @param transferFunction A unary function which transforms x -> y for each entry point
+     @param size Number of points in the curve */
     template <class T>
     std::vector<T> generateCurve(std::function<T(T)> function, size_t size)
     {
@@ -36,31 +36,15 @@ namespace bear
         return output;
     }
     
-//    template <class T1, class T2>
-//    std::vector<T2> generateCurve(const T1 minimum, const T2 maximum, std::size_t resolution, std::function<T2(T2)> transferFunction)
-//    {
-//        const auto increment = static_cast<long double>(maximum - minimum) / resolution;
-//        
-//        std::vector<T2> y;
-//        y.reserve(resolution);
-//        
-//        for (auto i = 0; i < resolution; ++i)
-//            y.emplace_back(transferFunction((i * increment) + minimum));
-//        
-//        return y;
-//    }
-    
     //! Apply z-transform on a input sequence and return the transfer function
-    template <typename T>
-    static inline auto zTransform(gsl::span<T> input)
+    template <typename T1, typename T2>
+    static inline auto zTransform(gsl::span<T1> input)
     {
-        std::vector<T> inputVec(input.begin(), input.end());
-        
-        return [=](const T& angularFrequency)
+        return [=](const unit::radian<T2>& angularFrequency)
         {
-            std::complex<T> accumulator(0, 0);
-            for (auto order = 0; order < inputVec.size(); ++order)
-                accumulator += inputVec[order] * std::polar(1.f, -angularFrequency * order);
+            std::complex<T2> accumulator(0, 0);
+            for (auto order = 0; order < input.size(); ++order)
+                accumulator += input[order] * std::polar(1, -angularFrequency * order);
             
             return accumulator;
         };
@@ -70,8 +54,8 @@ namespace bear
     /*! @param angularFrequency The frequency in radians
      @param transferFunction The transfer function (H(z)) of an impulse response
      */
-    template <typename T>
-    static inline auto frequencyResponse(const T& angularFrequency, std::function<std::complex<T>(T)> transferFunction)
+    template <typename T1, typename T2>
+    static inline auto frequencyResponse(const unit::radian<T1>& angularFrequency, std::function<std::complex<T2>(T2)> transferFunction)
     {
         return transferFunction(angularFrequency);
     }
@@ -80,17 +64,17 @@ namespace bear
     /*! @param angularFrequency The frequency in radians
      @param impulseResponse The system impluse response
      */
-    template <typename T>
-    static inline auto frequencyResponse(const T& angularFrequency, gsl::span<T> impulseResponse)
+    template <typename T1, typename T2>
+    static inline auto frequencyResponse(const unit::radian<T1>& angularFrequency, gsl::span<T2> impulseResponse)
     {
         return zTransform(impulseResponse)(angularFrequency);
     }
     
     //! Return the frequency responses of a transfer function (H(z)) for a list of frequencies
-    template <typename T>
-    static inline auto frequencyResponse(gsl::span<T> angularFrequencies, std::function<std::complex<T>(T)> transferFunction)
+    template <typename T1, typename T2>
+    static inline auto frequencyResponse(gsl::span<const unit::radian<T1>> angularFrequencies, std::function<std::complex<T2>(T2)> transferFunction)
     {
-        std::vector<std::complex<T>> output;
+        std::vector<std::complex<unit::radian<T1>>> output;
         output.reserve(angularFrequencies.size());
         
         for (auto& frequency: angularFrequencies)
@@ -100,11 +84,10 @@ namespace bear
     }
     
     //! Return the frequency responses of an impulse response for a list of frequencies
-    template <typename T>
-    static inline auto frequencyResponse(gsl::span<T> angularFrequencies, gsl::span<T> impulseResponse)
+    template <typename T1, typename T2>
+    static inline auto frequencyResponse(gsl::span<const unit::radian<T1>> angularFrequencies, gsl::span<T2> impulseResponse)
     {
-        std::function<std::complex<T>(T)> transferFunction = zTransform(impulseResponse); // Can't use auto or fill in directly as 2nd argument for some reason..?
-        return frequencyResponse(angularFrequencies, transferFunction);
+        return frequencyResponse(angularFrequencies, zTransform(impulseResponse));
     }
     
     // Create an impulse response given a filter and a size
