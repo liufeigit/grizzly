@@ -18,7 +18,7 @@ using namespace std;
 
 #include <iostream>
 
-// Work to be done: gain factors of combfilters
+// Work to be done: gain factors of combfilters, primality test
 namespace bear::dsp
 {
     template <class T>
@@ -45,7 +45,7 @@ namespace bear::dsp
 
                 combDelayTime = _combDelayTime * ratio;
 
-                // make sure successive delaytimes have no common factors
+                // make sure successive delaytimes have no common factors (needs work)
                 while (combDelayTime % 2 == 0 || combDelayTime % 3 == 0)
                 {
                     combDelayTime += 1;
@@ -58,7 +58,7 @@ namespace bear::dsp
                 allPassFilters.emplace_back(allPassDelayTime, gain);
                 allPassDelayTime /= 3;
 
-                // make sure successive delaytimes have no common factors
+                // make sure successive delaytimes have no common factors (needs work)
                 while (allPassDelayTime % 2 == 0 || allPassDelayTime % 3 == 0)
                 {
                     allPassDelayTime += 1;
