@@ -17,14 +17,14 @@ namespace bear::audio
 {
     //! Retrieve the high-frequency content according to Brossier
     template <class T>
-    constexpr auto highFrequencyContentBrossier(gsl::span<const T> magnitudes, const unit::hertz<float>& sampleRate)
+    constexpr auto highFrequencyContentBrossier(const std::vector<T>& magnitudes, const unit::hertz<float>& sampleRate)
     {
         return dsp::indexWeightedSum<T>(magnitudes) * sampleRate / magnitudes.size();
     }
     
     //! Retrieve the high-frequency content according to Masri
     template <class T>
-    constexpr auto highFrequencyContentMasri(gsl::span<const T> magnitudes, const unit::hertz<float>& sampleRate)
+    constexpr auto highFrequencyContentMasri(const std::vector<T>& magnitudes, const unit::hertz<float>& sampleRate)
     {
         T acc = 0;
         for (auto i = 0; i < magnitudes.size(); ++i)
@@ -35,7 +35,7 @@ namespace bear::audio
     
     //! Retrieve the high-frequency content according to Masri
     template <class T>
-    constexpr auto highFrequencyContentJensen(gsl::span<const T> magnitudes, const unit::hertz<float>& sampleRate)
+    constexpr auto highFrequencyContentJensen(const std::vector<T>& magnitudes, const unit::hertz<float>& sampleRate)
     {
         T acc = 0;
         for (auto i = 0; i < magnitudes.size(); ++i)

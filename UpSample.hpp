@@ -33,7 +33,7 @@ namespace bear::dsp
         std::vector<T> process(T x);
         
         //! Upsample a range of floats
-        std::vector<T> processSpan(gsl::span<const T> x);
+        std::vector<T> processSpan(const std::vector<T>& x);
         
         //! Set the up-sampling factor and recompute the filter
         void setFactor(std::size_t factor);
@@ -99,8 +99,8 @@ namespace bear::dsp
         {
             float temp = 0;
             
-            dot(gsl::span<const T>(delayLine.data(), numberOfSteps), 1,
-                gsl::span<const T>(filterKernel.data() + sample, numberOfSteps), factor,
+            dot(const std::vector<T>&(delayLine.data(), numberOfSteps), 1,
+                const std::vector<T>&(filterKernel.data() + sample, numberOfSteps), factor,
                 temp);
             
             output[sample] = temp;
@@ -110,7 +110,7 @@ namespace bear::dsp
     }
     
     template <class T>
-    std::vector<T> UpSample<T>::processSpan(gsl::span<const T> x)
+    std::vector<T> UpSample<T>::processSpan(const std::vector<T>& x)
     {
         std::vector<T> out;
         out.reserve(factor * x.size());

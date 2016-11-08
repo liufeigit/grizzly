@@ -17,7 +17,7 @@ using namespace std;
 
 namespace bear::dsp
 {
-    void fillTriangleWindow(span<float> window, double t)
+    void fillTriangleWindow(vector<float>& window, double t)
     {
         const size_t l = window.size() * t;
         for (size_t i = 0; i < l; ++i)

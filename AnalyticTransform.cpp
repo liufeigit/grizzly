@@ -16,7 +16,7 @@ using namespace std;
 
 namespace bear::dsp
 {
-    vector<std::complex<float>> analyticTransform(span<const float> input)
+    vector<std::complex<float>> analyticTransform(const vector<float>& input)
     {
         auto hilbert = hilbertTransform(input);
 

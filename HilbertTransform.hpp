@@ -16,13 +16,13 @@
 namespace bear::dsp
 {
     //! The Hilbert transform of a real signal
-    std::vector<float> hilbertTransform(gsl::span<const float> input, bool inverse = false);
+    std::vector<float> hilbertTransform(const std::vector<float>& input, bool inverse = false);
     
     //! The Hilbert transform fo a complex signal
-    std::vector<std::complex<float>> hilbertTransformComplex(gsl::span<const std::complex<float>> input, bool inverse = false);
+    std::vector<std::complex<float>> hilbertTransformComplex(const std::vector<std::complex<float>>& input, bool inverse = false);
     
     //! Find the intrinsic mode function inside a signal
-    std::vector<float> findIntrinsicModeFunction(gsl::span<const float> input);
+    std::vector<float> findIntrinsicModeFunction(const std::vector<float>& input);
     
     //! The result of findIntrinsicModeFunctions
     struct IntrinsicModeFunctions
@@ -32,7 +32,7 @@ namespace bear::dsp
         IntrinsicModeFunctions() = default;
         
         //! Construct by giving the residue
-        IntrinsicModeFunctions(gsl::span<const float> residue) : residue(residue.begin(), residue.end()) { }
+        IntrinsicModeFunctions(const std::vector<float>& residue) : residue(residue.begin(), residue.end()) { }
         
     public:
         //! The intrinsic mode functions
@@ -43,7 +43,7 @@ namespace bear::dsp
     };
     
     //! Find all intrinsic mode functions and a residue in a signal
-    IntrinsicModeFunctions findIntrinsicModeFunctions(gsl::span<const float> input);
+    IntrinsicModeFunctions findIntrinsicModeFunctions(const std::vector<float>& input);
 }
 
 #endif

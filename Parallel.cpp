@@ -15,7 +15,7 @@ using namespace std;
 
 namespace bear
 {
-    void normalizeSum(gsl::span<float> x, double sum)
+    void normalizeSum(std::vector<float>& x, double sum)
     {
         double gainFactor = 1.0 / sum;
         double accumulator = 0;
@@ -28,7 +28,7 @@ namespace bear
                 value /= (accumulator * gainFactor);
     }
 
-    void normalizeBiDirectional(gsl::span<float> x, double peakMaximum)
+    void normalizeBiDirectional(std::vector<float>& x, double peakMaximum)
     {
         double highest = 0;
 
@@ -41,7 +41,7 @@ namespace bear
             value *= gainFactor;
     }
 
-    void normalizeUniDirectional(gsl::span<float> x, double peakMaximum)
+    void normalizeUniDirectional(std::vector<float>& x, double peakMaximum)
     {
         if (peakMaximum <= 0)
             throw std::runtime_error("Peak maximum has to be higher than zero. Use normalizeBilateral instead?");

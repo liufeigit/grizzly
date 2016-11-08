@@ -30,10 +30,10 @@ namespace bear::dsp
         DownSample(std::size_t factor, std::size_t size);
         
         //! Downsample a vector of floats (size factor) to a single float
-        T process(gsl::span<const T> x);
+        T process(const std::vector<T>& x);
         
         //! Down sample a range of floats
-        std::vector<T> processSpan(gsl::span<const T> x);
+        std::vector<T> processSpan(const std::vector<T>& x);
         
         //! Set the down-sampling factor and recompute the filter
         void setFactor(size_t factor);
@@ -85,7 +85,7 @@ namespace bear::dsp
     }
     
     template <class T>
-    T DownSample<T>::process(gsl::span<const T> x)
+    T DownSample<T>::process(const std::vector<T>& x)
     {
         if (x.size() != factor)
             throw std::runtime_error("Input is not of factor size");
@@ -105,8 +105,8 @@ namespace bear::dsp
         {
             float temp = 0;
             
-            dot(gsl::span<const float>(delayLine.data() + sample, numberOfSteps), factor,
-                gsl::span<const float>(filterKernel.data() + sample, numberOfSteps), factor,
+            dot(const std::vector<float>&(delayLine.data() + sample, numberOfSteps), factor,
+                const std::vector<float>&(filterKernel.data() + sample, numberOfSteps), factor,
                 temp);
             
             output += temp;
@@ -116,7 +116,7 @@ namespace bear::dsp
     }
     
     template <class T>
-    std::vector<T> DownSample<T>::processSpan(gsl::span<const T> x)
+    std::vector<T> DownSample<T>::processSpan(const std::vector<T>& x)
     {
         std::vector<T> out;
         out.reserve(x.size() / factor);

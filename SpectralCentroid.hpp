@@ -16,7 +16,7 @@
 namespace bear::audio
 {
     template <class T>
-    inline static unit::hertz<float> spectralCentroid(gsl::span<const T> magnitudes, unit::hertz<float> sampleRate)
+    inline static unit::hertz<float> spectralCentroid(const std::vector<T>& magnitudes, unit::hertz<float> sampleRate)
     {
         return dsp::centroid(magnitudes) * sampleRate / magnitudes.size();
     }

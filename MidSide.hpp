@@ -44,16 +44,16 @@ namespace bear::audio
     }
 
     //! Convert a stereo signal to mid-side (in-place)
-    void stereo2ms(gsl::span<const float> left, gsl::span<const float> right, gsl::span<float> mid, gsl::span<float> side);
+    void stereo2ms(const std::vector<float>& left, const std::vector<float>& right, std::vector<float>& mid, std::vector<float>& side);
     
     //! Convert a stereo signal to mid-side
-    std::array<std::vector<float>, 2> stereo2ms(gsl::span<const float> left, gsl::span<const float> right);
+    std::array<std::vector<float>, 2> stereo2ms(const std::vector<float>& left, const std::vector<float>& right);
     
     //! Convert a mid-side signal to stereo (in-place)
-    void ms2stereo(gsl::span<const float> mid, gsl::span<const float> side, gsl::span<float> left, gsl::span<float> right);
+    void ms2stereo(const std::vector<float>& mid, const std::vector<float>& side, std::vector<float>& left, std::vector<float>& right);
 
     //! Convert a mid-side signal to stereo
-    std::array<std::vector<float>, 2> ms2stereo(gsl::span<const float> mid, gsl::span<const float> side);
+    std::array<std::vector<float>, 2> ms2stereo(const std::vector<float>& mid, const std::vector<float>& side);
 }
 
 #endif /* BEAR_AUDIO_MID_SIDE_HPP */

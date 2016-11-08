@@ -15,7 +15,7 @@
 namespace bear::dsp
 {
     //! Fill a triangle window
-    void fillTriangleWindow(gsl::span<float> window, double t = 0.5);
+    void fillTriangleWindow(std::vector<float>& window, double t = 0.5);
     
     //! Create triangle window
     std::vector<float> createTriangleWindow(size_t size, double t = 0.5);
