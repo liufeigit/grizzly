@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <complex>
 #include <gsl/gsl>
 #include <vector>
 
@@ -322,6 +323,19 @@ namespace bear
             out[i * 2 + 1] = rhs[i];
         }
     }
+    
+    template <class T1, class T2, class T3>
+    void interleave(const std::vector<T1>& lhs, const std::vector<T2>& rhs, std::vector<std::complex<T3>>& out)
+    {
+        std::vector<T3> fout(out.size() * 2);
+        interleave(lhs, rhs, fout);
+        
+        for (auto i = 0; i < out.size(); ++i)
+        {
+            out[i].real(fout[i * 2]);
+            out[i].imag(fout[i * 2 + 1]);
+        }
+    }
 
     //! Interleave two spans
     template <class T1, class T2>
@@ -344,6 +358,19 @@ namespace bear
             lhs[i] = in[i * 2];
             rhs[i] = in[i * 2 + 1];
         }
+    }
+    
+    template <class T1, class T2, class T3>
+    void deinterleave(const std::vector<std::complex<T1>>& in, std::vector<T2>& lhs, std::vector<T3>& rhs)
+    {
+        std::vector<float> fin(in.size() * 2);
+        for (auto i = 0; i < in.size(); ++i)
+        {
+            fin[i * 2] = in[i].real();
+            fin[i * 2 + 1] = in[i].imag();
+        }
+        
+        deinterleave(fin, lhs, rhs);
     }
 
     //! Normalize the sum of a function to a value (e.g. 1, 1 --> 0.5, 0.5 for sum = 1)

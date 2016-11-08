@@ -99,6 +99,8 @@ namespace bear::dsp
     {
         const auto frameSize = fourier.getSize();
         
+        const vector<float>* theWindow = &window;
+        
         // Zero-pad the window
         if (window.size() < frameSize)
         {
@@ -108,7 +110,7 @@ namespace bear::dsp
             for (auto i = 0; i < window.size(); ++i)
                 w[offset + i] = window[i];
             
-            window = w;
+            theWindow = &w;
             // Or throw if the window is bigger than the frame size
         } else if (frameSize < window.size()) {
             throw runtime_error("Window size can't be bigger than frame size ()");
@@ -124,10 +126,10 @@ namespace bear::dsp
             if (i + frameSize < input.size())
             {
                 // Take a frame
-                auto frame = input.subspan(i, i + frameSize);
+                vector<float> frame(input.begin() + i, input.begin() + i + frameSize);
                 
                 // Multiply the frame by a window
-                auto windowedFrame = multiply(frame, window);
+                auto windowedFrame = multiply(frame, *theWindow);
                 
                 // Take the transform of the frame and place it in the spectrum vector
                 spectrum.emplace_back(fourier.forward(windowedFrame));
@@ -136,7 +138,7 @@ namespace bear::dsp
                 copy_n(&input[i], input.size() - i, frame.data());
                 
                 // Multiply the frame by a window
-                auto windowedFrame = multiply(frame, window);
+                auto windowedFrame = multiply(frame, *theWindow);
                 
                 // Take the transform of the frame and place it in the spectrum vector
                 spectrum.emplace_back(fourier.forward(windowedFrame));

@@ -88,10 +88,10 @@ namespace bear::dsp
         result.residue.resize(input.size());
         copy(input.begin(), input.end(), result.residue.begin());
 
-        while (rootMeanSquare(const vector<float>&(result.residue)) >= 0.01)
+        while (rootMeanSquare(result.residue) >= 0.01)
         {
             result.intrinsicModeFunctions.emplace_back(findIntrinsicModeFunction(result.residue));
-            subtract(const vector<float>&(result.residue), const vector<float>&(result.intrinsicModeFunctions.back()), vector<float>&(result.residue));
+            subtract(result.residue, result.intrinsicModeFunctions.back(), result.residue);
         }
 
         return result;

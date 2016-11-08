@@ -43,7 +43,7 @@ namespace bear::dsp
         // Do the forward transform
         forward(input, real, imaginary);
         
-        interleave(real, imaginary, vector<float>&((float*)output.data(), output.size() * 2));
+        interleave(real, imaginary, output);
     }
     
     void FastFourierTransformBase::forward(const vector<double>& input, vector<complex<double>>& output)
@@ -55,7 +55,7 @@ namespace bear::dsp
         // Do the forward transform
         forward(input, real, imaginary);
         
-        interleave(real, imaginary, vector<double>&((double*)output.data(), output.size() * 2));
+        interleave(real, imaginary, output);
     }
     
     void FastFourierTransformBase::forward(const vector<float>& input, vector<float>& real, vector<float>& imaginary)
@@ -97,7 +97,7 @@ namespace bear::dsp
         vector<float> imaginary(input.size());
         
         // Deinterleave
-        deinterleave(const vector<float>&((float*)input.data(), input.size() * 2), real, imaginary);
+        deinterleave(input, real, imaginary);
         
         // Do the inverse transform
         inverse(real, imaginary, output);
@@ -110,7 +110,7 @@ namespace bear::dsp
         vector<double> imaginary(input.size());
         
         // Deinterleave
-        deinterleave(const vector<double>&((double*)input.data(), input.size() * 2), real, imaginary);
+        deinterleave(input, real, imaginary);
         
         // Do the inverse transform
         inverse(real, imaginary, output);
@@ -159,7 +159,7 @@ namespace bear::dsp
         vector<float> inImaginary(input.size());
         
         // Deinterleave
-        deinterleave(const vector<float>&((float*)input.data(), input.size() * 2), inReal, inImaginary);
+        deinterleave(input, inReal, inImaginary);
         
         // The deinterleaved output will be stored in here
         vector<float> outReal(output.size(), 0);
@@ -168,7 +168,7 @@ namespace bear::dsp
         // Do the forward transform
         forwardComplex(inReal, inImaginary, outReal, outImaginary);
         
-        interleave(outReal, outImaginary, vector<float>&((float*)output.data(), output.size() * 2));
+        interleave(outReal, outImaginary, output);
     }
     
     void FastFourierTransformBase::forwardComplex(const vector<complex<double>>& input, vector<complex<double>>& output)
@@ -178,7 +178,7 @@ namespace bear::dsp
         vector<double> inImaginary(input.size());
         
         // Deinterleave
-        deinterleave(const vector<double>&((double*)input.data(), input.size() * 2), inReal, inImaginary);
+        deinterleave(input, inReal, inImaginary);
         
         // The deinterleaved output will be stored in here
         vector<double> outReal(output.size(), 0);
@@ -187,7 +187,7 @@ namespace bear::dsp
         // Do the forward transform
         forwardComplex(inReal, inImaginary, outReal, outImaginary);
         
-        interleave(outReal, outImaginary, vector<double>&((double*)output.data(), output.size() * 2));
+        interleave(outReal, outImaginary, output);
     }
     
     void FastFourierTransformBase::forwardComplex(const vector<float>& inReal, const vector<float>& inImaginary, vector<float>& outReal, vector<float>& outImaginary)
@@ -235,7 +235,7 @@ namespace bear::dsp
         vector<float> inputImaginary(input.size());
         
         // Deinterleave
-        deinterleave(const vector<float>&((float*)input.data(), input.size() * 2), inputReal, inputImaginary);
+        deinterleave(input, inputReal, inputImaginary);
         
         vector<float> outputReal(output.size());
         vector<float> outputImaginary(output.size());
@@ -243,7 +243,7 @@ namespace bear::dsp
         // Do the inverse transform
         inverseComplex(inputReal, inputImaginary, outputReal, outputImaginary);
         
-        interleave(outputReal, outputImaginary, vector<float>&((float*)output.data(), output.size() * 2));
+        interleave(outputReal, outputImaginary, output);
     }
     
     void FastFourierTransformBase::inverseComplex(const vector<complex<double>>& input, vector<complex<double>>& output)
@@ -253,7 +253,7 @@ namespace bear::dsp
         vector<float> inputImaginary(input.size());
         
         // Deinterleave
-        deinterleave(const vector<float>&((float*)input.data(), input.size() * 2), inputReal, inputImaginary);
+        deinterleave(input, inputReal, inputImaginary);
         
         vector<float> outputReal(output.size());
         vector<float> outputImaginary(output.size());
@@ -261,7 +261,7 @@ namespace bear::dsp
         // Do the inverse transform
         inverseComplex(inputReal, inputImaginary, outputReal, outputImaginary);
         
-        interleave(outputReal, outputImaginary, vector<float>&((float*)output.data(), output.size() * 2));
+        interleave(outputReal, outputImaginary, output);
     }
     
     void FastFourierTransformBase::inverseComplex(const vector<float>& inReal, const vector<float>& inImaginary, vector<float>& outReal, vector<float>& outImaginary)
