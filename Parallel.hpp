@@ -166,7 +166,7 @@ namespace bear
     {
         using T3 = std::decay_t<std::common_type_t<T1, T2>>;
         std::vector<T3> out(std::min(lhs.size(), rhs.size()));
-        add(lhs, rhs, std::vector<T3>&(out));
+        add(lhs, rhs, out);
         return out;
     }
     
@@ -184,7 +184,7 @@ namespace bear
     {
         using T3 = std::decay_t<std::common_type_t<T1, T2>>;
         std::vector<T3> out(std::min(lhs.size(), rhs.size()));
-        subtract(lhs, rhs, std::vector<T3>&(out));
+        subtract(lhs, rhs, out);
         return out;
     }
     
@@ -210,7 +210,7 @@ namespace bear
     {
         using T3 = std::decay_t<std::common_type_t<T1, T2>>;
         std::vector<T3> out(std::min(lhs.size(), rhs.size()));
-        multiply(lhs, rhs, std::vector<T3>&(out));
+        multiply(lhs, rhs, out);
         return out;
     }
     
@@ -220,7 +220,7 @@ namespace bear
     {
         using T3 = std::decay_t<std::common_type_t<T1, T2>>;
         std::vector<T3> out(lhs.size());
-        multiply(lhs, rhs, std::vector<T3>&(out));
+        multiply(lhs, rhs, out);
         return out;
     }
     
@@ -238,7 +238,7 @@ namespace bear
     {
         using T3 = std::decay_t<std::common_type_t<T1, T2>>;
         std::vector<T3> out(std::min(lhs.size(), rhs.size()));
-        divide(lhs, rhs, std::vector<T3>&(out));
+        divide(lhs, rhs, out);
         return out;
     }
 
@@ -275,7 +275,7 @@ namespace bear
     void mean(const std::vector<T1>& lhs, const std::vector<T2>& rhs, std::vector<T3>& out)
     {
         add(lhs, rhs, out);
-        multiply(const std::vector<T3>&(out), std::common_type_t<std::common_type_t<T1, T2>, T3>(0.5), out);
+        multiply(out, std::common_type_t<std::common_type_t<T1, T2>, T3>(0.5), out);
     }
 
     //! The mean between two signals
@@ -284,7 +284,7 @@ namespace bear
     {
         using T3 = std::decay_t<std::common_type_t<T1, T2>>;
         std::vector<T3> out(std::min(lhs.size(), rhs.size()));
-        mean(lhs, rhs, std::vector<T3>&(out));
+        mean(lhs, rhs, out);
         return out;
     }
     
@@ -306,7 +306,7 @@ namespace bear
     {
         using T4 = std::decay_t<std::common_type_t<T1, T2>>;
         std::vector<T4> out(std::min(lhs.size(), rhs.size()));
-        interpolateLinear(lhs, rhs, std::vector<T4>&(out), f);
+        interpolateLinear(lhs, rhs, out, f);
         return out;
     }
     
@@ -329,7 +329,7 @@ namespace bear
     {
         using T3 = std::decay_t<std::common_type_t<T1, T2>>;
         std::vector<T3> out(std::min(lhs.size(), rhs.size()) * 2);
-        interleave(lhs, rhs, std::vector<T3>&(out));
+        interleave(lhs, rhs, out);
         return out;
     }
     
