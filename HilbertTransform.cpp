@@ -58,9 +58,9 @@ namespace bear::dsp
 
         while (true)
         {
-            auto minima = localMinima(const vector<float>&(sift));
-            auto maxima = localMaxima(const vector<float>&(sift));
-            auto crossings = zeroCrossings(const vector<float>&(sift));
+            auto minima = localMinima(sift);
+            auto maxima = localMaxima(sift);
+            auto crossings = zeroCrossings(sift);
 
             if (minima.size() + maxima.size() - (int)crossings <= 1)
                 return sift;
@@ -75,9 +75,9 @@ namespace bear::dsp
 
             auto maximaSignal = maximaSpline.span(0, sift.size());
 
-            auto m = mean(const vector<float>&(minimaSignal), const vector<float>&(maximaSignal));
+            auto m = mean(minimaSignal, maximaSignal);
 
-            sift = subtract(const vector<float>&(sift), const vector<float>&(m));
+            sift = subtract(sift, m);
         }
     }
 

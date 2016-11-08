@@ -74,7 +74,7 @@ namespace bear::dsp
         move(data.begin(), data.end(), output.begin());
         
         float factor = 2.0 / size;
-        multiply(const vector<float>&(output), factor, output);
+        multiply(output, factor, output);
     }
     
     void FastFourierTransformOoura::doInverse(const vector<double>& real, const vector<double>& imaginary, vector<double>& output)
@@ -92,48 +92,48 @@ namespace bear::dsp
         move(data.begin(), data.end(), output.begin());
         
         float factor = 2.0 / size;
-        multiply(const vector<double>&(output), factor, output);
+        multiply(output, factor, output);
     }
     
     void FastFourierTransformOoura::doForwardComplex(const vector<float>& inReal, const vector<float>& inImaginary, vector<float>& outReal, vector<float>& outImaginary)
     {
-        interleave(inReal, inImaginary, vector<double>&(dataComplex));
+        interleave(inReal, inImaginary, dataComplex);
         
         cdft(static_cast<int>(size * 2), 1, dataComplex.data(), ip.data(), w.data());
 
-        deinterleave(const vector<double>&(dataComplex), outReal, outImaginary);
+        deinterleave(dataComplex, outReal, outImaginary);
     }
     
     void FastFourierTransformOoura::doForwardComplex(const vector<double>& inReal, const vector<double>& inImaginary, vector<double>& outReal, vector<double>& outImaginary)
     {
-        interleave(inReal, inImaginary, vector<double>&(dataComplex));
+        interleave(inReal, inImaginary, dataComplex);
         
         cdft(static_cast<int>(size * 2), 1, dataComplex.data(), ip.data(), w.data());
         
-        deinterleave(const vector<double>&(dataComplex), outReal, outImaginary);
+        deinterleave(dataComplex, outReal, outImaginary);
     }
     
     void FastFourierTransformOoura::doInverseComplex(const vector<float>& inReal, const vector<float>& inImaginary, vector<float>& outReal, vector<float>& outImaginary)
     {
-        interleave(inReal, inImaginary, vector<double>&(dataComplex));
+        interleave(inReal, inImaginary, dataComplex);
         
         cdft(static_cast<int>(size * 2), -1, dataComplex.data(), ip.data(), w.data());
         
         float factor = 1.0 / size;
-        multiply(const vector<double>&(dataComplex), factor, vector<double>&(dataComplex));
+        multiply(dataComplex, factor, dataComplex);
         
-        deinterleave(const vector<double>&(dataComplex), outReal, outImaginary);
+        deinterleave(dataComplex, outReal, outImaginary);
     }
     
     void FastFourierTransformOoura::doInverseComplex(const vector<double>& inReal, const vector<double>& inImaginary, vector<double>& outReal, vector<double>& outImaginary)
     {
-        interleave(inReal, inImaginary, vector<double>&(dataComplex));
+        interleave(inReal, inImaginary, dataComplex);
         
         cdft(static_cast<int>(size * 2), -1, dataComplex.data(), ip.data(), w.data());
         
         double factor = 1.0 / size;
-        multiply(const vector<double>&(dataComplex), factor, vector<double>&(dataComplex));
+        multiply(dataComplex, factor, dataComplex);
         
-        deinterleave(const vector<double>&(dataComplex), outReal, outImaginary);
+        deinterleave(dataComplex, outReal, outImaginary);
     }
 }

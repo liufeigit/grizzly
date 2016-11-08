@@ -45,7 +45,7 @@ namespace bear::dsp
     void FastFourierTransformAccelerate::doForward(const vector<float>& input, vector<float>& real, vector<float>& imaginary)
     {
         // Split the input signal to even and odd arrays
-        deinterleave(input, vector<float>&(evenFloat), vector<float>&(oddFloat));
+        deinterleave(input, evenFloat, oddFloat);
 
         // Do the transform
         vDSP_DFT_Execute(floatSetup.forward, evenFloat.data(), oddFloat.data(), real.data(), imaginary.data());
@@ -54,8 +54,8 @@ namespace bear::dsp
         // Probably because both the negative and positive frequencies get summed, or something. The complex-to-complex
         // DFT in Accelerate (see function below) doesn't need scaling).
         const float factor = 0.5f;
-        multiply(const vector<float>&(real), factor, real);
-        multiply(const vector<float>&(imaginary), factor, imaginary);
+        multiply(real, factor, real);
+        multiply(imaginary, factor, imaginary);
 
         // Because the Im[0] and Im[Nyquist] are always 0, vDSP stores the Re[Nyquist]
         // in Im[0], so that it can return one complex number less. Imho, this only makes
@@ -71,7 +71,7 @@ namespace bear::dsp
     void FastFourierTransformAccelerate::doForward(const vector<double>& input, vector<double>& real, vector<double>& imaginary)
     {
         // Split the input signal to even and odd arrays
-        deinterleave(input, vector<double>&(evenDouble), vector<double>&(oddDouble));
+        deinterleave(input, evenDouble, oddDouble);
         
         // Do the transform
         vDSP_DFT_ExecuteD(doubleSetup.forward, evenDouble.data(), oddDouble.data(), real.data(), imaginary.data());
@@ -80,8 +80,8 @@ namespace bear::dsp
         // Probably because both the negative and positive frequencies get summed, or something. The complex-to-complex
         // DFT in Accelerate (see function below) doesn't need scaling).
         const double factor = 0.5f;
-        multiply(const vector<double>&(real), factor, real);
-        multiply(const vector<double>&(imaginary), factor, imaginary);
+        multiply(real, factor, real);
+        multiply(imaginary, factor, imaginary);
         
         // Because the Im[0] and Im[Nyquist] are always 0, vDSP stores the Re[Nyquist]
         // in Im[0], so that it can return one complex number less. Imho, this only makes
@@ -108,11 +108,11 @@ namespace bear::dsp
         vDSP_DFT_Execute(floatSetup.inverse, real.data(), imaginary_.data(), real_.data(), imaginary_.data());
 
         // Combine the even and odd output signals into one interleaved output signal
-        interleave(const vector<float>&(real_), const vector<float>&(imaginary_), output);
+        interleave(real_, imaginary_, output);
 
         // For inverse DFT, the scaling is Size, so scale back by multiplying with its reciprocal
         const float factor = 1.0f / output.size();
-        multiply(const vector<float>&(output), factor, output);
+        multiply(output, factor, output);
     }
     
     void FastFourierTransformAccelerate::doInverse(const vector<double>& real, const vector<double>& imaginary, vector<double>& output)
@@ -129,11 +129,11 @@ namespace bear::dsp
         vDSP_DFT_ExecuteD(doubleSetup.inverse, real.data(), imaginary_.data(), real_.data(), imaginary_.data());
         
         // Combine the even and odd output signals into one interleaved output signal
-        interleave(const vector<double>&(real_), const vector<double>&(imaginary_), output);
+        interleave(real_, imaginary_, output);
         
         // For inverse DFT, the scaling is Size, so scale back by multiplying with its reciprocal
         const double factor = 1.0 / output.size();
-        multiply(const vector<double>&(output), factor, output);
+        multiply(output, factor, output);
     }
     
     void FastFourierTransformAccelerate::doForwardComplex(const vector<float>& inReal, const vector<float>& inImaginary, vector<float>& outReal, vector<float>& outImaginary)
@@ -155,8 +155,8 @@ namespace bear::dsp
         
         // For inverse DFT, the scaling is Size, so scale back by multiplying with its reciprocal
         const float factor = 1.0f / outReal.size();
-        multiply(const vector<float>&(outReal), factor, outReal);
-        multiply(const vector<float>&(outImaginary), factor, outImaginary);
+        multiply(outReal, factor, outReal);
+        multiply(outImaginary, factor, outImaginary);
     }
     
     void FastFourierTransformAccelerate::doInverseComplex(const vector<double>& inReal, const vector<double>& inImaginary, vector<double>& outReal, vector<double>& outImaginary)
@@ -166,7 +166,7 @@ namespace bear::dsp
         
         // For inverse DFT, the scaling is Size, so scale back by multiplying with its reciprocal
         const double factor = 1.0 / outReal.size();
-        multiply(const vector<double>&(outReal), factor, outReal);
-        multiply(const vector<double>&(outImaginary), factor, outImaginary);
+        multiply(outReal, factor, outReal);
+        multiply(outImaginary, factor, outImaginary);
     }
 }

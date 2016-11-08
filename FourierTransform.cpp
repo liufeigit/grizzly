@@ -136,7 +136,7 @@ namespace bear::dsp
                 copy_n(&input[i], input.size() - i, frame.data());
                 
                 // Multiply the frame by a window
-                auto windowedFrame = multiply(const vector<float>&(frame), window);
+                auto windowedFrame = multiply(frame, window);
                 
                 // Take the transform of the frame and place it in the spectrum vector
                 spectrum.emplace_back(fourier.forward(windowedFrame));
