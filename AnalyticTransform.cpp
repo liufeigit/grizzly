@@ -11,7 +11,6 @@
 #include "AnalyticTransform.hpp"
 #include "HilbertTransform.hpp"
 
-using namespace gsl;
 using namespace std;
 
 namespace bear::dsp

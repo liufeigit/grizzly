@@ -11,7 +11,6 @@
 #include <dsperados/math/utility.hpp>
 #include "Window.hpp"
 
-using namespace gsl;
 using namespace math;
 using namespace std;
 

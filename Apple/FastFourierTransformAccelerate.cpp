@@ -11,7 +11,6 @@
 #include "../FastFourierTransform.hpp"
 #include "../Parallel.hpp"
 
-using namespace gsl;
 using namespace std;
 
 namespace bear::dsp

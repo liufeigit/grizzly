@@ -11,7 +11,6 @@
 
 #include <algorithm>
 #include <cstddef>
-#include <gsl/span>
 #include <vector>
 
 #include <unit/hertz.hpp>

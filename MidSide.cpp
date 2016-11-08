@@ -8,7 +8,6 @@
 
 #include "MidSide.hpp"
 
-using namespace gsl;
 using namespace std;
 
 namespace bear::audio

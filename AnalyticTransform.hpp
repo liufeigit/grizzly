@@ -10,7 +10,6 @@
 #define BEAR_DSP_ANALYTIC_TRANSFORM_HPP
 
 #include <complex>
-#include <gsl/span>
 #include <vector>
 
 namespace bear::dsp

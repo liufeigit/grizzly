@@ -14,7 +14,6 @@
 #include "HilbertTransform.hpp"
 #include "Parallel.hpp"
 
-using namespace gsl;
 using namespace math;
 using namespace std;
 

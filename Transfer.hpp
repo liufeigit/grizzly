@@ -10,9 +10,8 @@
 #define BEAR_CORE_TRANSFER_HPP
 
 #include <functional>
-#include <gsl/span>
-#include <vector>
 #include <stdexcept>
+#include <vector>
 
 #include <dsperados/math/utility.hpp>
 #include <unit/radian.hpp>

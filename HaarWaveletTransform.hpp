@@ -11,7 +11,6 @@
 
 #include <cmath>
 #include <cstddef>
-#include <gsl/span>
 #include <stdexcept>
 #include <vector>
 
