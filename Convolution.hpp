@@ -35,7 +35,7 @@ namespace bear::dsp
         }
         
         //! Construct with a kernel
-        Convolution(gsl::span<const T> kernel)
+        Convolution(const std::vector<T>& kernel)
         {
             setKernel(kernel);
         }
@@ -55,21 +55,21 @@ namespace bear::dsp
         }
         
         //! Process multiple samples
-        std::vector<T> processor(gsl::span<const T> x)
+        std::vector<T> processor(const std::vector<T>& x)
         {
             std::vector<T> y(x.size());
             std::transform(x.begin(), x.end(), y.begin(), &Convolution::process);
         }
         
         //! Change the kernel
-        void setKernel(gsl::span<const T> kernel)
+        void setKernel(const std::vector<T>& kernel)
         {
             this->kernel.assign(kernel.begin(), kernel.end());
             delay.resize(kernel.size());
         }
         
         //! Convolve two buffers, return a buffer with size input + kernel - 1
-        static std::vector<float> convolve(gsl::span<T> input, gsl::span<T> kernel)
+        static std::vector<float> convolve(std::vector<T>& input, std::vector<T>& kernel)
         {
             std::vector<T> output(input.size() + kernel.size() - 1);
             

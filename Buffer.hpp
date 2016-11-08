@@ -11,7 +11,6 @@
 
 #include <algorithm>
 #include <cstddef>
-#include <gsl/span>
 #include <vector>
 
 #include <unit/hertz.hpp>
@@ -30,7 +29,7 @@ namespace bear::dsp
         Buffer(unit::hertz<float> sampleRate, std::size_t size = 0) : samples(size), sampleRate(sampleRate) { }
         
         //! Construct by passing samples and their sample rate
-        Buffer(unit::hertz<float> sampleRate, gsl::span<const float> samples) : samples(samples.begin(), samples.end()), sampleRate(sampleRate) { }
+        Buffer(unit::hertz<float> sampleRate, const std::vector<float>& samples) : samples(samples.begin(), samples.end()), sampleRate(sampleRate) { }
         
         //! Convert from a (differently typed) Buffer
         template <class U>

@@ -11,7 +11,6 @@
 
 #include <cmath>
 #include <cstddef>
-#include <gsl/span>
 #include <stdexcept>
 #include <vector>
 
@@ -26,7 +25,7 @@ namespace bear::dsp
     /*! The fast Haar wavelet transform is a series of linear homomorphic filters recursively applied to a signal or part of a signal.
         Google Haar wavelet for it's basefunction. The input should be a power of 2 in length and will create an output of log2(N). */
     template <class T>
-    constexpr void fastHaarWaveletTransform(gsl::span<T> input)
+    constexpr void fastHaarWaveletTransform(std::vector<T>& input)
     {
         if (!isPowerOf2(input.size()))
             throw std::invalid_argument("input size should be the power of 2");
@@ -57,7 +56,7 @@ namespace bear::dsp
     
     //! The inverse Haar wavelet transform
     template <class T>
-    constexpr void inverseFastHaarWaveletTransform(gsl::span<T> input)
+    constexpr void inverseFastHaarWaveletTransform(std::vector<T>& input)
     {
         const auto numFilters = input.size();
 

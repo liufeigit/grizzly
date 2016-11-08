@@ -9,16 +9,14 @@
 #ifndef BEAR_DSP_CENTROID_HPP
 #define BEAR_DSP_CENTROID_HPP
 
-#include <gsl/span>
-
 #include "Parallel.hpp"
 
 namespace bear::dsp
 {
     //! The centroid of a span of values
     /*! The centroid or 'center of gravity' is sum of values, weighted by its index, divided by the sum of values. */
-    template <typename T, long N>
-    inline static float centroid(gsl::span<T, N> values)
+    template <typename T>
+    inline static float centroid(const std::vector<T>& values)
     {
         // Accumulator
         T indexWeightedSum = 0;

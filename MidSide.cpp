@@ -8,12 +8,11 @@
 
 #include "MidSide.hpp"
 
-using namespace gsl;
 using namespace std;
 
 namespace bear::audio
 {
-    void stereo2ms(span<const float> left, span<const float> right, span<float> mid, span<float> side)
+    void stereo2ms(const vector<float>& left, const vector<float>& right, vector<float>& mid, vector<float>& side)
     {
         const auto frameCount = min({left.size(), right.size(), mid.size(), side.size()});
 
@@ -24,7 +23,7 @@ namespace bear::audio
         }
     }
 
-    array<vector<float>, 2> stereo2ms(span<const float> left, span<const float> right)
+    array<vector<float>, 2> stereo2ms(const vector<float>& left, const vector<float>& right)
     {
         const auto frameCount = min(left.size(), right.size());
 
@@ -37,7 +36,7 @@ namespace bear::audio
         return result;
     }
 
-    void ms2stereo(span<const float> mid, span<const float> side, span<float> left, span<float> right)
+    void ms2stereo(const vector<float>& mid, const vector<float>& side, vector<float>& left, vector<float>& right)
     {
         const auto frameCount = min({mid.size(), side.size(), left.size(), right.size()});
 
@@ -48,7 +47,7 @@ namespace bear::audio
         }
     }
 
-    array<vector<float>, 2> ms2stereo(span<const float> mid, span<const float> side)
+    array<vector<float>, 2> ms2stereo(const vector<float>& mid, const vector<float>& side)
     {
         const auto frameCount = min(mid.size(), side.size());
 

@@ -14,7 +14,6 @@
 #include "FourierTransform.hpp"
 #include "Parallel.hpp"
 
-using namespace gsl;
 using namespace std;
 
 namespace bear::dsp
@@ -30,74 +29,76 @@ namespace bear::dsp
         return *transforms.emplace(size, make_unique<FastFourierTransform>(size)).first->second;
     }
     
-    void fourierTransform(span<const float> input, span<std::complex<float>> output)
+    void fourierTransform(const vector<float>& input, vector<std::complex<float>>& output)
     {
         getFastFourierTransform(input.size()).forward(input, output);
     }
     
-    void fourierTransform(span<const float> input, span<float> outputReal, span<float> outputImaginary)
+    void fourierTransform(const vector<float>& input, vector<float>& outputReal, vector<float>& outputImaginary)
     {
         getFastFourierTransform(input.size()).forward(input, outputReal, outputImaginary);
     }
     
-    void fourierTransformComplex(span<const complex<float>> input, span<complex<float>> output)
+    void fourierTransformComplex(const vector<complex<float>>& input, vector<complex<float>>& output)
     {
         getFastFourierTransform(input.size()).forwardComplex(input, output);
     }
     
-    void fourierTransformComplex(span<const float> inputReal, span<const float> inputImaginary, span<float> outputReal, span<float> outputImaginary)
+    void fourierTransformComplex(const vector<float>& inputReal, const vector<float>& inputImaginary, vector<float>& outputReal, vector<float>& outputImaginary)
     {
         getFastFourierTransform(inputReal.size()).forwardComplex(inputReal, inputImaginary, outputReal, outputImaginary);
     }
     
-    vector<complex<float>> fourierTransform(span<const float> input)
+    vector<complex<float>> fourierTransform(const vector<float>& input)
     {
         return getFastFourierTransform(input.size()).forward(input);
     }
     
-    vector<complex<float>> fourierTransformComplex(span<const complex<float>> input)
+    vector<complex<float>> fourierTransformComplex(const vector<complex<float>>& input)
     {
         return getFastFourierTransform(input.size()).forwardComplex(input);
     }
     
-    void inverseFourierTransform(span<const complex<float>> input, span<float> output)
+    void inverseFourierTransform(const vector<complex<float>>& input, vector<float>& output)
     {
         getFastFourierTransform(output.size()).inverse(input, output);
     }
     
-    void inverseFourierTransform(span<const float> inputReal, span<const float> inputImaginary, span<float> output)
+    void inverseFourierTransform(const vector<float>& inputReal, const vector<float>& inputImaginary, vector<float>& output)
     {
         getFastFourierTransform(output.size()).inverse(inputReal, inputImaginary, output);
     }
     
-    void inverseFourierTransformComplex(span<const complex<float>> input, span<complex<float>> output)
+    void inverseFourierTransformComplex(const vector<complex<float>>& input, vector<complex<float>>& output)
     {
         getFastFourierTransform(output.size()).inverseComplex(input, output);
     }
     
-    void inverseFourierTransformComplex(span<const float> inputReal, span<const float> inputImaginary, span<float> outputReal, span<float> outputImaginary)
+    void inverseFourierTransformComplex(const vector<float>& inputReal, const vector<float>& inputImaginary, vector<float>& outputReal, vector<float>& outputImaginary)
     {
         getFastFourierTransform(outputReal.size()).inverseComplex(inputReal, inputImaginary, outputReal, outputImaginary);
     }
     
-    vector<float> inverseFourierTransform(span<const complex<float>> input)
+    vector<float> inverseFourierTransform(const vector<complex<float>>& input)
     {
         return getFastFourierTransform((input.size() - 1) * 2).inverse(input);
     }
     
-    vector<complex<float>> inverseFourierTransformComplex(span<const complex<float>> input)
+    vector<complex<float>> inverseFourierTransformComplex(const vector<complex<float>>& input)
     {
         return getFastFourierTransform(input.size()).inverseComplex(input);
     }
     
-    vector<vector<complex<float>>> shortTimeFourierTransform(span<const float> input, size_t frameSize, span<const float> window, size_t hopSize)
+    vector<vector<complex<float>>> shortTimeFourierTransform(const vector<float>& input, size_t frameSize, const vector<float>& window, size_t hopSize)
     {
         return shortTimeFourierTransform(input, getFastFourierTransform(frameSize), window, hopSize);
     }
     
-    vector<vector<complex<float>>> shortTimeFourierTransform(span<const float> input, FastFourierTransformBase& fourier, span<const float> window, size_t hopSize)
+    vector<vector<complex<float>>> shortTimeFourierTransform(const vector<float>& input, FastFourierTransformBase& fourier, const vector<float>& window, size_t hopSize)
     {
         const auto frameSize = fourier.getSize();
+        
+        const vector<float>* theWindow = &window;
         
         // Zero-pad the window
         if (window.size() < frameSize)
@@ -108,7 +109,7 @@ namespace bear::dsp
             for (auto i = 0; i < window.size(); ++i)
                 w[offset + i] = window[i];
             
-            window = w;
+            theWindow = &w;
             // Or throw if the window is bigger than the frame size
         } else if (frameSize < window.size()) {
             throw runtime_error("Window size can't be bigger than frame size ()");
@@ -124,10 +125,10 @@ namespace bear::dsp
             if (i + frameSize < input.size())
             {
                 // Take a frame
-                auto frame = input.subspan(i, i + frameSize);
+                vector<float> frame(input.begin() + i, input.begin() + i + frameSize);
                 
                 // Multiply the frame by a window
-                auto windowedFrame = multiply(frame, window);
+                auto windowedFrame = multiply(frame, *theWindow);
                 
                 // Take the transform of the frame and place it in the spectrum vector
                 spectrum.emplace_back(fourier.forward(windowedFrame));
@@ -136,7 +137,7 @@ namespace bear::dsp
                 copy_n(&input[i], input.size() - i, frame.data());
                 
                 // Multiply the frame by a window
-                auto windowedFrame = multiply(span<const float>(frame), window);
+                auto windowedFrame = multiply(frame, *theWindow);
                 
                 // Take the transform of the frame and place it in the spectrum vector
                 spectrum.emplace_back(fourier.forward(windowedFrame));

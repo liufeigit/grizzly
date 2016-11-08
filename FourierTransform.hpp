@@ -10,7 +10,6 @@
 #define BEAR_DSP_FOURIER_TRANSFORM_HPP
 
 #include <complex>
-#include <gsl/span>
 #include <vector>
 
 #include "FastFourierTransform.hpp"
@@ -18,46 +17,46 @@
 namespace bear::dsp
 {
     //! The real-to-complex forward Fourier transform
-    void fourierTransform(gsl::span<const float> input, gsl::span<std::complex<float>> output);
+    void fourierTransform(const std::vector<float>& input, std::vector<std::complex<float>>& output);
     
     //! The real-to-complex forward Fourier transform
-    void fourierTransform(gsl::span<const float> input, gsl::span<float> outputReal, gsl::span<float> outputImaginary);
+    void fourierTransform(const std::vector<float>& input, std::vector<float>& outputReal, std::vector<float>& outputImaginary);
     
     //! The complex-to-complex forward Fourier transform
-    void fourierTransformComplex(gsl::span<const std::complex<float>> input, gsl::span<std::complex<float>> output);
+    void fourierTransformComplex(const std::vector<std::complex<float>>& input, std::vector<std::complex<float>>& output);
     
     //! The complex-to-complex forward Fourier transform
-    void fourierTransformComplex(gsl::span<const float> inputReal, gsl::span<const float> inputImaginary, gsl::span<float> outputReal, gsl::span<float> outputImaginary);
+    void fourierTransformComplex(const std::vector<float>& inputReal, const std::vector<float>& inputImaginary, std::vector<float>& outputReal, std::vector<float>& outputImaginary);
     
     //! The real-to-complex forward Fourier transform
-    std::vector<std::complex<float>> fourierTransform(gsl::span<const float> input);
+    std::vector<std::complex<float>> fourierTransform(const std::vector<float>& input);
     
     //! The complex-to-complex forward Fourier transform
-    std::vector<std::complex<float>> fourierTransformComplex(gsl::span<const std::complex<float>> input);
+    std::vector<std::complex<float>> fourierTransformComplex(const std::vector<std::complex<float>>& input);
     
     //! The complex-to-real inverse Fourier transform
-    void inverseFourierTransform(gsl::span<const std::complex<float>> input, gsl::span<float> output);
+    void inverseFourierTransform(const std::vector<std::complex<float>>& input, std::vector<float>& output);
     
     //! The complex-to-real inverse Fourier transform
-    void inverseFourierTransform(gsl::span<const float> inputReal, gsl::span<const float> inputImaginary, gsl::span<float> output);
+    void inverseFourierTransform(const std::vector<float>& inputReal, const std::vector<float>& inputImaginary, std::vector<float>& output);
     
     //! The complex-to-complex inverse Fourier transform
-    void inverseFourierTransformComplex(gsl::span<const std::complex<float>> input, gsl::span<std::complex<float>> output);
+    void inverseFourierTransformComplex(const std::vector<std::complex<float>>& input, std::vector<std::complex<float>>& output);
     
     //! the complex-to-complex inverse Fourier transform
-    void inverseFourierTransformComplex(gsl::span<const float> inputReal, gsl::span<const float> inputImaginary, gsl::span<float> outputReal, gsl::span<float> outputImaginary);
+    void inverseFourierTransformComplex(const std::vector<float>& inputReal, const std::vector<float>& inputImaginary, std::vector<float>& outputReal, std::vector<float>& outputImaginary);
     
     //! The complex-to-real inverse Fourier transform
-    std::vector<float> inverseFourierTransform(gsl::span<const std::complex<float>> input);
+    std::vector<float> inverseFourierTransform(const std::vector<std::complex<float>>& input);
     
     //! The complex-to-complex inverse Fourier transform
-    std::vector<std::complex<float>> inverseFourierTransformComplex(gsl::span<const std::complex<float>> input);
+    std::vector<std::complex<float>> inverseFourierTransformComplex(const std::vector<std::complex<float>>& input);
     
     //! The short-time Fourier transform
-    std::vector<std::vector<std::complex<float>>> shortTimeFourierTransform(gsl::span<const float> input, FastFourierTransformBase& fourier, gsl::span<const float> window, size_t hopSize);
+    std::vector<std::vector<std::complex<float>>> shortTimeFourierTransform(const std::vector<float>& input, FastFourierTransformBase& fourier, const std::vector<float>& window, size_t hopSize);
     
     //! The short-time Fourier transform
-    std::vector<std::vector<std::complex<float>>> shortTimeFourierTransform(gsl::span<const float> input, size_t frameSize, gsl::span<const float> window, size_t hopSize);
+    std::vector<std::vector<std::complex<float>>> shortTimeFourierTransform(const std::vector<float>& input, size_t frameSize, const std::vector<float>& window, size_t hopSize);
 }
 
 #endif
