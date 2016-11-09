@@ -18,6 +18,14 @@ using namespace std;
 
 #include <iostream>
 
+constexpr int commonFactor(int a, int b)
+{
+    if (a == 1 || b == 1)
+        return 1;
+    else
+        return b == 0 ? a : commonFactor(b, a % b);
+}
+
 // Work to be done: gain factors of combfilters, primality test
 namespace bear::dsp
 {
@@ -45,9 +53,11 @@ namespace bear::dsp
 
                 combDelayTime = _combDelayTime * ratio;
 
-                // make sure successive delaytimes have no common factors (needs work)
-                while (combDelayTime % 2 == 0 || combDelayTime % 3 == 0)
+                // make sure successive delaytimes have no common factors
+                auto gcf = 0;
+                while (gcf != 1)
                 {
+                    gcf = commonFactor(_combDelayTime, combDelayTime);
                     combDelayTime += 1;
                 }
             }
@@ -56,11 +66,14 @@ namespace bear::dsp
             while (allPassDelayTime >= 1 && allPassFilters.size() < nrofAllPassFilters)
             {
                 allPassFilters.emplace_back(allPassDelayTime, gain);
+                auto _allPassDelayTime = allPassDelayTime;
                 allPassDelayTime /= 3;
 
-                // make sure successive delaytimes have no common factors (needs work)
-                while (allPassDelayTime % 2 == 0 || allPassDelayTime % 3 == 0)
+                // make sure successive delaytimes have no common factors
+                auto gcf = 0;
+                while (gcf != 1)
                 {
+                    gcf = commonFactor(_allPassDelayTime, allPassDelayTime);
                     allPassDelayTime += 1;
                 }
             }
