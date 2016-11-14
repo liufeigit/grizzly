@@ -13,6 +13,7 @@
 #include <vector>
 
 #include "FastFourierTransform.hpp"
+#include "Spectrum.hpp"
 
 namespace bear::dsp
 {
@@ -29,7 +30,7 @@ namespace bear::dsp
     void fourierTransformComplex(const std::vector<float>& inputReal, const std::vector<float>& inputImaginary, std::vector<float>& outputReal, std::vector<float>& outputImaginary);
     
     //! The real-to-complex forward Fourier transform
-    std::vector<std::complex<float>> fourierTransform(const std::vector<float>& input);
+    Spectrum<float> fourierTransform(const std::vector<float>& input);
     
     //! The complex-to-complex forward Fourier transform
     std::vector<std::complex<float>> fourierTransformComplex(const std::vector<std::complex<float>>& input);

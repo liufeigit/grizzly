@@ -49,7 +49,7 @@ namespace bear::dsp
         getFastFourierTransform(inputReal.size()).forwardComplex(inputReal, inputImaginary, outputReal, outputImaginary);
     }
     
-    vector<complex<float>> fourierTransform(const vector<float>& input)
+    Spectrum<float> fourierTransform(const vector<float>& input)
     {
         return getFastFourierTransform(input.size()).forward(input);
     }

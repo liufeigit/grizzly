@@ -39,6 +39,7 @@ set(HEADERS
     Parallel.hpp
     Ramp.hpp
     SpectralCentroid.hpp
+    Spectrum.hpp
     Transfer.hpp
 	UpSample.hpp
 	WaveShaper.hpp
