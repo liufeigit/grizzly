@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5.1)
 
-project(grizzly)
+project(grizzly CXX)
 
 add_definitions(-std=c++1z -Wall)
 include_directories(/usr/local/include)
@@ -34,7 +34,7 @@ set(HEADERS
 	HilbertTransform.hpp
 	HighFrequencyContent.hpp
 	InputStream.hpp
-	MidSide.hpp MidSide.cpp
+	MidSide.hpp
     Oscillator.hpp
     Parallel.hpp
     Ramp.hpp
