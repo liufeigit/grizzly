@@ -9,24 +9,26 @@
 #ifndef BEAR_DSP_CENTROID_HPP
 #define BEAR_DSP_CENTROID_HPP
 
-#include "Parallel.hpp"
-
-namespace bear::dsp
+namespace dsp
 {
     //! The centroid of a span of values
     /*! The centroid or 'center of gravity' is sum of values, weighted by its index, divided by the sum of values. */
     template <typename T>
     inline static float centroid(const std::vector<T>& values)
     {
-        // Accumulator
-        T indexWeightedSum = 0;
+        // Accumulation of the numerator and the denominator
+        T numerator = 0;
+        T denominator = 0;
         
-        // Multiply each value with its index number and accumulate, skip index 0
-        for (auto index = 1; index < values.size(); ++index)
-            indexWeightedSum += index * values[index];
+        // Multiply each value with its index number and accumulate
+        for (auto index = 0; index < values.size(); ++index)
+        {
+            numerator += index * values[index];
+            denominator += values[index];
+        }
         
-        return indexWeightedSum / sum<T>(values);
+        return numerator / denominator;
     }
 }
 
-#endif /* BEAR_DSP_CENTROID_HPP */
+#endif
