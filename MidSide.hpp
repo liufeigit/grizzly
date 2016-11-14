@@ -6,39 +6,92 @@
 //  Copyright © 2016 FrisHertz. All rights reserved.
 //
 
-#ifndef BEAR_AUDIO_MID_SIDE_HPP
-#define BEAR_AUDIO_MID_SIDE_HPP
+#ifndef GRIZZLY_MID_SIDE_HPP
+#define GRIZZLY_MID_SIDE_HPP
 
-#include <array>
+#include <utility>
 #include <vector>
 
-namespace bear::audio
+namespace dsp
 {
+    //! Sample with a left and right channel
+    template <class T>
+    struct Stereo
+    {
+    public:
+        Stereo() = default;
+        Stereo(const T& left, const T& right) : left(left), right(right) { }
+
+        T left; //!< The left channel
+        T right; //!< The right channel
+    };
+
+    //! Compare two stereos for equality
+    template <class T>
+    constexpr bool operator==(const Stereo<T>& lhs, const Stereo<T>& rhs)
+    {
+        return lhs.left == rhs.left && lhs.right == rhs.right;
+    }
+
+    //! Compare two stereos for inequality
+    template <class T>
+    constexpr bool operator!=(const Stereo<T>& lhs, const Stereo<T>& rhs)
+    {
+        return !(lhs == rhs);
+    }
+
+    //! Sample with a mid and side channel
+    template <class T>
+    struct MidSide
+    {
+        MidSide() = default;
+        MidSide(const T& mid, const T& side) : mid(mid), side(side) { }
+
+        T mid; //!< The mid channel
+        T side; //!< The side channel
+    };
+
+    //! Compare two mid-sides for equality
+    template <class T>
+    constexpr bool operator==(const MidSide<T>& lhs, const MidSide<T>& rhs)
+    {
+        return lhs.mid == rhs.mid && lhs.side == rhs.side;
+    }
+
+    //! Compare two mid-sides for inequality
+    template <class T>
+    constexpr bool operator!=(const MidSide<T>& lhs, const MidSide<T>& rhs)
+    {
+        return !(lhs == rhs);
+    }
+
     //! Convert a left and right stereo sample to mid-side
     template <class T>
-    constexpr std::array<T, 2> stereo2ms(const T& left, const T& right)
+    constexpr MidSide<T> stereo2ms(const T& left, const T& right)
     {
-        return {{(left + right) * T(0.5), (left - right) * T(0.5)}};
+        return {(left + right) * static_cast<T>(0.5), (left - right) * static_cast<T>(0.5)};
+    }
+
+    //! Convert a left and right stereo sample to mid-side
+    template <class T>
+    constexpr MidSide<T> stereo2ms(const Stereo<T>& stereo)
+    {
+        return stereo2ms(stereo.left, stereo.right);
     }
 
     //! Convert mid-side sample to a stereo left-right
     template <class T>
-    constexpr std::array<T, 2> ms2stereo(const T& mid, const T& side)
+    constexpr Stereo<T> ms2stereo(const T& mid, const T& side)
     {
-        return {{mid + side, mid - side}};
+        return {mid + side, mid - side};
     }
 
-    //! Convert a stereo signal to mid-side (in-place)
-    void stereo2ms(const std::vector<float>& left, const std::vector<float>& right, std::vector<float>& mid, std::vector<float>& side);
-    
-    //! Convert a stereo signal to mid-side
-    std::array<std::vector<float>, 2> stereo2ms(const std::vector<float>& left, const std::vector<float>& right);
-    
-    //! Convert a mid-side signal to stereo (in-place)
-    void ms2stereo(const std::vector<float>& mid, const std::vector<float>& side, std::vector<float>& left, std::vector<float>& right);
-
-    //! Convert a mid-side signal to stereo
-    std::array<std::vector<float>, 2> ms2stereo(const std::vector<float>& mid, const std::vector<float>& side);
+    //! Convert mid-side sample to a stereo left-right
+    template <class T>
+    constexpr Stereo<T> ms2stereo(const MidSide<T>& ms)
+    {
+        return ms2stereo(ms.mid, ms.side);
+    }
 }
 
-#endif /* BEAR_AUDIO_MID_SIDE_HPP */
+#endif

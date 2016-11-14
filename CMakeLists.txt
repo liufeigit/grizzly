@@ -50,7 +50,6 @@ set(SOURCES
 	FastFourierTransform.cpp
 	FourierTransform.cpp
 	HilbertTransform.cpp
-	MidSide.cpp
     Parallel.cpp
 	Window.cpp)
 
