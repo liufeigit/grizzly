@@ -32,7 +32,7 @@ namespace bear::dsp
         return result;
     }
 
-    vector<std::complex<float>> hilbertTransformComplex(const vector<std::complex<float>>& input, bool inverse)
+    Spectrum<float> hilbertTransformComplex(const vector<std::complex<float>>& input, bool inverse)
     {
         // Take the forward Fourier
         auto spectrum = fourierTransformComplex(input);
@@ -48,7 +48,7 @@ namespace bear::dsp
             spectrum[i] *= std::complex<float>(0, inverse ? -1 : 1);
 
         // Return the inverse fourier
-        return inverseFourierTransformComplex(spectrum);
+        return {inverseFourierTransformComplex(spectrum)};
     }
     
     vector<float> findIntrinsicModeFunction(const vector<float>& input)

@@ -29,9 +29,9 @@ namespace bear::dsp
         return *transforms.emplace(size, make_unique<FastFourierTransform>(size)).first->second;
     }
     
-    void fourierTransform(const vector<float>& input, vector<std::complex<float>>& output)
+    void fourierTransform(const vector<float>& input, Spectrum<float>& output)
     {
-        getFastFourierTransform(input.size()).forward(input, output);
+        getFastFourierTransform(input.size()).forward(input, output.data);
     }
     
     void fourierTransform(const vector<float>& input, vector<float>& outputReal, vector<float>& outputImaginary)
@@ -39,9 +39,9 @@ namespace bear::dsp
         getFastFourierTransform(input.size()).forward(input, outputReal, outputImaginary);
     }
     
-    void fourierTransformComplex(const vector<complex<float>>& input, vector<complex<float>>& output)
+    void fourierTransformComplex(const Spectrum<float>& input, Spectrum<float>& output)
     {
-        getFastFourierTransform(input.size()).forwardComplex(input, output);
+        getFastFourierTransform(input.size()).forwardComplex(input.data, output.data);
     }
     
     void fourierTransformComplex(const vector<float>& inputReal, const vector<float>& inputImaginary, vector<float>& outputReal, vector<float>& outputImaginary)
@@ -51,17 +51,17 @@ namespace bear::dsp
     
     Spectrum<float> fourierTransform(const vector<float>& input)
     {
-        return getFastFourierTransform(input.size()).forward(input);
+        return {getFastFourierTransform(input.size()).forward(input)};
     }
     
-    vector<complex<float>> fourierTransformComplex(const vector<complex<float>>& input)
+    Spectrum<float> fourierTransformComplex(const Spectrum<float>& input)
     {
-        return getFastFourierTransform(input.size()).forwardComplex(input);
+        return {getFastFourierTransform(input.size()).forwardComplex(input.data)};
     }
     
-    void inverseFourierTransform(const vector<complex<float>>& input, vector<float>& output)
+    void inverseFourierTransform(const Spectrum<float>& input, vector<float>& output)
     {
-        getFastFourierTransform(output.size()).inverse(input, output);
+        getFastFourierTransform(output.size()).inverse(input.data, output);
     }
     
     void inverseFourierTransform(const vector<float>& inputReal, const vector<float>& inputImaginary, vector<float>& output)
@@ -69,9 +69,9 @@ namespace bear::dsp
         getFastFourierTransform(output.size()).inverse(inputReal, inputImaginary, output);
     }
     
-    void inverseFourierTransformComplex(const vector<complex<float>>& input, vector<complex<float>>& output)
+    void inverseFourierTransformComplex(const Spectrum<float>& input, Spectrum<float>& output)
     {
-        getFastFourierTransform(output.size()).inverseComplex(input, output);
+        getFastFourierTransform(output.size()).inverseComplex(input.data, output.data);
     }
     
     void inverseFourierTransformComplex(const vector<float>& inputReal, const vector<float>& inputImaginary, vector<float>& outputReal, vector<float>& outputImaginary)
@@ -79,22 +79,22 @@ namespace bear::dsp
         getFastFourierTransform(outputReal.size()).inverseComplex(inputReal, inputImaginary, outputReal, outputImaginary);
     }
     
-    vector<float> inverseFourierTransform(const vector<complex<float>>& input)
+    vector<float> inverseFourierTransform(const Spectrum<float>& input)
     {
-        return getFastFourierTransform((input.size() - 1) * 2).inverse(input);
+        return getFastFourierTransform((input.size() - 1) * 2).inverse(input.data);
     }
     
-    vector<complex<float>> inverseFourierTransformComplex(const vector<complex<float>>& input)
+    Spectrum<float> inverseFourierTransformComplex(const Spectrum<float>& input)
     {
-        return getFastFourierTransform(input.size()).inverseComplex(input);
+        return {getFastFourierTransform(input.size()).inverseComplex(input.data)};
     }
     
-    vector<vector<complex<float>>> shortTimeFourierTransform(const vector<float>& input, size_t frameSize, const vector<float>& window, size_t hopSize)
+    vector<Spectrum<float>> shortTimeFourierTransform(const vector<float>& input, size_t frameSize, const vector<float>& window, size_t hopSize)
     {
         return shortTimeFourierTransform(input, getFastFourierTransform(frameSize), window, hopSize);
     }
     
-    vector<vector<complex<float>>> shortTimeFourierTransform(const vector<float>& input, FastFourierTransformBase& fourier, const vector<float>& window, size_t hopSize)
+    vector<Spectrum<float>> shortTimeFourierTransform(const vector<float>& input, FastFourierTransformBase& fourier, const vector<float>& window, size_t hopSize)
     {
         const auto frameSize = fourier.getSize();
         
@@ -116,7 +116,7 @@ namespace bear::dsp
         }
         
         // The resulting spectra will be placed here
-        vector<vector<complex<float>>> spectrum;
+        vector<Spectrum<float>> spectrum;
 
         size_t i = 0;
         while (true)

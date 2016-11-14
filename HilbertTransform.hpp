@@ -12,13 +12,15 @@
 #include <complex>
 #include <vector>
 
+#include "Spectrum.hpp"
+
 namespace bear::dsp
 {
     //! The Hilbert transform of a real signal
     std::vector<float> hilbertTransform(const std::vector<float>& input, bool inverse = false);
     
     //! The Hilbert transform fo a complex signal
-    std::vector<std::complex<float>> hilbertTransformComplex(const std::vector<std::complex<float>>& input, bool inverse = false);
+    Spectrum<float> hilbertTransformComplex(const std::vector<std::complex<float>>& input, bool inverse = false);
     
     //! Find the intrinsic mode function inside a signal
     std::vector<float> findIntrinsicModeFunction(const std::vector<float>& input);
