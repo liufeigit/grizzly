@@ -9,6 +9,7 @@
 #ifndef BEAR_DSP_OSCILLATOR_HPP
 #define BEAR_DSP_OSCILLATOR_HPP
 
+#include <cmath>
 #include <dsperados/math/utility.hpp>
 
 namespace bear::dsp
@@ -31,35 +32,35 @@ namespace bear::dsp
     template <typename T>
     constexpr T generateSaw(T phase)
     {
-        return 2 * math::wrap(phase + 0.5, 0, 1) - 1;
+        return 2 * math::wrap<T>(phase + 0.5, 0, 1) - 1;
     }
     
     //! Generate a bipolar square wave given a normalised phase
     template <typename T1, typename T2>
     constexpr T1 generateSquare(T1 phase, T2 pulseWidth)
     {
-        return math::wrap(phase, 0, 1) < pulseWidth ? 1 : -1;
+        return math::wrap<T1>(phase, 0, 1) < pulseWidth ? 1 : -1;
     }
     
     //! Generate a unipolar square wave given a normalised phase
     template <typename T1, typename T2>
     constexpr T1 generateUnipolarSquare(T1 phase, T2 pulseWidth)
     {
-        return math::wrap(phase, 0, 1) < pulseWidth ? 1 : 0;
+        return math::wrap<T1>(phase, 0, 1) < pulseWidth ? 1 : 0;
     }
     
     //! Generate a bipolar triangle wave given a normalised phase
     template <typename T>
     constexpr T generateTriangle(T phase)
     {
-        return 2 * fabs(2 * math::wrap(phase - 0.25, 0, 1) - 1) - 1;
+        return 2 * std::fabs(2 * math::wrap<T>(phase - 0.25, 0, 1) - 1) - 1;
     }
     
     //! Generate a unipolar triangle wave given a normalised phase
     template <typename T>
     constexpr T generateUnipolarTriangle(T phase)
     {
-        return math::wrap(phase, 0, 1) < 0.5 ? phase * 2 : (0.5 - (phase - 0.5)) * 2;
+        return math::wrap<T>(phase, 0, 1) < 0.5 ? phase * 2 : (0.5 - (phase - 0.5)) * 2;
     }
 }
 
