@@ -10,9 +10,9 @@
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
+#include <dsperados/math/access.hpp>
 
 #include "FourierTransform.hpp"
-#include "Parallel.hpp"
 
 using namespace std;
 
@@ -89,67 +89,43 @@ namespace bear::dsp
         return {getFastFourierTransform(input.size()).inverseComplex(input.data)};
     }
     
-    vector<Spectrum<float>> shortTimeFourierTransform(const vector<float>& input, size_t frameSize, const vector<float>& window, size_t hopSize)
+    vector<Spectrum<float>> shortTimeFourierTransform(const vector<float>& input, size_t frameSize, const vector<float>* window, size_t hopSize)
     {
         return shortTimeFourierTransform(input, getFastFourierTransform(frameSize), window, hopSize);
     }
     
-    vector<Spectrum<float>> shortTimeFourierTransform(const vector<float>& input, FastFourierTransformBase& fourier, const vector<float>& window, size_t hopSize)
+    vector<Spectrum<float>> shortTimeFourierTransform(const vector<float>& input, FastFourierTransformBase& fourier, const vector<float>* window, size_t hopSize)
     {
         const auto frameSize = fourier.getSize();
         
-        const vector<float>* theWindow = &window;
+        if (frameSize != window->size())
+            throw runtime_error("Frame size not equal to window size");
         
-        // Zero-pad the window
-        if (window.size() < frameSize)
-        {
-            static vector<float> w(frameSize, 0.0f);
-            auto offset = (frameSize - window.size()) / 2.0;
-            
-            for (auto i = 0; i < window.size(); ++i)
-                w[offset + i] = window[i];
-            
-            theWindow = &w;
-            // Or throw if the window is bigger than the frame size
-        } else if (frameSize < window.size()) {
-            throw runtime_error("Window size can't be bigger than frame size ()");
-        }
+        size_t numberOfFramesRequired = ceil(input.size() / hopSize);
         
-        // The resulting spectra will be placed here
-        vector<Spectrum<float>> spectrum;
-
+        vector<Spectrum<float>> Spectra;
+        Spectra.reserve(numberOfFramesRequired);
+        
         size_t i = 0;
-        while (true)
+        while (i < input.size())
         {
-            // Is there enough in the input left?
+            std::vector<float> vec;
             if (i + frameSize < input.size())
+                vec.insert(vec.begin(), input.begin() + i, input.begin() + i + frameSize);
+            else
             {
-                // Take a frame
-                vector<float> frame(input.begin() + i, input.begin() + i + frameSize);
-                
-                // Multiply the frame by a window
-                auto windowedFrame = multiply(frame, *theWindow);
-                
-                // Take the transform of the frame and place it in the spectrum vector
-                spectrum.emplace_back(fourier.forward(windowedFrame));
-            } else {
-                vector<float> frame(frameSize, 0.0f);
-                copy_n(&input[i], input.size() - i, frame.data());
-                
-                // Multiply the frame by a window
-                auto windowedFrame = multiply(frame, *theWindow);
-                
-                // Take the transform of the frame and place it in the spectrum vector
-                spectrum.emplace_back(fourier.forward(windowedFrame));
-                
-                // This was the last frame. Bail out of the while loop
-                break;
+                vec.insert(vec.begin(), input.begin() + i, input.end());
+                vec.resize(frameSize);
             }
             
-            // Hop
+            if (window)
+                std::transform(vec.begin(), vec.end(), window->begin(), vec.begin(), [](const float& lhs, const float& rhs){ return lhs * rhs; });
+            
+            Spectra.emplace_back(fourier.forward(vector<float>(vec)));
+            
             i += hopSize;
         }
         
-        return spectrum;
+        return Spectra;
     }
 }

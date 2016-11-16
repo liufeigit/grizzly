@@ -35,8 +35,8 @@ set(HEADERS
 	HighFrequencyContent.hpp
 	InputStream.hpp
 	MidSide.hpp
+    Normalise.hpp
     Oscillator.hpp
-    Parallel.hpp
     Ramp.hpp
     SpectralCentroid.hpp
     Spectrum.hpp
@@ -73,7 +73,7 @@ install (FILES ${OOURA_HEADERS} DESTINATION include/grizzly/Ooura)
 # Apple
 if (APPLE)
     set(APPLE_HEADERS
-        Apple/Parallel.hpp)
+        "")
 
 	set(APPLE_SOURCES
 		Apple/FastFourierTransformAccelerate.cpp)

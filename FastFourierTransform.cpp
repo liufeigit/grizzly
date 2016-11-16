@@ -6,9 +6,11 @@
 //  Copyright © 2016 Dsperados. All rights reserved.
 //
 
-#include "FastFourierTransform.hpp"
-#include "Parallel.hpp"
+#include <dsperados/math/interleave.hpp>
 
+#include "FastFourierTransform.hpp"
+
+using namespace math;
 using namespace std;
 
 namespace bear::dsp

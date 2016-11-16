@@ -54,10 +54,10 @@ namespace bear::dsp
     Spectrum<float> inverseFourierTransformComplex(const Spectrum<float>& input);
     
     //! The short-time Fourier transform
-    std::vector<Spectrum<float>> shortTimeFourierTransform(const std::vector<float>& input, FastFourierTransformBase& fourier, const std::vector<float>& window, size_t hopSize);
+    std::vector<Spectrum<float>> shortTimeFourierTransform(const std::vector<float>& input, FastFourierTransformBase& fourier, const std::vector<float>* window, size_t hopSize);
     
     //! The short-time Fourier transform
-    std::vector<Spectrum<float>> shortTimeFourierTransform(const std::vector<float>& input, size_t frameSize, const std::vector<float>& window, size_t hopSize);
+    std::vector<Spectrum<float>> shortTimeFourierTransform(const std::vector<float>& input, size_t frameSize, const std::vector<float>* window, size_t hopSize);
 }
 
 #endif

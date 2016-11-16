@@ -10,10 +10,10 @@
 #define BEAR_DSP_DOWN_SAMPLE_HPP
 
 #include <cstddef>
+#include <dsperados/math/linear.hpp>
 #include <stdexcept>
 #include <vector>
 
-#include "Parallel.hpp"
 #include "Window.hpp"
 
 namespace bear::dsp
@@ -104,7 +104,7 @@ namespace bear::dsp
         {
             float temp = 0;
             
-            dot(const std::vector<float>&(delayLine.data() + sample, numberOfSteps), factor,
+            math::dot(const std::vector<float>&(delayLine.data() + sample, numberOfSteps), factor,
                 const std::vector<float>&(filterKernel.data() + sample, numberOfSteps), factor,
                 temp);
             
@@ -147,11 +147,14 @@ namespace bear::dsp
         // Construct the kernel
         filterKernel = createSymmetricSincWindow(filterSize, 0.5 / factor);
         
+        // Construct the window
         auto window = createSymmetricKaiserWindow(filterSize, betaFactor);
-        auto windowedFilter = multiply(gsl::as_cspan(filterKernel), gsl::as_cspan(window));
         
-        normalizeSum(windowedFilter);
-        filterKernel = windowedFilter;
+        // Multiply kernel with window
+        std::transform(filterKernel.begin(), filterKernel.end(), window.begin(), filterKernel.begin(), std::multiplies<>()):
+        
+        // Make integral of kernel equal to one
+        normalizeSum(filterKernel);
     }
 }
 

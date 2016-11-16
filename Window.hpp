@@ -13,10 +13,16 @@
 
 namespace bear::dsp
 {
+    //! Create a rectangular window
+    std::vector<float> createRectangularWindow(size_t size, float amplitude = 1)
+    {
+        return std::vector<float>(size, amplitude);
+    }
+    
     //! Fill a triangle window
     void fillTriangleWindow(std::vector<float>& window, double t = 0.5);
     
-    //! Create triangle window
+    //! Create a triangle window
     std::vector<float> createTriangleWindow(size_t size, double t = 0.5);
     
     //! Create a Hann window

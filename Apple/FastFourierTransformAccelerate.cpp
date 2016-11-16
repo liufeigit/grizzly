@@ -6,11 +6,12 @@
 //  Copyright © 2016 Dsperados. All rights reserved.
 //
 
+#include <dsperados/math/interleave.hpp>
 #include <stdexcept>
 
 #include "../FastFourierTransform.hpp"
-#include "../Parallel.hpp"
 
+using namespace math;
 using namespace std;
 
 namespace bear::dsp
@@ -52,9 +53,8 @@ namespace bear::dsp
         // In the forward direction, the scale is 2 (for some reason), so scale back by a half
         // Probably because both the negative and positive frequencies get summed, or something. The complex-to-complex
         // DFT in Accelerate (see function below) doesn't need scaling).
-        const float factor = 0.5f;
-        multiply(real, factor, real);
-        multiply(imaginary, factor, imaginary);
+        std::transform(real.begin(), real.end(), real.begin(), [](const float& lhs) { return lhs * 0.5f; });
+        std::transform(imaginary.begin(), imaginary.end(), imaginary.begin(), [](const float& lhs) { return lhs * 0.5f; });
 
         // Because the Im[0] and Im[Nyquist] are always 0, vDSP stores the Re[Nyquist]
         // in Im[0], so that it can return one complex number less. Imho, this only makes
@@ -78,9 +78,8 @@ namespace bear::dsp
         // In the forward direction, the scale is 2 (for some reason), so scale back by a half
         // Probably because both the negative and positive frequencies get summed, or something. The complex-to-complex
         // DFT in Accelerate (see function below) doesn't need scaling).
-        const double factor = 0.5f;
-        multiply(real, factor, real);
-        multiply(imaginary, factor, imaginary);
+        std::transform(real.begin(), real.end(), real.begin(), [](const float& lhs) { return lhs * 0.5f; });
+        std::transform(imaginary.begin(), imaginary.end(), imaginary.begin(), [](const float& lhs) { return lhs * 0.5f; });
         
         // Because the Im[0] and Im[Nyquist] are always 0, vDSP stores the Re[Nyquist]
         // in Im[0], so that it can return one complex number less. Imho, this only makes
@@ -111,7 +110,7 @@ namespace bear::dsp
 
         // For inverse DFT, the scaling is Size, so scale back by multiplying with its reciprocal
         const float factor = 1.0f / output.size();
-        multiply(output, factor, output);
+        std::transform(output.begin(), output.end(), output.begin(), [&](const float& lhs) { return lhs * factor; });
     }
     
     void FastFourierTransformAccelerate::doInverse(const vector<double>& real, const vector<double>& imaginary, vector<double>& output)
@@ -132,7 +131,7 @@ namespace bear::dsp
         
         // For inverse DFT, the scaling is Size, so scale back by multiplying with its reciprocal
         const double factor = 1.0 / output.size();
-        multiply(output, factor, output);
+        std::transform(output.begin(), output.end(), output.begin(), [&](const float& lhs) { return lhs * factor; });
     }
     
     void FastFourierTransformAccelerate::doForwardComplex(const vector<float>& inReal, const vector<float>& inImaginary, vector<float>& outReal, vector<float>& outImaginary)
@@ -154,8 +153,8 @@ namespace bear::dsp
         
         // For inverse DFT, the scaling is Size, so scale back by multiplying with its reciprocal
         const float factor = 1.0f / outReal.size();
-        multiply(outReal, factor, outReal);
-        multiply(outImaginary, factor, outImaginary);
+        std::transform(outReal.begin(), outReal.end(), outReal.begin(), [&](const float& lhs) { return lhs * factor; });
+        std::transform(outImaginary.begin(), outImaginary.end(), outImaginary.begin(), [&](const float& lhs) { return lhs * factor; });
     }
     
     void FastFourierTransformAccelerate::doInverseComplex(const vector<double>& inReal, const vector<double>& inImaginary, vector<double>& outReal, vector<double>& outImaginary)
@@ -165,7 +164,7 @@ namespace bear::dsp
         
         // For inverse DFT, the scaling is Size, so scale back by multiplying with its reciprocal
         const double factor = 1.0 / outReal.size();
-        multiply(outReal, factor, outReal);
-        multiply(outImaginary, factor, outImaginary);
+        std::transform(outReal.begin(), outReal.end(), outReal.begin(), [&](const float& lhs) { return lhs * factor; });
+        std::transform(outImaginary.begin(), outImaginary.end(), outImaginary.begin(), [&](const float& lhs) { return lhs * factor; });
     }
 }

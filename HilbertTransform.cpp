@@ -7,12 +7,11 @@
 //
 
 #include <algorithm>
-
 #include <dsperados/math/spline.hpp>
+#include <dsperados/math/statistics.hpp>
 
 #include "FourierTransform.hpp"
 #include "HilbertTransform.hpp"
-#include "Parallel.hpp"
 
 using namespace math;
 using namespace std;
@@ -74,9 +73,11 @@ namespace bear::dsp
 
             auto maximaSignal = maximaSpline.span(0, sift.size());
 
-            auto m = mean(minimaSignal, maximaSignal);
-
-            sift = subtract(sift, m);
+            vector<float> m(minimaSignal.size());
+            
+            std::transform(minimaSignal.begin(), minimaSignal.end(), maximaSignal.begin(), m.begin(), [](const float& a, const float& b) { return (a - b) * 0.5; });
+            
+            std::transform(sift.begin(), sift.end(), m.begin(), sift.begin(), std::minus<>());
         }
     }
 
@@ -87,10 +88,10 @@ namespace bear::dsp
         result.residue.resize(input.size());
         copy(input.begin(), input.end(), result.residue.begin());
 
-        while (rootMeanSquare(result.residue) >= 0.01)
+        while (math::rootMeanSquare<float>(result.residue.begin(), result.residue.end()) >= 0.01)
         {
             result.intrinsicModeFunctions.emplace_back(findIntrinsicModeFunction(result.residue));
-            subtract(result.residue, result.intrinsicModeFunctions.back(), result.residue);
+            std::transform(result.residue.begin(), result.residue.end(), result.intrinsicModeFunctions.back().begin(), result.residue.begin(), std::minus<>());
         }
 
         return result;
