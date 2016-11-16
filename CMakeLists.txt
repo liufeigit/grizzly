@@ -36,12 +36,12 @@ set(HEADERS
 	InputStream.hpp
 	MidSide.hpp
     Normalise.hpp
-    Oscillator.hpp
     Ramp.hpp
     SpectralCentroid.hpp
     Spectrum.hpp
     Transfer.hpp
 	UpSample.hpp
+    Waveform.hpp
 	WaveShaper.hpp
 	Window.hpp
 	YinPitchDetection.hpp)

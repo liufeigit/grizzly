@@ -1,13 +1,13 @@
 //
-//  Oscillator.hpp
+//  Waveform.hpp
 //  bear
 //
 //  Created by Milan van der Meer on 25/07/16.
 //
 //
 
-#ifndef BEAR_DSP_OSCILLATOR_HPP
-#define BEAR_DSP_OSCILLATOR_HPP
+#ifndef BEAR_DSP_WAVEFORM_HPP
+#define BEAR_DSP_WAVEFORM_HPP
 
 #include <cmath>
 #include <dsperados/math/utility.hpp>
