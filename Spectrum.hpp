@@ -11,6 +11,7 @@
 
 #include <algorithm>
 #include <complex>
+#include <stdexcept>
 #include <vector>
 
 #include <dsperados/math/constants.hpp>
@@ -89,6 +90,44 @@ namespace bear::dsp
                            });
             
             return unwrappedPhases;
+        }
+        
+        //! Replace the real data of the spectrum
+        void replaceRealData(const std::vector<T>& real)
+        {
+            if (real.size() != data.size())
+                throw std::runtime_error("Sizes not equal");
+            
+            std::transform(data.begin(), data.end(), real.begin(), data.begin(), [](std::complex<T> lhs, T rhs) { lhs.real(rhs); });
+        }
+        
+        //! Replace the imaginary data of the spectrum
+        void repplaceImaginaryData(const std::vector<T>& imaginary)
+        {
+            if (imaginary.size() != data.size())
+                throw std::runtime_error("Sizes not equal");
+            
+            std::transform(data.begin(), data.end(), imaginary.begin(), data.begin(), [](std::complex<T> lhs, T rhs) { lhs.imag(rhs); });
+        }
+        
+        //! Replace the magnitudes of the spectrum
+        void replaceMagnitudes(const std::vector<T>& magnitudes)
+        {
+            if (magnitudes.size() != data.size())
+                throw std::runtime_error("Sizes not equal");
+            
+            for (auto bin = 0; bin < data.size(); ++bin)
+                data[bin] = std::polar(magnitudes[bin], std::arg(data[bin]));
+        }
+        
+        //! Replace the phases of the spectrum
+        void replacePhases(const std::vector<T>& phases)
+        {
+            if (phases.size() != data.size())
+                throw std::runtime_error("Sizes not equal");
+            
+            for (auto bin = 0; bin < data.size(); ++bin)
+                data[bin] = std::polar(std::abs(data[bin]), phases[bin]);
         }
         
         //! Return the size of the spectrum
