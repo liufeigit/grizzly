@@ -14,7 +14,7 @@
 
 #include "Ramp.hpp"
 
-namespace bear::dsp
+namespace dsp
 {
     //! Envelope
     /*! Envelope generator build-up from segments. Each segment describes a slope over time. */

@@ -15,7 +15,7 @@
 
 #include <dsperados/math/constants.hpp>
 
-namespace bear::dsp
+namespace dsp
 {
     //! Coefficients for a first-order, one-pole/one-zero filter
     template <class T>

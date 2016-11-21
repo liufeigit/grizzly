@@ -13,7 +13,7 @@
 using namespace math;
 using namespace std;
 
-namespace bear::dsp
+namespace dsp
 {
     FastFourierTransformBase::FastFourierTransformBase(size_t size) :
         size(size)

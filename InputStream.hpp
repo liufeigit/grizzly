@@ -16,7 +16,7 @@
 #include "Access.hpp"
 #include "Interpolation.hpp"
 
-namespace bear::dsp
+namespace dsp
 {
     //! Base class for input reading streams
     template <class T>

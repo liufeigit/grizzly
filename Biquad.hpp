@@ -12,7 +12,7 @@
 #include "BiquadCoefficients.hpp"
 #include "Filter.hpp"
 
-namespace bear::dsp
+namespace dsp
 {
     //! A biquad using Direct Form I
     /*! Biquad that computes samples using the Direct Form I topology */

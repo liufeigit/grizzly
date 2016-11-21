@@ -18,7 +18,7 @@
 #include "Delay.hpp"
 #include "Filter.hpp"
 
-namespace bear::dsp
+namespace dsp
 {
     //! Convolution, in the mathematical sense
     template <class T>

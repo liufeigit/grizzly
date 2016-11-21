@@ -16,7 +16,7 @@
 using namespace math;
 using namespace std;
 
-namespace bear::dsp
+namespace dsp
 {
     vector<float> hilbertTransform(const vector<float>& input, bool inverse)
     {

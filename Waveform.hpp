@@ -12,7 +12,7 @@
 #include <cmath>
 #include <dsperados/math/utility.hpp>
 
-namespace bear::dsp
+namespace dsp
 {
     //! Generate a bipolar sine wave given a normalised phase
     template <typename T>

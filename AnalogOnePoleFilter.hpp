@@ -14,7 +14,7 @@
 
 #include <dsperados/math/utility.hpp>
 
-namespace bear::dsp
+namespace dsp
 {
     //! Topology preserving one pole filter with resolved zero feedback delay
     /*! See "The Art Of VA Filter Design" by Vadim Zavalishin. */

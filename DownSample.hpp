@@ -16,7 +16,7 @@
 
 #include "Window.hpp"
 
-namespace bear::dsp
+namespace dsp
 {
     //! Downsample a vector of floats to a single float
     template <class T>

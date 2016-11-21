@@ -16,7 +16,7 @@
 
 #include <dsperados/math/utility.hpp>
 
-namespace bear::dsp
+namespace dsp
 {
     //! Topology preserving state variable filter with resolved zero feedback delay
     /*! See "Designing software synthesizer plug-ins in c++" by Will Pirkle.

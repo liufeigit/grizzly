@@ -12,7 +12,7 @@
 #include <complex>
 #include <vector>
 
-namespace bear::dsp
+namespace dsp
 {
     //! The analytic transform of a real signal
     std::vector<std::complex<float>> analyticTransform(const std::vector<float>& input);

@@ -11,7 +11,7 @@
 
 #include <vector>
 
-namespace bear::dsp
+namespace dsp
 {
     //! Create a rectangular window
     std::vector<float> createRectangularWindow(size_t size, float amplitude = 1)

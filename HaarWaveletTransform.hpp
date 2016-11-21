@@ -16,7 +16,7 @@
 
 #include <dsperados/math/utility.hpp>
 
-namespace bear::dsp
+namespace dsp
 {
     // The fast Haar wavelet transform is a series of linear homomorphic filters recursively applied to a signal or part of a signal.
     // Google Haar wavelet for it's basefunction. The input should be a power of 2 in length and will create an output of log2(N).

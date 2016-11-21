@@ -12,7 +12,7 @@
 #include <boost/circular_buffer.hpp>
 #include <dsperados/math/interpolation.hpp>
 
-namespace bear::dsp
+namespace dsp
 {
     //! A simple sample delay object
     /*! Delay based on a circular buffer, capable of interpolation */

@@ -15,7 +15,7 @@
 #include "FastFourierTransform.hpp"
 #include "Spectrum.hpp"
 
-namespace bear::dsp
+namespace dsp
 {
     //! The real-to-complex forward Fourier transform
     void fourierTransform(const std::vector<float>& input, Spectrum<float>& output);

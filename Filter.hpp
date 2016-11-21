@@ -9,7 +9,7 @@
 #ifndef BEAR_DSP_FILTER_HPP
 #define BEAR_DSP_FILTER_HPP
 
-namespace bear::dsp
+namespace dsp
 {
     //! A filter interface: takes an input sample, produces an output sample
     template <class In, class Out = In>

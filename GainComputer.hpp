@@ -11,7 +11,7 @@
 
 #include <unit/amplitude.hpp>
 
-namespace bear::dsp
+namespace dsp
 {
     //! Compressor gain estimation based on a typica mixing situation
     template <typename T1, typename T2>

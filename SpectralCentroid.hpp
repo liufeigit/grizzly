@@ -13,7 +13,7 @@
 
 #include "Centroid.hpp"
 
-namespace bear::dsp
+namespace dsp
 {
     template <class T>
     inline static unit::hertz<float> spectralCentroid(const std::vector<T>& magnitudes, unit::hertz<float> sampleRate)

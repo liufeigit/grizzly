@@ -13,7 +13,7 @@
 
 #include <dsperados/math/utility.hpp>
 
-namespace bear::dsp
+namespace dsp
 {
     template <typename T1, typename T2, typename T3>
     static inline T1 sigmoid(const T1& x, const T2& negativeFactor, const T3& positiveFactor)

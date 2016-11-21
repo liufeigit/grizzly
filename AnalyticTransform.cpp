@@ -13,7 +13,7 @@
 
 using namespace std;
 
-namespace bear::dsp
+namespace dsp
 {
     vector<std::complex<float>> analyticTransform(const vector<float>& input)
     {

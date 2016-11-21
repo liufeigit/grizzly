@@ -14,7 +14,7 @@
 using namespace math;
 using namespace std;
 
-namespace bear::dsp
+namespace dsp
 {
     void fillTriangleWindow(vector<float>& window, double t)
     {

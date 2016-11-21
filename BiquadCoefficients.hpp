@@ -15,7 +15,7 @@
 
 #include <dsperados/math/constants.hpp>
 
-namespace bear::dsp
+namespace dsp
 {
     //! Coefficients to a biquad
     /*! Credits to Robert Bristow-Johnson for providing the cooking formulas (see "Audio-EQ-cookbook") . Notice we use "a" for feed-forward and "b" for feed-back. */

@@ -13,20 +13,20 @@
 #include <cmath>
 #include <cstddef>
 #include <dsperados/math/analysis.hpp>
+#include <numeric>
 #include <stdexcept>
 #include <vector>
 
-namespace bear::dsp
+namespace dsp
 {
     //! Normalise an area so the integral of the signal equals one
-    template <class InputIterator, class OutputIterator, class T>
-    static inline void normaliseArea(InputIterator inBegin, InputIterator inEnd, OutputIterator outBegin, T sum = 1.l)
+    template <class InputIterator, class OutputIterator>
+    static inline void normaliseArea(InputIterator inBegin, InputIterator inEnd, OutputIterator outBegin)
     {
         auto integral = std::accumulate(inBegin, inEnd, 0.l);
-        auto factor = integral / sum;
         
         if (integral)
-            std::transform(inBegin, inEnd, outBegin, [&](const auto& x){ return x / factor; });
+            std::transform(inBegin, inEnd, outBegin, [&](const auto& x){ return x / integral; });
     }
     
     //! Normalise a signal

@@ -15,7 +15,7 @@
 
 #include <unit/hertz.hpp>
 
-namespace bear::dsp
+namespace dsp
 {
     //! A buffer of samples, sampled at a given rate
     template <class T>

@@ -16,7 +16,7 @@
 
 using namespace std;
 
-namespace bear::dsp
+namespace dsp
 {
     FastFourierTransform& getFastFourierTransform(size_t size)
     {

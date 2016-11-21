@@ -16,7 +16,7 @@
 #include "AnalogOnePoleFilter.hpp"
 #include <dsperados/math/utility.hpp>
 
-namespace bear::dsp
+namespace dsp
 {
     //! Topology preserving ladder filter with resolved zero feedback delay
     /*! See "Designing software synthesizer plug-ins in c++" by Will Pirkle.

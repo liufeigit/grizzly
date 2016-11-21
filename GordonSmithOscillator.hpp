@@ -14,7 +14,7 @@
 
 #include <dsperados/math/constants.hpp>
 
-namespace bear::dsp
+namespace dsp
 {
     //! Sine approximation using Gordon-Smith
     template <class T>

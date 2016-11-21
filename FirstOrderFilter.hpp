@@ -12,7 +12,7 @@
 #include "Filter.hpp"
 #include "FirstOrderCoefficients.hpp"
 
-namespace bear::dsp
+namespace dsp
 {
     //! A First-order, one-pole/one-zero filter (6bd/oct roll-off)
     template <class T, class CoeffType = double>

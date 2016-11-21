@@ -14,7 +14,7 @@
 
 #include "Spectrum.hpp"
 
-namespace bear::dsp
+namespace dsp
 {
     //! The Hilbert transform of a real signal
     std::vector<float> hilbertTransform(const std::vector<float>& input, bool inverse = false);

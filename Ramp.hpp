@@ -15,7 +15,7 @@
 
 #include <dsperados/math/utility.hpp>
 
-namespace bear::dsp
+namespace dsp
 {
     //! A linearly as/descending ramp signal
     /*! Outputs the current state and increments (or decrements if negative) with each call.

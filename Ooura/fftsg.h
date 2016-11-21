@@ -296,7 +296,7 @@ Appendix :
 #ifndef BEAR_DSP_OOURA_FFTSG_H
 #define BEAR_DSP_OOURA_FFTSG_H
 
-namespace bear::dsp
+namespace dsp
 {
     void cdft(int, int, double *, int *, double *);
     void rdft(int, int, double *, int *, double *);

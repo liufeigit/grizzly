@@ -17,7 +17,7 @@
 #include "FirstOrderFilter.hpp"
 #include <dsperados/math/utility.hpp>
 
-namespace bear::dsp
+namespace dsp
 {
     //! Analog style ADSR envelope generator
     /*! Envelope generator based on a charging and discharging a capacitor.

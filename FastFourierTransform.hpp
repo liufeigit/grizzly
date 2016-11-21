@@ -16,7 +16,7 @@
 #include <Accelerate/Accelerate.h>
 #endif
 
-namespace bear::dsp
+namespace dsp
 {
     //! Base class for Fourier transforms
     class FastFourierTransformBase

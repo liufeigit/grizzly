@@ -17,7 +17,7 @@
 #include <dsperados/math/constants.hpp>
 #include <unit/radian.hpp>
 
-namespace bear::dsp
+namespace dsp
 {
     //! Spectrum
     template <class T>

@@ -16,7 +16,7 @@
 
 #include "Window.hpp"
 
-namespace bear::dsp
+namespace dsp
 {
     //! Upsamples a single value by a factor
     template <class T>

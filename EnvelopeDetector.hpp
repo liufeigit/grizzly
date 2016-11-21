@@ -13,7 +13,7 @@
 #include "FirstOrderFilter.hpp"
 #include <dsperados/math/utility.hpp>
 
-namespace bear::dsp
+namespace dsp
 {
     //! Abstract bass class for envelope detectors
     template <class T>
