@@ -43,8 +43,7 @@ set(HEADERS
 	UpSample.hpp
     Waveform.hpp
 	WaveShaper.hpp
-	Window.hpp
-	YinPitchDetection.hpp)
+	Window.hpp)
 
 set(SOURCES
 	AnalyticTransform.cpp

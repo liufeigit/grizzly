@@ -20,13 +20,13 @@ namespace bear::dsp
 {
     //! Normalise an area so the integral of the signal equals one
     template <class InputIterator, class OutputIterator, class T>
-    static inline void normaliseArea(InputIterator inBegin, InputIterator inEnd, OutputIterator outBegin, T sum = 1.0l)
+    static inline void normaliseArea(InputIterator inBegin, InputIterator inEnd, OutputIterator outBegin, T sum = 1.l)
     {
-        auto factor = 1.0l / sum;
-        auto integral = std::accumulate(inBegin, inEnd, T(0));
+        auto integral = std::accumulate(inBegin, inEnd, 0.l);
+        auto factor = integral / sum;
         
         if (integral)
-            std::transform(inBegin, inEnd, outBegin, [&](const auto& x){ return x / (integral * factor); });
+            std::transform(inBegin, inEnd, outBegin, [&](const auto& x){ return x / factor; });
     }
     
     //! Normalise a signal
