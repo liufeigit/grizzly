@@ -9,65 +9,32 @@
 #ifndef Normalise_hpp
 #define Normalise_hpp
 
+#include <algorithm>
 #include <cmath>
 #include <cstddef>
+#include <dsperados/math/analysis.hpp>
 #include <stdexcept>
 #include <vector>
 
 namespace bear::dsp
 {
-    //! Normalize the sum of a function to a value (e.g. 1, 1 --> 0.5, 0.5 for sum = 1)
-    void normalizeSum(std::vector<float>& x, double sum = 1.0);
-    
-    //! Normalize a function to its highest absolute peak
-    void normalizeBiDirectional(std::vector<float>& x, double peakMaximum = 1.0);
-    
-    //! Normalize a function to its highest peak
-    void normalizeUniDirectional(std::vector<float>& x, double peakMaximum = 1.0);
-    
-    void normalizeSum(std::vector<float>& x, double sum)
+    //! Normalise an area so the integral of the signal equals one
+    template <class InputIterator, class OutputIterator, class T>
+    static inline void normaliseArea(InputIterator inBegin, InputIterator inEnd, OutputIterator outBegin, T sum = 1.0l)
     {
-        double gainFactor = 1.0 / sum;
-        double accumulator = 0;
+        auto factor = 1.0l / sum;
+        auto integral = std::accumulate(inBegin, inEnd, T(0));
         
-        for (auto& value : x)
-            accumulator += value;
-        
-        if (accumulator) // OF RUN TIME ERROR?!
-            for (auto& value : x)
-                value /= (accumulator * gainFactor);
+        if (integral)
+            std::transform(inBegin, inEnd, outBegin, [&](const auto& x){ return x / (integral * factor); });
     }
     
-    void normalizeBiDirectional(std::vector<float>& x, double peakMaximum)
+    //! Normalise a signal
+    template <class InputIterator, class OutputIterator>
+    static inline void normalise(InputIterator inBegin, InputIterator inEnd, OutputIterator outBegin)
     {
-        double highest = 0;
-        
-        for (auto& value : x)
-            if (fabs(value) > highest) highest = fabs(value);
-        
-        double gainFactor = fabs(peakMaximum) / highest;
-        
-        for (auto& value : x)
-            value *= gainFactor;
-    }
-    
-    void normalizeUniDirectional(std::vector<float>& x, double peakMaximum)
-    {
-        if (peakMaximum <= 0)
-            throw std::runtime_error("Peak maximum has to be higher than zero. Use normalizeBilateral instead?");
-        
-        double highest = 0;
-        
-        if (!highest)
-            throw std::runtime_error("There has to be at least one point above zero. Use normalizeBilateral instead?");
-        
-        for (auto& value : x)
-            if (value > highest) highest = value;
-        
-        double gainFactor = peakMaximum / highest;
-        
-        for (auto& value : x)
-            value *= gainFactor;
+        std::common_type_t<decltype(*inBegin), decltype(*outBegin)> peak = math::absolutePeak(std::vector<decltype(*inBegin)>(inBegin, inEnd));
+        std::transform(inBegin, inEnd, outBegin, [&](const auto& x){ return x / peak; });
     }
 }
 
