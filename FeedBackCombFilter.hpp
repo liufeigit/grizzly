@@ -37,9 +37,14 @@ namespace dsp
             return y;
         }
         
-        void setDelayTime(T delayTime)
+        void setDelayTime(float delayTime)
         {
             delayLine.delayTime = delayTime;
+        }
+        
+        void setMaxDelayTime(float maxDelayTime)
+        {
+            delayLine.resize(maxDelayTime);
         }
         
     public:
