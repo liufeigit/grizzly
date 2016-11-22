@@ -17,7 +17,7 @@
 
 #include "Delay.hpp"
 
-namespace bear::dsp
+namespace dsp
 {
     //! Delay interface
     template <class T>

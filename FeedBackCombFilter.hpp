@@ -12,7 +12,7 @@
 #include "DelayLine.hpp"
 #include "Filter.hpp"
 
-namespace bear::dsp
+namespace dsp
 {
     //! Feedforward Comb Filter
     template <class T>
