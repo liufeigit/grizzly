@@ -6,38 +6,36 @@
 //
 //
 
-#ifndef Normalize_hpp
-#define Normalize_hpp
+#ifndef GRIZZLY_NORMALIZE_HPP
+#define GRIZZLY_NORMALIZE_HPP
 
 #include <algorithm>
-#include <cmath>
-#include <cstddef>
-#include <dsperados/math/analysis.hpp>
 #include <numeric>
 #include <stdexcept>
-#include <vector>
+
+#include <dsperados/math/analysis.hpp>
 
 namespace dsp
 {
     //! Normalize an area so the integral of the signal equals one
     template <class InputIterator, class OutputIterator>
-    static inline void normalizeArea(InputIterator inBegin, InputIterator inEnd, OutputIterator outBegin)
+    void normalizeArea(InputIterator inBegin, InputIterator inEnd, OutputIterator outBegin)
     {
-        auto integral = std::accumulate(inBegin, inEnd, 0.l);
+        auto integral = std::accumulate(inBegin, inEnd, typename InputIterator::value_type{0});
         
         if (!integral)
-            throw std::runtime_error("Integral equals zero");
+            throw std::runtime_error("area equals zero");
             
         std::transform(inBegin, inEnd, outBegin, [&](const auto& x){ return x / integral; });
     }
     
     //! Normalize a signal
     template <class InputIterator, class OutputIterator>
-    static inline void normalize(InputIterator inBegin, InputIterator inEnd, OutputIterator outBegin)
+    void normalize(InputIterator inBegin, InputIterator inEnd, OutputIterator outBegin)
     {
         auto peak = *math::findAbsolutePeak(inBegin, inEnd);
         std::transform(inBegin, inEnd, outBegin, [&](const auto& x){ return x / peak; });
     }
 }
 
-#endif /* Normalise_hpp */
+#endif /* GRIZZLY_NORMALIZE_HPP */
