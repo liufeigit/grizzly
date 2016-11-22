@@ -56,9 +56,9 @@ namespace dsp
 
         while (true)
         {
-            auto minima = localMinima(sift);
-            auto maxima = localMaxima(sift);
-            auto crossings = zeroCrossings(sift);
+            auto minima = findLocalMinimaPositions(sift.begin(), sift.end());
+            auto maxima = findLocalMaximaPositions(sift.begin(), sift.end());
+            auto crossings = countZeroCrossings(sift.begin(), sift.end());
 
             if (minima.size() + maxima.size() - (int)crossings <= 1)
                 return sift;
