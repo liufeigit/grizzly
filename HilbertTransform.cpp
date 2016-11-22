@@ -6,10 +6,6 @@
 //  Copyright © 2016 FrisHertz. All rights reserved.
 //
 
-#include <algorithm>
-#include <dsperados/math/spline.hpp>
-#include <dsperados/math/statistics.hpp>
-
 #include "FourierTransform.hpp"
 #include "HilbertTransform.hpp"
 
@@ -48,52 +44,5 @@ namespace dsp
 
         // Return the inverse fourier
         return {inverseFourierTransformComplex(spectrum)};
-    }
-    
-    vector<float> findIntrinsicModeFunction(const vector<float>& input)
-    {
-        vector<float> sift(input.begin(), input.end());
-
-        while (true)
-        {
-            auto minima = findLocalMinimaPositions(sift.begin(), sift.end());
-            auto maxima = findLocalMaximaPositions(sift.begin(), sift.end());
-            auto crossings = countZeroCrossings(sift.begin(), sift.end());
-
-            if (minima.size() + maxima.size() - (int)crossings <= 1)
-                return sift;
-
-            CubicSpline minimaSpline;
-            minimaSpline.emplace<size_t>(minima, sift);
-
-            auto minimaSignal = minimaSpline.span(0, sift.size());
-
-            CubicSpline maximaSpline;
-            maximaSpline.emplace<size_t>(maxima, sift);
-
-            auto maximaSignal = maximaSpline.span(0, sift.size());
-
-            vector<float> m(minimaSignal.size());
-            
-            std::transform(minimaSignal.begin(), minimaSignal.end(), maximaSignal.begin(), m.begin(), [](const float& a, const float& b) { return (a - b) * 0.5; });
-            
-            std::transform(sift.begin(), sift.end(), m.begin(), sift.begin(), std::minus<>());
-        }
-    }
-
-   IntrinsicModeFunctions findIntrinsicModeFunctions(const vector<float>& input)
-    {
-        IntrinsicModeFunctions result;
-
-        result.residue.resize(input.size());
-        copy(input.begin(), input.end(), result.residue.begin());
-
-        while (math::rootMeanSquare<float>(result.residue.begin(), result.residue.end()) >= 0.01)
-        {
-            result.intrinsicModeFunctions.emplace_back(findIntrinsicModeFunction(result.residue));
-            std::transform(result.residue.begin(), result.residue.end(), result.intrinsicModeFunctions.back().begin(), result.residue.begin(), std::minus<>());
-        }
-
-        return result;
     }
 }
