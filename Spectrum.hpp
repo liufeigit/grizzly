@@ -6,8 +6,8 @@
 //
 //
 
-#ifndef Spectrum_hpp
-#define Spectrum_hpp
+#ifndef GRIZZLY_SPECTRUM_HPP
+#define GRIZZLY_SPECTRUM_HPP
 
 #include <algorithm>
 #include <complex>
@@ -31,12 +31,14 @@ namespace dsp
         Spectrum() = default;
         
         //! Construct a spectrum with a vector of bins
-        Spectrum(const std::vector<Bin>& spectrum) : data(spectrum)
+        Spectrum(const std::vector<Bin>& spectrum) :
+            data(spectrum)
         {
+            
         }
         
         //! Return the real spectrum
-        auto real() const
+        std::vector<T> real() const
         {
             std::vector<T> real(data.size());
             std::transform(data.begin(), data.end(), real.begin(), [&](auto bin){ return bin.real(); });
@@ -44,7 +46,7 @@ namespace dsp
         }
         
         //! Return the imaginary spectrum
-        auto imaginary() const
+        std::vector<T> imaginary() const
         {
             std::vector<T> imaginary(data.size());
             std::transform(data.begin(), data.end(), imaginary.begin(), [&](auto bin){ return bin.imag(); });
@@ -52,7 +54,7 @@ namespace dsp
         }
         
         //! return the magnitudes
-        auto magnitudes() const
+        std::vector<T> magnitudes() const
         {
             std::vector<T> magnitudes(data.size());
             std::transform(data.begin(), data.end(), magnitudes.begin(), [&](auto bin){ return std::abs(bin); });
@@ -60,7 +62,7 @@ namespace dsp
         }
         
         //! Return the phases
-        auto phases() const
+        std::vector<unit::radian<T>> phases() const
         {
             std::vector<unit::radian<T>> phases(data.size());
             std::transform(data.begin(), data.end(), phases.begin(), [&](auto bin){ return std::arg(bin); });
@@ -68,7 +70,7 @@ namespace dsp
         }
         
         //! Return the unwrapped phases
-        auto unwrappedPhases() const
+        std::vector<unit::radian<T>> unwrappedPhases() const
         {
             auto wrappedPhases = phases();
             std::vector<unit::radian<T>> unwrappedPhases(wrappedPhases.size());
@@ -77,17 +79,17 @@ namespace dsp
             
             signed multiplier = 0;
             std::transform(wrappedPhases.begin() + 1, wrappedPhases.end(), unwrappedPhases.begin() + 1, [&](auto value)
-                           {
-                               auto currentValue = value;
+            {
+                auto currentValue = value;
                                
-                               if (currentValue - previousValue > math::PI<T>)
-                                   multiplier--;
-                               else if (currentValue - previousValue < -math::PI<T>)
-                                   multiplier++;
-                               
-                               previousValue = currentValue;
-                               return value + math::TWO_PI<T> * multiplier;
-                           });
+                if (currentValue - previousValue > math::PI<T>)
+                    multiplier--;
+                else if (currentValue - previousValue < -math::PI<T>)
+                    multiplier++;
+               
+                previousValue = currentValue;
+                return value + math::TWO_PI<T> * multiplier;
+            });
             
             return unwrappedPhases;
         }
@@ -102,10 +104,10 @@ namespace dsp
         }
         
         //! Replace the imaginary data of the spectrum
-        void repplaceImaginaryData(const std::vector<T>& imaginary)
+        void replaceImaginaryData(const std::vector<T>& imaginary)
         {
             if (imaginary.size() != data.size())
-                throw std::runtime_error("Sizes not equal");
+                throw std::invalid_argument("Sizes not equal");
             
             std::transform(data.begin(), data.end(), imaginary.begin(), data.begin(), [](std::complex<T> lhs, T rhs) { lhs.imag(rhs); });
         }
@@ -114,7 +116,7 @@ namespace dsp
         void replaceMagnitudes(const std::vector<T>& magnitudes)
         {
             if (magnitudes.size() != data.size())
-                throw std::runtime_error("Sizes not equal");
+                throw std::invalid_argument("Sizes not equal");
             
             for (auto bin = 0; bin < data.size(); ++bin)
                 data[bin] = std::polar(magnitudes[bin], std::arg(data[bin]));
@@ -124,7 +126,7 @@ namespace dsp
         void replacePhases(const std::vector<T>& phases)
         {
             if (phases.size() != data.size())
-                throw std::runtime_error("Sizes not equal");
+                throw std::invalid_argument("Sizes not equal");
             
             for (auto bin = 0; bin < data.size(); ++bin)
                 data[bin] = std::polar(std::abs(data[bin]), phases[bin]);
@@ -134,10 +136,10 @@ namespace dsp
         auto size() const { return data.size(); }
         
         //! Return iterator at the begin of the spectrum
-        auto begin(){ return data.begin(); }
+        auto begin() { return data.begin(); }
         
         //! Return iterator at the end of the spectrum
-        auto end(){ return data.end(); }
+        auto end() { return data.end(); }
         
         //! Return const iterator at the begin of the spectrum
         auto begin() const { return data.begin(); }
@@ -157,4 +159,4 @@ namespace dsp
     };
 }
 
-#endif /* Spectrum_hpp */
+#endif /* GRIZZLY_SPECTRUM_HPP */
