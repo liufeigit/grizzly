@@ -19,57 +19,49 @@ namespace dsp
 {
     //! A linearly as/descending ramp signal
     /*! Outputs the current state and increments (or decrements if negative) with each call.
-        Output is then wrapped within its range and can therefore be used as an oscillator,
+        Output is then wrapped within a normalized range and can be used as an oscillator,
         or more typical, to drive the phase of another oscillator. */
     template <class T>
     class Ramp
     {
     public:
         //! Default constructor
-        /*! Range goes from 0 to 1 */
         Ramp() = default;
         
-        //! Construct the ramp
-        Ramp(const T& min, const T& max) :
-            min(min),
-            max(max)
+        Ramp(const T& phase)
         {
-            if (max < min)
-                throw std::invalid_argument("negative range not allowed");
-            
-            setState(min);
+            setPhase(phase);
         }
         
-        //! Set the ramp value for next callback
-        void setState(const T& value)
+        //! Set the phase for next callback, wrap if necessary
+        void setPhase(const T& phase)
         {
-            if (value >= max && end)
+            this->phase = math::wrap(phase, 0, 1);
+        }
+        
+        //! Increment the phase
+        void increment(const T& increment)
+        {
+            phase += increment;
+            if (phase >= 1 && end)
                 end();
             
-            y = math::wrap(value, min, max);
+            phase = math::wrap(phase, T(0), T(1));
         }
         
-        //! Output the current ramp value, increment and wrap (if necessary) for next callback
-        T operator()(const T& increment)
+        //! Get phase
+        T getPhase() const
         {
-            T output = y;
-            setState(y + increment);
-            
-            return output;
+            return phase;
         }
         
     public:
-        std::function<void(void)> end = [](){};
+        //! End function when ramp gets wrapped
+        std::function<void(void)> end;
 
     private:
-        //! The minimal value of the range
-        T min = 0;
-        
-        //! The maximal value of the range
-        T max = 1;
-        
-        //! Ramp output value
-        T y = 0;
+        //! Phase
+        T phase = 0;
     };
 }
 

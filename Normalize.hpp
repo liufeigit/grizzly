@@ -25,15 +25,17 @@ namespace dsp
     {
         auto integral = std::accumulate(inBegin, inEnd, 0.l);
         
-        if (integral)
-            std::transform(inBegin, inEnd, outBegin, [&](const auto& x){ return x / integral; });
+        if (!integral)
+            throw std::runtime_error("Integral equals zero");
+            
+        std::transform(inBegin, inEnd, outBegin, [&](const auto& x){ return x / integral; });
     }
     
     //! Normalize a signal
     template <class InputIterator, class OutputIterator>
     static inline void normalize(InputIterator inBegin, InputIterator inEnd, OutputIterator outBegin)
     {
-        std::common_type_t<decltype(*inBegin), decltype(*outBegin)> peak = math::absolutePeak(std::vector<decltype(*inBegin)>(inBegin, inEnd));
+        auto peak = math::absolutePeak(inBegin, inEnd);
         std::transform(inBegin, inEnd, outBegin, [&](const auto& x){ return x / peak; });
     }
 }
