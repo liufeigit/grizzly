@@ -15,31 +15,31 @@
 namespace dsp
 {
     //! Generate a bipolar sine wave given a normalised phase
-    template <typename T>
-    constexpr T generateSine(T phase)
+    template <typename T, typename Phase>
+    constexpr T generateSine(Phase phase)
     {
         return std::sin(math::TWO_PI<T> * phase);
     }
 
     //! Generate a unipolar sine wave given a normalised phase
-    template <typename T>
-    constexpr T generateUnipolarSine(T phase)
+    template <typename T, typename Phase>
+    constexpr T generateUnipolarSine(Phase phase)
     {
-        return std::sin(math::TWO_PI<T> * phase) * 0.5 + 0.5;
+        return generateSine<T>(phase) * 0.5 + 0.5;
     }
     
     //! Generate a bipolar saw wave given a normalised phase
-    template <typename T>
-    constexpr T generateSaw(T phase)
+    template <typename T, typename Phase>
+    constexpr T generateSaw(Phase phase)
     {
-        return 2 * math::wrap<T>(phase + 0.5, 0, 1) - 1;
+        return math::wrap<std::common_type_t<Phase, T>>(phase + 0.5, 0, 1) * 2 - 1;
     }
     
     //! Generate a bipolar square wave given a normalised phase
-    template <typename T1, typename T2>
-    constexpr T1 generateSquare(T1 phase, T2 pulseWidth)
+    template <typename T, typename Phase, typename PulseWidth>
+    constexpr T generateSquare(Phase phase, PulseWidth pulseWidth)
     {
-        return math::wrap<T1>(phase, 0, 1) < pulseWidth ? 1 : -1;
+        return math::wrap<Phase>(phase, 0, 1) < pulseWidth ? 1 : -1;
     }
     
     //! Generate a unipolar square wave given a normalised phase

@@ -6,8 +6,8 @@
 //  Copyright © 2016 Dsperados. All rights reserved.
 //
 
-#ifndef DMS_DSP_FIRST_ORDER_FILTERS_HPP
-#define DMS_DSP_FIRST_ORDER_FILTERS_HPP
+#ifndef GRIZZLY_FIRST_ORDER_FILTER_HPP
+#define GRIZZLY_FIRST_ORDER_FILTER_HPP
 
 #include "FirstOrderCoefficients.hpp"
 
@@ -59,4 +59,4 @@ namespace dsp
 }
 
 
-#endif /* DMS_DSP_FIRST_ORDER_FILTERS_HPP */
+#endif /* GRIZZLY_FIRST_ORDER_FILTER_HPP */
