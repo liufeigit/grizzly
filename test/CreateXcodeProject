@@ -1,0 +1,9 @@
+#! /bin/bash
+
+echo "Building for Xcode"
+
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+mkdir $DIR/Xcode
+cd $DIR/Xcode
+cmake -GXcode ..

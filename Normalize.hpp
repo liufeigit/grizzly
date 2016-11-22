@@ -1,13 +1,13 @@
 //
-//  Normalise.hpp
+//  Normalize.hpp
 //  grizzly
 //
 //  Created by Milan van der Meer on 16/11/16.
 //
 //
 
-#ifndef Normalise_hpp
-#define Normalise_hpp
+#ifndef Normalize_hpp
+#define Normalize_hpp
 
 #include <algorithm>
 #include <cmath>
@@ -19,9 +19,9 @@
 
 namespace dsp
 {
-    //! Normalise an area so the integral of the signal equals one
+    //! Normalize an area so the integral of the signal equals one
     template <class InputIterator, class OutputIterator>
-    static inline void normaliseArea(InputIterator inBegin, InputIterator inEnd, OutputIterator outBegin)
+    static inline void normalizeArea(InputIterator inBegin, InputIterator inEnd, OutputIterator outBegin)
     {
         auto integral = std::accumulate(inBegin, inEnd, 0.l);
         
@@ -29,9 +29,9 @@ namespace dsp
             std::transform(inBegin, inEnd, outBegin, [&](const auto& x){ return x / integral; });
     }
     
-    //! Normalise a signal
+    //! Normalize a signal
     template <class InputIterator, class OutputIterator>
-    static inline void normalise(InputIterator inBegin, InputIterator inEnd, OutputIterator outBegin)
+    static inline void normalize(InputIterator inBegin, InputIterator inEnd, OutputIterator outBegin)
     {
         std::common_type_t<decltype(*inBegin), decltype(*outBegin)> peak = math::absolutePeak(std::vector<decltype(*inBegin)>(inBegin, inEnd));
         std::transform(inBegin, inEnd, outBegin, [&](const auto& x){ return x / peak; });

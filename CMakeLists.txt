@@ -35,7 +35,7 @@ set(HEADERS
 	HighFrequencyContent.hpp
 	InputStream.hpp
 	MidSide.hpp
-    Normalise.hpp
+    Normalize.hpp
     Ramp.hpp
     SpectralCentroid.hpp
     Spectrum.hpp
