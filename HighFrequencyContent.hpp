@@ -6,14 +6,14 @@
 //  Copyright © 2015 FrisHertz. All rights reserved.
 //
 
-#ifndef BEAR_AUDIO_HIGH_FREQUENCY_CONTENT_HPP
-#define BEAR_AUDIO_HIGH_FREQUENCY_CONTENT_HPP
+#ifndef GRIZZLY_HIGH_FREQUENCY_CONTENT_HPP
+#define GRIZZLY_HIGH_FREQUENCY_CONTENT_HPP
 
 #include <unit/hertz.hpp>
 
 #include "../Dsp/WeightedSum.hpp"
 
-namespace bear::audio
+namespace dsp
 {
     //! Retrieve the high-frequency content according to Brossier
     template <class T>
