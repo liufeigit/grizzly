@@ -6,8 +6,8 @@
 //  Copyright © 2016 Dsperados. All rights reserved.
 //
 
-#ifndef BEAR_DSP_FIRST_ORDER_COEFFICIENTS_HPP
-#define BEAR_DSP_FIRST_ORDER_COEFFICIENTS_HPP
+#ifndef GRIZZLY_FIRST_ORDER_COEFFICIENTS_HPP
+#define GRIZZLY_FIRST_ORDER_COEFFICIENTS_HPP
 
 #include <cmath>
 #include <unit/hertz.hpp>
@@ -94,4 +94,4 @@ namespace dsp
     }
 }
 
-#endif /* BEAR_DSP_FIRST_ORDER_COEFFICIENTS_HPP */
+#endif /* GRIZZLY_FIRST_ORDER_COEFFICIENTS_HPP */

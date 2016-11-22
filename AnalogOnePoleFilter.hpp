@@ -6,8 +6,8 @@
 //  Copyright © 2015 Milan van de Meer. All rights reserved.
 //
 
-#ifndef BEAR_DSP_ANALOGONEPOLEFILTER_HPP
-#define BEAR_DSP_ANALOGONEPOLEFILTER_HPP
+#ifndef GRIZZLY_ANALOGONEPOLEFILTER_HPP
+#define GRIZZLY_ANALOGONEPOLEFILTER_HPP
 
 #include <experimental/optional>
 #include <unit/hertz.hpp>

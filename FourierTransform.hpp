@@ -6,8 +6,8 @@
 //  Copyright © 2015 FrisHertz. All rights reserved.
 //
 
-#ifndef BEAR_DSP_FOURIER_TRANSFORM_HPP
-#define BEAR_DSP_FOURIER_TRANSFORM_HPP
+#ifndef GRIZZLY_FOURIER_TRANSFORM_HPP
+#define GRIZZLY_FOURIER_TRANSFORM_HPP
 
 #include <complex>
 #include <vector>

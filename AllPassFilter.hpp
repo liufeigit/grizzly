@@ -6,8 +6,8 @@
 //  Copyright © 2016 Yuri Wilmering. All rights reserved.
 //
 
-#ifndef BEAR_DSP_ALL_PASS_FILTER_HPP
-#define BEAR_DSP_ALL_PASS_FILTER_HPP
+#ifndef GRIZZLY_ALL_PASS_FILTER_HPP
+#define GRIZZLY_ALL_PASS_FILTER_HPP
 
 #include <dsperados/math/constants.hpp>
 #include <vector>

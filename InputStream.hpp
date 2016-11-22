@@ -6,8 +6,8 @@
 //  Copyright © 2016 Dsperados. All rights reserved.
 //
 
-#ifndef BEAR_DSP_INPUT_STREAM_HPP
-#define BEAR_DSP_INPUT_STREAM_HPP
+#ifndef GRIZZLY_INPUT_STREAM_HPP
+#define GRIZZLY_INPUT_STREAM_HPP
 
 #include <boost/circular_buffer.hpp>
 #include <unit/discrete.hpp>

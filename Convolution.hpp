@@ -7,8 +7,8 @@
 //  Copyright © 2016 FrisHertz. All rights reserved.
 //
 
-#ifndef BEAR_DSP_CONVOLUTION_HPP
-#define BEAR_DSP_CONVOLUTION_HPP
+#ifndef GRIZZLY_CONVOLUTION_HPP
+#define GRIZZLY_CONVOLUTION_HPP
 
 #include <algorithm>
 #include <initializer_list>

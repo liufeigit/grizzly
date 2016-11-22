@@ -6,8 +6,8 @@
 //  Copyright © 2016 Dsperados. All rights reserved.
 //
 
-#ifndef BEAR_DSP_GORDON_SMITH_OSCILLATOR_HPP
-#define BEAR_DSP_GORDON_SMITH_OSCILLATOR_HPP
+#ifndef GRIZZLY_GORDON_SMITH_OSCILLATOR_HPP
+#define GRIZZLY_GORDON_SMITH_OSCILLATOR_HPP
 
 #include <cmath>
 #include <unit/hertz.hpp>
@@ -82,4 +82,4 @@ namespace dsp
     };
 }
 
-#endif /* BEAR_DSP_GORDON_SMITH_OSCILLATOR_HPP */
+#endif /* GRIZZLY_GORDON_SMITH_OSCILLATOR_HPP */

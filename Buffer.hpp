@@ -6,8 +6,8 @@
 //  Copyright (c) 2015 FrisHertz. All rights reserved.
 //
 
-#ifndef BEAR_DSP_BUFFER_HPP
-#define BEAR_DSP_BUFFER_HPP
+#ifndef GRIZZLY_BUFFER_HPP
+#define GRIZZLY_BUFFER_HPP
 
 #include <algorithm>
 #include <cstddef>
@@ -65,4 +65,4 @@ namespace dsp
     };
 }
 
-#endif // BEAR_DSP_BUFFER_HPP
+#endif // GRIZZLY_BUFFER_HPP

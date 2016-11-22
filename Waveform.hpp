@@ -6,8 +6,8 @@
 //
 //
 
-#ifndef BEAR_DSP_WAVEFORM_HPP
-#define BEAR_DSP_WAVEFORM_HPP
+#ifndef GRIZZLY_WAVEFORM_HPP
+#define GRIZZLY_WAVEFORM_HPP
 
 #include <cmath>
 #include <dsperados/math/utility.hpp>

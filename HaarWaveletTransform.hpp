@@ -6,8 +6,8 @@
 //  Copyright © 2016 FrisHertz. All rights reserved.
 //
 
-#ifndef BEAR_DSP_HAAR_WAVELET_TRANSFORM_HPP
-#define BEAR_DSP_HAAR_WAVELET_TRANSFORM_HPP
+#ifndef GRIZZLY_HAAR_WAVELET_TRANSFORM_HPP
+#define GRIZZLY_HAAR_WAVELET_TRANSFORM_HPP
 
 #include <cmath>
 #include <cstddef>

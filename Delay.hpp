@@ -6,8 +6,8 @@
 //  Copyright (c) 2015 FrisHertz. All rights reserved.
 //
 
-#ifndef BEAR_DSP_DELAY_HPP
-#define BEAR_DSP_DELAY_HPP
+#ifndef GRIZZLY_DELAY_HPP
+#define GRIZZLY_DELAY_HPP
 
 #include <boost/circular_buffer.hpp>
 #include <dsperados/math/interpolation.hpp>

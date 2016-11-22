@@ -6,8 +6,8 @@
 //  Copyright © 2015 FrisHertz. All rights reserved.
 //
 
-#ifndef BEAR_DSP_WINDOW_HPP
-#define BEAR_DSP_WINDOW_HPP
+#ifndef GRIZZLY_WINDOW_HPP
+#define GRIZZLY_WINDOW_HPP
 
 #include <vector>
 
@@ -47,4 +47,4 @@ namespace dsp
     std::vector<float> createSymmetricKaiserWindow(size_t size, double betaFactor);
 }
 
-#endif /* BEAR_DSP_WINDOW_HPP */
+#endif /* GRIZZLY_WINDOW_HPP */

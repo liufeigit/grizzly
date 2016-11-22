@@ -6,8 +6,8 @@
 //  Copyright © 2016 FrisHertz. All rights reserved.
 //
 
-#ifndef BEAR_DSP_ANALYTIC_TRANSFORM_HPP
-#define BEAR_DSP_ANALYTIC_TRANSFORM_HPP
+#ifndef GRIZZLY_ANALYTIC_TRANSFORM_HPP
+#define GRIZZLY_ANALYTIC_TRANSFORM_HPP
 
 #include <complex>
 #include <vector>
@@ -18,4 +18,4 @@ namespace dsp
     std::vector<std::complex<float>> analyticTransform(const std::vector<float>& input);
 }
 
-#endif /* BEAR_DSP_ANALYTIC_TRANSFORM_HPP */
+#endif /* GRIZZLY_ANALYTIC_TRANSFORM_HPP */

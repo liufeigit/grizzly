@@ -293,8 +293,8 @@ Appendix :
     w[] and ip[] are compatible with all routines.
 */
 
-#ifndef BEAR_DSP_OOURA_FFTSG_H
-#define BEAR_DSP_OOURA_FFTSG_H
+#ifndef GRIZZLY_OOURA_FFTSG_H
+#define GRIZZLY_OOURA_FFTSG_H
 
 namespace dsp
 {

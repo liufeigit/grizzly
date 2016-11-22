@@ -6,8 +6,8 @@
 //
 //
 
-#ifndef BEAR_DSP_RAMP_HPP
-#define BEAR_DSP_RAMP_HPP
+#ifndef GRIZZLY_RAMP_HPP
+#define GRIZZLY_RAMP_HPP
 
 #include <functional>
 #include <stdexcept>

@@ -6,8 +6,8 @@
 //  Copyright © 2015 Milan van de Meer. All rights reserved.
 //
 
-#ifndef BEAR_DSP_ANALOG_ENVELOPE_HPP
-#define BEAR_DSP_ANALOG_ENVELOPE_HPP
+#ifndef GRIZZLY_ANALOG_ENVELOPE_HPP
+#define GRIZZLY_ANALOG_ENVELOPE_HPP
 
 #include <cmath>
 #include <unit/hertz.hpp>

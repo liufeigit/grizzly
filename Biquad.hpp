@@ -6,8 +6,8 @@
 //  Copyright (c) 2015 FrisHertz. All rights reserved.
 //
 
-#ifndef BEAR_DSP_BIQUAD_HPP
-#define BEAR_DSP_BIQUAD_HPP
+#ifndef GRIZZLY_BIQUAD_HPP
+#define GRIZZLY_BIQUAD_HPP
 
 #include "BiquadCoefficients.hpp"
 

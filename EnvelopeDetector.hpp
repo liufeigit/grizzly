@@ -6,8 +6,8 @@
 //  Copyright © 2016 Dsperados. All rights reserved.
 //
 
-#ifndef BEAR_DSP_ENVELOPEDETECTOR_HPP
-#define BEAR_DSP_ENVELOPEDETECTOR_HPP
+#ifndef GRIZZLY_ENVELOPEDETECTOR_HPP
+#define GRIZZLY_ENVELOPEDETECTOR_HPP
 
 #include "FirstOrderCoefficients.hpp"
 #include "FirstOrderFilter.hpp"
@@ -174,4 +174,4 @@ namespace dsp
     
 }
 
-#endif /* BEAR_DSP_ENVELOPEDETECTOR_HPP */
+#endif /* GRIZZLY_ENVELOPEDETECTOR_HPP */

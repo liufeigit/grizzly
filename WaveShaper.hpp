@@ -6,8 +6,8 @@
 //  Copyright © 2016 Dsperados. All rights reserved.
 //
 
-#ifndef BEAR_DSP_WAVESHAPER_HPP
-#define BEAR_DSP_WAVESHAPER_HPP
+#ifndef GRIZZLY_WAVESHAPER_HPP
+#define GRIZZLY_WAVESHAPER_HPP
 
 #include <stdexcept>
 
@@ -63,4 +63,4 @@ namespace dsp
     }
 }
 
-#endif /* BEAR_DSP_WAVESHAPER_HPP */
+#endif /* GRIZZLY_WAVESHAPER_HPP */

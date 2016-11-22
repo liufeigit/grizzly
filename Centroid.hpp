@@ -6,8 +6,8 @@
 //  Copyright © 2015 FrisHertz. All rights reserved.
 //
 
-#ifndef BEAR_DSP_CENTROID_HPP
-#define BEAR_DSP_CENTROID_HPP
+#ifndef GRIZZLY_CENTROID_HPP
+#define GRIZZLY_CENTROID_HPP
 
 namespace dsp
 {

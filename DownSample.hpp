@@ -6,8 +6,8 @@
 //  Copyright © 2016 FrisHertz. All rights reserved.
 //
 
-#ifndef BEAR_DSP_DOWN_SAMPLE_HPP
-#define BEAR_DSP_DOWN_SAMPLE_HPP
+#ifndef GRIZZLY_DOWN_SAMPLE_HPP
+#define GRIZZLY_DOWN_SAMPLE_HPP
 
 #include <cstddef>
 #include <dsperados/math/linear.hpp>
