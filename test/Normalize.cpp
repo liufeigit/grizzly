@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <vector>
 
 #include "doctest.h"
@@ -7,16 +8,16 @@
 using namespace dsp;
 using namespace std;
 
-TEST_CASE("test Normalise.hpp")
+TEST_CASE("Normalize")
 {
     SUBCASE("normalise()")
     {
-        SUBCASE("Negative peak")
+        SUBCASE("negative")
         {
             vector<float> x = {0.1, -0.5};
             normalize(x.begin(), x.end(), x.begin());
             
-            SUBCASE("in Bounds")
+            SUBCASE("values in bounds")
             {
                 for (auto& value: x)
                 {
@@ -25,24 +26,19 @@ TEST_CASE("test Normalise.hpp")
                 }
             }
             
-            SUBCASE("aproximates -1")
+            SUBCASE("peak equals -1")
             {
-                float peak = 0;
-                
-                for (auto& val: x)
-                    if (std::abs(val) > peak)
-                        peak = std::abs(val);
-                
-                CHECK(std::abs(peak) == doctest::Approx(1.f));
+                auto peak = *min_element(x.begin(), x.end());
+                CHECK(peak == doctest::Approx(-1.f));
             }
         }
         
-        SUBCASE("Positive peak")
+        SUBCASE("positive")
         {
             vector<float> x = {-0.1, 0.5};
             normalize(x.begin(), x.end(), x.begin());
             
-            SUBCASE("in Bounds")
+            SUBCASE("values in bounds")
             {
                 for (auto& value: x)
                 {
@@ -51,14 +47,9 @@ TEST_CASE("test Normalise.hpp")
                 }
             }
             
-            SUBCASE("aproximates 1")
+            SUBCASE("peak equals 1")
             {
-                float peak = 0;
-                
-                for (auto& val: x)
-                    if (std::abs(val) > peak)
-                        peak = std::abs(val);
-                
+                auto peak = *max_element(x.begin(), x.end());
                 CHECK(std::abs(peak) == doctest::Approx(1.f));
             }
         }

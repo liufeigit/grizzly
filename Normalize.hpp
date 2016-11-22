@@ -33,8 +33,8 @@ namespace dsp
     template <class InputIterator, class OutputIterator>
     void normalize(InputIterator inBegin, InputIterator inEnd, OutputIterator outBegin)
     {
-        auto peak = *math::findAbsolutePeak(inBegin, inEnd);
-        std::transform(inBegin, inEnd, outBegin, [&](const auto& x){ return x / peak; });
+        auto absolutePeakValue = std::abs(*math::findAbsolutePeak(inBegin, inEnd));
+        std::transform(inBegin, inEnd, outBegin, [&](const auto& x){ return x / absolutePeakValue; });
     }
 }
 
