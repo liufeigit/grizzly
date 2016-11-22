@@ -5,50 +5,46 @@
 //  Created by Yuri Wilmering on 01/11/16.
 //  Copyright © 2016 Yuri Wilmering. All rights reserved.
 //
-#include <vector>
-
-#include "DelayLine.hpp"
-#include "Filter.hpp"
-
-using namespace bear;
-using namespace std;
 
 #ifndef BEAR_DSP_ALL_PASS_FILTER_HPP
 #define BEAR_DSP_ALL_PASS_FILTER_HPP
 
-namespace bear::dsp
+#include <dsperados/math/constants.hpp>
+#include <vector>
+
+#include "Delay.hpp"
+
+using namespace std;
+
+namespace dsp
 {
     template <class T>
-    class AllPassFilter : public dsp::Filter<T>
+    class AllPassFilter
     {
     public:
-        AllPassFilter(std::size_t maxDelayTime, float gain=0.618) :
-            delayLine(maxDelayTime),
-            gain(gain)
+        AllPassFilter(std::size_t maxDelayTime) :
+            delay(maxDelayTime)
         {
 
         }
 
-        T process(const T& x) final override
+        T process(const T& x, float delayTime, float gain = math::INVERSE_PHI<float>)
         {
-            const auto w = gain * delayLine.read() + x;
-            const auto y = gain * w - delayLine.read();
+            const auto w = gain * delay.read(delayTime) + x;
+            const auto y = gain * w - delay.read(delayTime);
 
-            delayLine.write(w);
+            delay.write(w);
 
             return y;
         }
-
-        void setDelayTime(T delayTime)
+        
+        T operator()(const T& x, float delayTime, float gain = math::INVERSE_PHI<float>)
         {
-          delayLine.delayTime = delayTime;
+            return process(x, delayTime, gain);
         }
 
-    public:
-        float gain = 0;
-
     private:
-        DelayLine<T> delayLine;
+        Delay<T> delay;
     };
 }
 

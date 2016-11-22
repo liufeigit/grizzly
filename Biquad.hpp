@@ -10,18 +10,17 @@
 #define BEAR_DSP_BIQUAD_HPP
 
 #include "BiquadCoefficients.hpp"
-#include "Filter.hpp"
 
 namespace dsp
 {
     //! A biquad using Direct Form I
     /*! Biquad that computes samples using the Direct Form I topology */
     template <class T, class CoeffType = double>
-    class BiquadDirectFormI : public Filter<T>
+    class BiquadDirectFormI
     {
     public:
         //! Compute a sample
-        constexpr T process(const T& x) override final
+        constexpr T process(const T& x)
         {
             const auto y = x * coefficients.a0 + xz1 * coefficients.a1 + xz2 * coefficients.a2 - coefficients.b1 * yz1 - coefficients.b2 * yz2;
             
@@ -32,6 +31,12 @@ namespace dsp
             yz1 = y;
             
             return y;
+        }
+        
+        //! Compute a sample
+        constexpr T operator()(const T& x)
+        {
+            return process(x);
         }
         
     public:
