@@ -17,7 +17,7 @@
 
 #include "Delay.hpp"
 
-namespace bear::dsp
+namespace dsp
 {
     //! Delay interface
     template <class T>
@@ -44,7 +44,7 @@ namespace bear::dsp
         //! The delay that will be used to read from the buffer
         /*! If delayTime > maxDelay given in the constructor, it will be clamped to the maximum delay time */
         double delayTime;
-
+        using Delay<T>::resize;
     private:
         using Delay<T>::read;
     };

@@ -12,7 +12,7 @@
 #include "DelayLine.hpp"
 #include "Filter.hpp"
 
-namespace bear::dsp
+namespace dsp
 {
     //! Feedforward Comb Filter
     template <class T>
@@ -37,9 +37,14 @@ namespace bear::dsp
             return y;
         }
         
-        void setDelayTime(T delayTime)
+        void setDelayTime(float delayTime)
         {
             delayLine.delayTime = delayTime;
+        }
+        
+        void setMaxDelayTime(float maxDelayTime)
+        {
+            delayLine.resize(maxDelayTime);
         }
         
     public:
