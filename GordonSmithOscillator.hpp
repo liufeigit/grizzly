@@ -32,11 +32,17 @@ namespace dsp
         }
         
         //! Compute the next sample
-        T operator()()
+        T process()
         {
             yq -= epsilon * y;
             
             return y += epsilon * yq;
+        }
+        
+        //! Compute the next sample
+        T operator()()
+        {
+            return process();
         }
         
         //! Change the frequency

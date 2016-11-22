@@ -13,18 +13,18 @@ namespace dsp
 {
     //! The centroid of a span of values
     /*! The centroid or 'center of gravity' is sum of values, weighted by its index, divided by the sum of values. */
-    template <typename T>
-    inline static float centroid(const std::vector<T>& values)
+    template <typename Iterator>
+    inline static float centroid(Iterator begin, Iterator end)
     {
         // Accumulation of the numerator and the denominator
-        T numerator = 0;
-        T denominator = 0;
+        typename Iterator::value_type numerator = 0;
+        typename Iterator::value_type denominator = 0;
         
         // Multiply each value with its index number and accumulate
-        for (auto index = 0; index < values.size(); ++index)
+        for (auto index = 0; begin != end; ++begin)
         {
-            numerator += index * values[index];
-            denominator += values[index];
+            numerator += *begin * index++;
+            denominator += *begin;
         }
         
         return numerator / denominator;

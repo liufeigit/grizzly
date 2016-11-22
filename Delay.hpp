@@ -37,7 +37,7 @@ namespace dsp
         
         //! Read from the delay line
         template <class Index, class Interpolator = math::LinearInterpolation>
-        T read (Index index, Interpolator interpolator = Interpolator()) const
+        T read(Index index, Interpolator interpolator = Interpolator()) const
         {
             return interpolate(data.begin(), data.end(), index, interpolator, math::ClampedAccess());
         }
