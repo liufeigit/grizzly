@@ -9,18 +9,17 @@
 #ifndef DMS_DSP_FIRST_ORDER_FILTERS_HPP
 #define DMS_DSP_FIRST_ORDER_FILTERS_HPP
 
-#include "Filter.hpp"
 #include "FirstOrderCoefficients.hpp"
 
 namespace dsp
 {
     //! A First-order, one-pole/one-zero filter (6bd/oct roll-off)
     template <class T, class CoeffType = double>
-    class FirstOrderFilter : public Filter<T>
+    class FirstOrderFilter
     {
     public:
         //! Compute a sample
-        constexpr T process(const T& x) override final
+        constexpr T process(const T& x)
         {
             // Compute the output
             const auto output = coefficients.a0 * x + coefficients.a1 * xz1 + coefficients.b1 * yz1;
@@ -31,6 +30,12 @@ namespace dsp
             
             // Return the outputs
             return output;
+        }
+        
+        //! Compute a sample
+        constexpr T operator()(const T& x)
+        {
+            return process(x);
         }
         
         //! Clear the delay elements

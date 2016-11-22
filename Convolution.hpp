@@ -16,13 +16,12 @@
 #include <vector>
 
 #include "Delay.hpp"
-#include "Filter.hpp"
 
 namespace dsp
 {
     //! Convolution, in the mathematical sense
     template <class T>
-    class Convolution : public Filter<T>
+    class Convolution
     {
     public:
         //! Construct without a kernel
@@ -41,7 +40,7 @@ namespace dsp
         }
         
         //! Process a single sample
-        T process(const T& x) override final
+        T process(const T& x)
         {
             // Write the input into the delay line
             delay.write(x);
@@ -52,6 +51,11 @@ namespace dsp
                 sum += kernel[h] * delay.read(h);
             
             return sum;
+        }
+        
+        T operator()(const T& x)
+        {
+            return process(x);
         }
         
         //! Process multiple samples

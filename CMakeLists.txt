@@ -19,16 +19,13 @@ set(HEADERS
 	BiquadCoefficients.hpp
 	Buffer.hpp
 	Centroid.hpp
+    CombFilter.hpp
 	Convolution.hpp
 	Delay.hpp
-	DelayLine.hpp
 	DownSample.hpp
 	Envelope.hpp
 	EnvelopeDetector.hpp
 	FastFourierTransform.hpp
-	FeedBackCombFilter.hpp
-	FeedForwardCombFilter.hpp
-	Filter.hpp
 	FirstOrderCoefficients.hpp
 	FirstOrderFilter.hpp
 	FourierTransform.hpp
