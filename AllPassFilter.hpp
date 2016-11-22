@@ -1,5 +1,5 @@
 //
-//  AllPass.hpp
+//  AllPassFilter.hpp
 //  wat
 //
 //  Created by Yuri Wilmering on 01/11/16.

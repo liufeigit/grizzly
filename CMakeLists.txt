@@ -9,6 +9,7 @@ add_library(grizzly SHARED "")
 install(TARGETS grizzly DESTINATION lib)
 
 set(HEADERS
+    AllPassFilter.hpp
 	AnalogEnvelope.hpp
 	AnalogLadderFilter.hpp
 	AnalogOnePoleFilter.hpp
