@@ -15,6 +15,32 @@ using namespace std;
 
 namespace dsp
 {
+    template <class T1, class T2, class T3>
+    void interleave(const std::vector<T1>& lhs, const std::vector<T2>& rhs, std::vector<std::complex<T3>>& out)
+    {
+        std::vector<T3> fout(out.size() * 2);
+        math::interleave(lhs.begin(), lhs.begin(), rhs.begin(), fout.begin());
+        
+        for (auto i = 0; i < out.size(); ++i)
+        {
+            out[i].real(fout[i * 2]);
+            out[i].imag(fout[i * 2 + 1]);
+        }
+    }
+    
+    template <class T1, class T2, class T3>
+    void deinterleave(const std::vector<std::complex<T1>>& in, std::vector<T2>& lhs, std::vector<T3>& rhs)
+    {
+        std::vector<float> fin(in.size() * 2);
+        for (auto i = 0; i < in.size(); ++i)
+        {
+            fin[i * 2] = in[i].real();
+            fin[i * 2 + 1] = in[i].imag();
+        }
+        
+        math::deinterleave(fin.begin(), fin.end(), lhs.begin(), rhs.begin());
+    }
+    
     FastFourierTransformBase::FastFourierTransformBase(size_t size) :
         size(size)
     {

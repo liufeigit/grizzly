@@ -45,7 +45,7 @@ namespace dsp
     void FastFourierTransformAccelerate::doForward(const vector<float>& input, vector<float>& real, vector<float>& imaginary)
     {
         // Split the input signal to even and odd arrays
-        deinterleave(input, evenFloat, oddFloat);
+        deinterleave(input.begin(), input.end(), evenFloat.begin(), oddFloat.begin());
 
         // Do the transform
         vDSP_DFT_Execute(floatSetup.forward, evenFloat.data(), oddFloat.data(), real.data(), imaginary.data());
@@ -70,7 +70,7 @@ namespace dsp
     void FastFourierTransformAccelerate::doForward(const vector<double>& input, vector<double>& real, vector<double>& imaginary)
     {
         // Split the input signal to even and odd arrays
-        deinterleave(input, evenDouble, oddDouble);
+        deinterleave(input.begin(), input.end(), evenDouble.begin(), oddDouble.begin());
         
         // Do the transform
         vDSP_DFT_ExecuteD(doubleSetup.forward, evenDouble.data(), oddDouble.data(), real.data(), imaginary.data());
@@ -106,7 +106,7 @@ namespace dsp
         vDSP_DFT_Execute(floatSetup.inverse, real.data(), imaginary_.data(), real_.data(), imaginary_.data());
 
         // Combine the even and odd output signals into one interleaved output signal
-        interleave(real_, imaginary_, output);
+        interleave(real_.begin(), real_.end(), imaginary_.begin(), output.begin());
 
         // For inverse DFT, the scaling is Size, so scale back by multiplying with its reciprocal
         const float factor = 1.0f / output.size();
@@ -127,7 +127,7 @@ namespace dsp
         vDSP_DFT_ExecuteD(doubleSetup.inverse, real.data(), imaginary_.data(), real_.data(), imaginary_.data());
         
         // Combine the even and odd output signals into one interleaved output signal
-        interleave(real_, imaginary_, output);
+        interleave(real_.begin(), real_.end(), imaginary_.begin(), output.begin());
         
         // For inverse DFT, the scaling is Size, so scale back by multiplying with its reciprocal
         const double factor = 1.0 / output.size();
