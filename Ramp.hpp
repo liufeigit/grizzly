@@ -28,6 +28,7 @@ namespace dsp
         //! Default constructor
         Ramp() = default;
         
+        //! Construct the ramp with an initial phase
         Ramp(const T& phase)
         {
             setPhase(phase);
@@ -36,7 +37,7 @@ namespace dsp
         //! Set the phase for next callback, wrap if necessary
         void setPhase(const T& phase)
         {
-            this->phase = math::wrap(phase, 0, 1);
+            this->phase = math::wrap<T>(phase, 0, 1);
         }
         
         //! Increment the phase
@@ -46,7 +47,7 @@ namespace dsp
             if (phase >= 1 && end)
                 end();
             
-            phase = math::wrap(phase, T(0), T(1));
+            phase = math::wrap<T>(phase, 0, 1);
         }
         
         //! Get phase
