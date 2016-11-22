@@ -61,7 +61,7 @@ namespace dsp
             The envelope is the output of a one-pole filter using a gate signal of 1 or 0 as input. */
         void setAttackShape(unit::proportion<float> maximumCharge)
         {
-            maximumCharge = clamp<float>(maximumCharge, 0.1, 0.99);
+            maximumCharge = math::clamp<float>(maximumCharge, 0.1, 0.99);
             this->maximumCharge = maximumCharge;
             normaliseFactor = 1.0 / maximumCharge;
             
