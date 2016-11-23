@@ -59,7 +59,7 @@ namespace dsp
     {
     public:
         FeedForwardCombFilter (const std::size_t maxDelay):
-        delay(maxDelay)
+            delay(maxDelay)
         {
             
         }
