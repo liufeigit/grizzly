@@ -25,9 +25,16 @@ namespace dsp
     {
     public:
         template <class BufferType, class PointerType, class ReferenceType>
-        class Iterator : public std::iterator<std::random_access_iterator_tag, std::ptrdiff_t, T, PointerType, ReferenceType>
+        class Iterator
         {
             friend class CircularBuffer;
+            
+        public:
+            using iterator_category = std::random_access_iterator_tag;
+            using value_type = T;
+            using difference_type = std::ptrdiff_t;
+            using pointer = PointerType;
+            using reference = ReferenceType;
             
         public:
             //! Dereference the iterator

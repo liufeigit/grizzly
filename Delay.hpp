@@ -9,6 +9,7 @@
 #ifndef GRIZZLY_DELAY_HPP
 #define GRIZZLY_DELAY_HPP
 
+#include <boost/circular_buffer.hpp>
 #include <dsperados/math/interpolation.hpp>
 
 #include "CircularBuffer.hpp"
@@ -39,7 +40,7 @@ namespace dsp
         template <class Index, class Interpolator = math::LinearInterpolation>
         T read(Index index, Interpolator interpolator = Interpolator()) const
         {
-            return static_cast<T>(math::interpolate(data.rbegin(), data.rend(), index, interpolator, math::ClampedAccess()));
+            return interpolate(data.rbegin(), data.rend(), index, interpolator, math::ClampedAccess());
         }
         
         //! Set the maximum delay
