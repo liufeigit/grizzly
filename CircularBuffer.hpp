@@ -93,7 +93,15 @@ namespace dsp
         
         //! Construct the buffer by feeding its samples directly
         CircularBuffer(std::initializer_list<T> elements) :
-            data{elements}
+            CircularBuffer(elements.begin(), elements.end())
+        {
+            
+        }
+        
+        //! Construct the buffer from an iterator range
+        template <typename Iterator>
+        CircularBuffer(Iterator begin, Iterator end) :
+            data(begin, end)
         {
             
         }

@@ -24,19 +24,20 @@ namespace dsp
     class Convolution
     {
     public:
-        //! Construct without a kernel
-        Convolution() = default;
-        
         //! Construct with a kernel
-        Convolution(std::initializer_list<T> kernel)
+        Convolution(std::initializer_list<T> kernel) :
+            Convolution(kernel.begin(), kernel.end())
         {
-            setKernel({kernel.begin(), kernel.end()});
+            
         }
         
         //! Construct with a kernel
-        Convolution(const std::vector<T>& kernel)
+        template <typename Iterator>
+        Convolution(Iterator begin, Iterator end) :
+            delay(std::distance(begin, end)),
+            kernel(begin, end)
         {
-            setKernel(kernel);
+            
         }
         
         //! Process a single sample
@@ -53,6 +54,7 @@ namespace dsp
             return sum;
         }
         
+        //! Process a single sample
         T operator()(const T& x)
         {
             return process(x);
@@ -66,9 +68,10 @@ namespace dsp
         }
         
         //! Change the kernel
-        void setKernel(const std::vector<T>& kernel)
+        template <typename Iterator>
+        void setKernel(Iterator begin, Iterator end)
         {
-            this->kernel.assign(kernel.begin(), kernel.end());
+            kernel.assign(begin, end);
             delay.resize(kernel.size());
         }
         
@@ -92,6 +95,9 @@ namespace dsp
             
             return output;
         }
+        
+        //! Return the kernel
+        const std::vector<T>& getKernel() const { return kernel; }
         
     private:
         //! Delay line used for input
