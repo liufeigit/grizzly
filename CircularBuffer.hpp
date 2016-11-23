@@ -25,9 +25,16 @@ namespace dsp
     {
     public:
         template <class BufferType, class PointerType, class ReferenceType>
-        class Iterator : public std::iterator<std::random_access_iterator_tag, std::ptrdiff_t, T, PointerType, ReferenceType>
+        class Iterator
         {
             friend class CircularBuffer;
+            
+        public:
+            using iterator_category = std::random_access_iterator_tag;
+            using value_type = T;
+            using difference_type = std::ptrdiff_t;
+            using pointer = PointerType;
+            using reference = ReferenceType;
             
         public:
             //! Dereference the iterator
@@ -93,14 +100,14 @@ namespace dsp
         
         //! Construct the buffer by feeding its samples directly
         CircularBuffer(std::initializer_list<T> elements) :
-            CircularBuffer(elements.begin(), elements.end())
+            data{elements}
         {
             
         }
         
         //! Construct the buffer from an iterator range
         template <typename Iterator>
-        CircularBuffer(Iterator begin, Iterator end) :
+            CircularBuffer(Iterator begin, Iterator end) :
             data(begin, end)
         {
             
@@ -153,6 +160,7 @@ namespace dsp
         std::reverse_iterator<const_iterator> crend() const { return std::reverse_iterator<const_iterator>(cbegin()); }
         
     private:
+        //! The actual buffer
         std::vector<T> data;
         
         //! The index pointing to the front of the buffer
