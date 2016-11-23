@@ -46,4 +46,19 @@ TEST_CASE("Convolution")
 		convolution.setKernel(kernel.begin(), kernel.end());
 		CHECK(convolution.getKernel() == kernel);
 	}
+
+	SUBCASE("convolve()")
+	{
+		std::vector<float> input = { 1, 0, 0, 0 };
+		std::vector<float> kernel = { 0.5, 0.5 };
+
+		auto result = convolve(input.begin(), input.end(), kernel.begin(), kernel.end());
+		CHECK(result.size() == input.size() + kernel.size() - 1);
+
+		CHECK(result[0] == doctest::Approx(0.5));
+		CHECK(result[1] == doctest::Approx(0.5));
+		CHECK(result[2] == doctest::Approx(0));
+		CHECK(result[3] == doctest::Approx(0));
+		CHECK(result[4] == doctest::Approx(0));
+	}
 }
