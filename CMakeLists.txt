@@ -35,7 +35,6 @@ set(HEADERS
 	HaarWaveletTransform.hpp
 	HilbertTransform.hpp
 	HighFrequencyContent.hpp
-	InputStream.hpp
 	MidSide.hpp
     Normalize.hpp
     Ramp.hpp
