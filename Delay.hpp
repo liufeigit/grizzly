@@ -46,7 +46,7 @@ namespace dsp
         //! Set the maximum delay
         void resize(std::size_t maximumDelayTime)
         {
-            data.resize(maximumDelayTime + 1);
+            data.resize_front(maximumDelayTime + 1);
         }
         
         //! Return the maximum number of delay samples

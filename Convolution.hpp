@@ -60,13 +60,6 @@ namespace dsp
             return process(x);
         }
         
-        //! Process multiple samples
-        std::vector<T> processor(const std::vector<T>& x)
-        {
-            std::vector<T> y(x.size());
-            std::transform(x.begin(), x.end(), y.begin(), &Convolution::process);
-        }
-        
         //! Change the kernel
         template <typename Iterator>
         void setKernel(Iterator begin, Iterator end)
