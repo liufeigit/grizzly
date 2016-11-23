@@ -9,8 +9,9 @@
 #ifndef GRIZZLY_DELAY_HPP
 #define GRIZZLY_DELAY_HPP
 
-#include <boost/circular_buffer.hpp>
 #include <dsperados/math/interpolation.hpp>
+
+#include "CircularBuffer.hpp"
 
 namespace dsp
 {
@@ -20,64 +21,39 @@ namespace dsp
     class Delay
     {
     public:
-        //! Construct with an empty delay line
-        Delay() = default;
-        
         //! Construct by feeding the maximum delay size
-        Delay(std::size_t maxDelay)
+        Delay(std::size_t maximumDelayTime) :
+            data(maximumDelayTime + 1)
         {
-            resize(maxDelay);
+            
         }
         
         //! Push a sample in the delay line
-        void write(const T& x)
+        template <class... Args>
+        void write(Args&&... args)
         {
-            data.push_front(x);
+            data.emplace_back(std::forward<Args&&>(args)...);
         }
         
         //! Read from the delay line
         template <class Index, class Interpolator = math::LinearInterpolation>
         T read(Index index, Interpolator interpolator = Interpolator()) const
         {
-            return interpolate(data.begin(), data.end(), index, interpolator, math::ClampedAccess());
+            return static_cast<T>(math::interpolate(data.rbegin(), data.rend(), index, interpolator, math::ClampedAccess()));
         }
         
         //! Set the maximum delay
-        void resize(std::size_t maxDelay)
+        void resize(std::size_t maximumDelayTime)
         {
-            data.resize(maxDelay + 1);
+            data.resize(maximumDelayTime + 1);
         }
         
         //! Return the maximum number of delay samples
-        std::size_t getMaxDelay() const { return data.size() - 1; }
-        
-        //! Begin for range for-loops
-        inline auto begin() { return data.begin(); }
-        
-        //! Begin for range for-loops
-        inline auto begin() const { return data.begin(); }
-        
-        //! Begin for range for-loops
-        inline auto rbegin() { return data.rbegin(); }
-        
-        //! Begin for range for-loops
-        inline auto rbegin() const { return data.rbegin(); }
-        
-        //! End for range for-loops
-        inline auto end() { return data.end(); }
-        
-        //! End for range for-loops
-        inline auto end() const { return data.end(); }
-        
-        //! End for range for-loops
-        inline auto rend() { return data.rend(); }
-        
-        //! End for range for-loops
-        inline auto rend() const { return data.rend(); }
+        std::size_t getMaximumDelayTime() const { return data.size() - 1; }
         
     private:
         //! The data in the delay line
-        boost::circular_buffer<T> data;
+        CircularBuffer<T> data;
     };
 }
 
