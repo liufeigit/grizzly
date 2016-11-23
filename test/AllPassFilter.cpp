@@ -39,4 +39,5 @@ TEST_CASE("test AllPassFilter.hpp")
         // check
         for (auto i = 0; i < bufferSize; i++)
             CHECK(buffer[i] == 0);
+    }
 }
