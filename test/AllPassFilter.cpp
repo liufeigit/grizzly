@@ -13,10 +13,10 @@ TEST_CASE("test AllPassFilter.hpp")
     {
         AllPassFilter<float> allPass(7);
 
-        std::cout << "0: " << allPass.process(1, 7, 0.167772) << std::endl;
+        // std::cout << "0: " << allPass.process(1, 7, 0.167772) << std::endl;
 
-        for (auto i = 1; i < 25; ++i)
-            std::cout << i << ": " << allPass.process(0, 7, 0.167772) << std::endl;
+        // for (auto i = 1; i < 25; ++i)
+        //     std::cout << i << ": " << allPass.process(0, 7, 0.167772) << std::endl;
     }
 
     SUBCASE("delaytime 0")
