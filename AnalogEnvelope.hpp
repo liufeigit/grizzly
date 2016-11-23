@@ -13,6 +13,7 @@
 #include <unit/hertz.hpp>
 #include <unit/proportion.hpp>
 #include <unit/time.hpp>
+#include <functional>
 
 #include "FirstOrderFilter.hpp"
 #include <dsperados/math/utility.hpp>
