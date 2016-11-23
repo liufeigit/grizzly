@@ -102,7 +102,8 @@ namespace dsp
         template <class... Args>
         void emplace_back(Args&&... args)
         {
-            data[front++] = T(std::forward<Args&&>(args)...);
+            data[front] = T(std::forward<Args&&>(args)...);
+            front = math::wrap<std::size_t>(front + 1, 0, data.size());
         }
         
         //! Access one of the elements in the buffer
