@@ -51,8 +51,7 @@ set(SOURCES
 	AnalyticTransform.cpp
 	FastFourierTransform.cpp
 	FourierTransform.cpp
-	HilbertTransform.cpp
-	Window.cpp)
+	HilbertTransform.cpp)
 
 target_sources(grizzly PRIVATE ${HEADERS} ${SOURCES})
 source_group(\\ FILES ${HEADERS} ${SOURCES})
