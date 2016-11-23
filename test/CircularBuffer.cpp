@@ -33,6 +33,14 @@ TEST_CASE("CircularBuffer")
 		REQUIRE(buffer.size() == 3);
 		CHECK(buffer[buffer.size() - 2] == 8);
 		CHECK(buffer[buffer.size() - 1] == 9);
+
+		buffer.emplace_back(1);
+		buffer.emplace_back(13);
+		buffer.emplace_back(-8);
+
+		CHECK(buffer[buffer.size() - 3] == 1);
+		CHECK(buffer[buffer.size() - 2] == 13);
+		CHECK(buffer[buffer.size() - 1] == -8);
 	}
 
 	SUBCASE("Subscript")
