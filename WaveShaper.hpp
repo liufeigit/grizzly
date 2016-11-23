@@ -9,57 +9,57 @@
 #ifndef GRIZZLY_WAVESHAPER_HPP
 #define GRIZZLY_WAVESHAPER_HPP
 
+#include <cmath>
 #include <stdexcept>
-
-#include <dsperados/math/utility.hpp>
 
 namespace dsp
 {
-    template <typename T1, typename T2, typename T3>
-    static inline T1 sigmoid(const T1& x, const T2& negativeFactor, const T3& positiveFactor)
+    //! Normalized sigmoid function
+    template <typename T>
+    static inline T sigmoid(const T& x, const double& negativeFactor, const double& positiveFactor)
     {
-        auto yAtX1Negative = (negativeFactor) / (1.0 + std::fabs(negativeFactor));
-        auto yAtX1Positive = (positiveFactor) / (1.0 + std::fabs(positiveFactor));
+        if (negativeFactor <= 0 || positiveFactor <=0)
+            throw std::runtime_error("Factor <= 0");
+        
+        auto yAtX1Negative = negativeFactor / (1 + std::abs(negativeFactor));
+        auto yAtX1Positive = positiveFactor / (1 + std::abs(positiveFactor));
         
         if (x > 0)
-            return ((x * positiveFactor) / (1.0 + fabs(x * positiveFactor))) / yAtX1Positive;
+            return ((x * positiveFactor) / (1 + std::abs(x * positiveFactor))) / yAtX1Positive;
         else if (x < 0)
-            return ((x * negativeFactor) / (1.0 + fabs(x * negativeFactor))) / yAtX1Negative;
+            return ((x * negativeFactor) / (1 + std::abs(x * negativeFactor))) / yAtX1Negative;
         else
             return 0;
     }
     
-    template <typename T1, typename T2, typename T3>
-    static inline T1 sigmoidTan(const T1& x, const T2& negativeFactor, const T3& positiveFactor)
+    //! Normalized sigmoid function using tan
+    template <typename T>
+    static inline T sigmoidTan(const T& x, const double& negativeFactor, const double& positiveFactor)
     {
+        if (negativeFactor <= 0 || positiveFactor <=0)
+            throw std::runtime_error("Factor <= 0");
+        
         if (x > 0)
-            return atan(x * positiveFactor) * (1.0 / atan(positiveFactor));
+            return std::atan(x * positiveFactor) * (1 / std::atan(positiveFactor));
         else if (x < 0)
-            return atan(x * negativeFactor) * (1.0 / atan(negativeFactor));
+            return atan(x * negativeFactor) * (1 / atan(negativeFactor));
         else
             return 0;
     }
     
-    template <typename T1, typename T2, typename T3>
-    T1 sigmoidExp(const T1& x, const T2& negativeFactor, const T3& positiveFactor)
+    //! Normalized sigmoid function using exp
+    template <typename T>
+    T sigmoidExp(const T& x, const double& negativeFactor, const double& positiveFactor)
     {
+        if (negativeFactor <= 0 || positiveFactor <=0)
+            throw std::runtime_error("Factor <= 0");
+        
         if (x > 0)
-            return (1 - exp(-x * positiveFactor)) / (1 - exp(-positiveFactor)) ;
+            return (1 - std::exp(-x * positiveFactor)) / (1 - std::exp(-positiveFactor)) ;
         else if (x < 0)
-            return (-1 + exp(x * negativeFactor)) / (1 - exp(-negativeFactor));
+            return (-1 + std::exp(x * negativeFactor)) / (1 - std::exp(-negativeFactor));
         else
             return 0;
-    }
-    
-    template <typename T1, typename T2>
-    static inline T1 hardClip(const T1& x, const T2& ceiling)
-    {
-        if (x > ceiling)
-            return ceiling;
-        else if (x < -ceiling)
-            return -ceiling;
-        else
-            return x;
     }
 }
 
