@@ -105,6 +105,14 @@ namespace dsp
             
         }
         
+        //! Construct the buffer from an iterator range
+        template <typename Iterator>
+            CircularBuffer(Iterator begin, Iterator end) :
+            data(begin, end)
+        {
+            
+        }
+        
         //! Put a new value at the back of the buffer
         template <class... Args>
         void emplace_back(Args&&... args)
@@ -152,6 +160,7 @@ namespace dsp
         std::reverse_iterator<const_iterator> crend() const { return std::reverse_iterator<const_iterator>(cbegin()); }
         
     private:
+        //! The actual buffer
         std::vector<T> data;
         
         //! The index pointing to the front of the buffer
