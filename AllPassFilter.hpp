@@ -43,6 +43,11 @@ namespace dsp
             return process(x, delayTime, gain);
         }
 
+        T getMaximumDelayTime()
+        {
+            return delay.getMaximumDelayTime();
+        }
+
     private:
         Delay<T> delay;
     };

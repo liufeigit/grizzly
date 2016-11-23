@@ -43,6 +43,25 @@ TEST_CASE("CircularBuffer")
 			CHECK(buffer[i] == 1);
 	}
 
+	SUBCASE("Resizing")
+	{
+		CircularBuffer<int> buffer = { 1, 2, 3, 4 };
+
+		SUBCASE("resize_front")
+		{
+			buffer.resize_front(5);
+			CHECK(buffer[0] == 0);
+			CHECK(buffer[4] == 4);
+		}
+
+		SUBCASE("resize_back")
+		{
+			buffer.resize_back(5);
+			CHECK(buffer[0] == 1);
+			CHECK(buffer[4] == 0);
+		}
+	}
+
 	SUBCASE("emplace_back")
 	{
 		CircularBuffer<int> buffer(3);	

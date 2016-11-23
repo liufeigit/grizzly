@@ -60,40 +60,12 @@ namespace dsp
             return process(x);
         }
         
-        //! Process multiple samples
-        std::vector<T> processor(const std::vector<T>& x)
-        {
-            std::vector<T> y(x.size());
-            std::transform(x.begin(), x.end(), y.begin(), &Convolution::process);
-        }
-        
         //! Change the kernel
         template <typename Iterator>
         void setKernel(Iterator begin, Iterator end)
         {
             kernel.assign(begin, end);
             delay.resize(kernel.size());
-        }
-        
-        //! Convolve two buffers, return a buffer with size input + kernel - 1
-        static std::vector<float> convolve(std::vector<T>& input, std::vector<T>& kernel)
-        {
-            std::vector<T> output(input.size() + kernel.size() - 1);
-            
-            for (auto sample = 0; sample < output.size(); ++sample)
-            {
-                for (auto h = 0; h < kernel.size(); ++h)
-                {
-                    if (sample - h < 0)
-                        continue;
-                    if (sample - h >= input.size())
-                        continue;
-                    
-                    output[sample] += kernel[h] * input[sample - h];
-                }
-            }
-            
-            return output;
         }
         
         //! Return the kernel
@@ -106,6 +78,38 @@ namespace dsp
         //! The convolution kernel
         std::vector<T> kernel;
     };
+    
+    //! Convolve two buffers, return a buffer with size input + kernel - 1
+    template <typename InputIterator, typename KernelIterator>
+    static std::vector<std::common_type_t<typename InputIterator::value_type, typename KernelIterator::value_type>>
+    convolve(InputIterator inBegin, InputIterator inEnd, KernelIterator kernelBegin, KernelIterator kernelEnd)
+    {
+        const auto inputSize = std::distance(inBegin, inEnd);
+        const auto kernelSize = std::distance(kernelBegin, kernelEnd);
+        
+        std::vector<std::common_type_t<typename InputIterator::value_type, typename KernelIterator::value_type>> output(inputSize + kernelSize - 1);
+        
+        InputIterator input = inBegin;
+        for (int sample = 0; sample < output.size(); ++sample)
+        {
+            InputIterator input2 = input++;
+            KernelIterator kernel = kernelBegin;
+            
+            for (int h = 0; h < kernelSize; ++h)
+            {
+                auto input3 = input2--;
+                if (sample - h < 0)
+                    continue;
+                
+                if (sample - h >= inputSize)
+                    continue;
+                
+                output[sample] += (*kernel++) * (*input3);
+            }
+        }
+        
+        return output;
+    }
 }
 
 

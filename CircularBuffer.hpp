@@ -139,6 +139,23 @@ namespace dsp
             return data[math::wrap<std::size_t>(front + index, 0, data.size())];
         }
         
+        //! Resize the buffer
+        void resize_back(std::size_t newSize)
+        {
+            std::vector<T> newData(begin(), end());
+            newData.resize(newSize);
+            data = newData;
+        }
+        
+        //! Resize the buffer
+        void resize_front(std::size_t newSize)
+        {
+            std::vector<T> newData(rbegin(), rend());
+            newData.resize(newSize);
+            std::reverse(newData.begin(), newData.end());
+            data = newData;
+        }
+        
         //! Return the size of the buffer
         std::size_t size() const { return data.size(); }
         
