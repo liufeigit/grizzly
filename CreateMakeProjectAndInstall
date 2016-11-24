@@ -7,3 +7,5 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 mkdir $DIR/Make
 cd $DIR/Make
 cmake ..
+make
+make install
