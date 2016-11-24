@@ -1,6 +1,6 @@
 #! /bin/bash
 
-echo "Building for Xcode"
+echo "building for Xcode..."
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 

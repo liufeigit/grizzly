@@ -1,6 +1,6 @@
 #! /bin/bash
 
-echo "Building for GNU Make"
+echo "building for GNU Make..."
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
