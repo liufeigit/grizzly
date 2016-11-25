@@ -10,6 +10,7 @@
 #define GRIZZLY_COMB_FILTER_HPP
 
 #include "Delay.hpp"
+#include <Functional>
 
 namespace dsp
 {
@@ -18,7 +19,7 @@ namespace dsp
     class FeedBackCombFilter
     {
     public:
-        FeedBackCombFilter (const std::size_t maxDelay):
+        FeedBackCombFilter (const std::size_t maxDelay = 0):
             delay(maxDelay)
         {
             
@@ -27,7 +28,7 @@ namespace dsp
         //! Process function, take an input
         T process(const T& x, float delayTime, float feedBack)
         {
-            const auto d = delay.read(delayTime);
+            const auto d = delayTime > 0 ? delay.read(delayTime - 1) : 0;
             const auto y = x + feedBack * (postDelay ? postDelay(d) : d);
             
             delay.write(y);
@@ -45,6 +46,11 @@ namespace dsp
             delay.resize(maxDelayTime);
         }
         
+        float getMaxDelayTime()
+        {
+            return delay.getMaximumDelayTime ();
+        }
+        
     public:
         //! PostDelay function
         std::function<T(const T&)> postDelay;
@@ -58,7 +64,7 @@ namespace dsp
     class FeedForwardCombFilter
     {
     public:
-        FeedForwardCombFilter (const std::size_t maxDelay):
+        FeedForwardCombFilter (const std::size_t maxDelay = 0):
         delay(maxDelay)
         {
             
@@ -83,6 +89,11 @@ namespace dsp
         void setMaxDelayTime(float maxDelayTime)
         {
             delay.resize(maxDelayTime);
+        }
+        
+        float getMaxDelayTime()
+        {
+            return delay.getMaximumDelayTime ();
         }
         
         
