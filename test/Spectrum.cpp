@@ -46,6 +46,14 @@ TEST_CASE("Spectrum")
         CHECK(phases[3].value == doctest::Approx(-2.2143));
     }
     
+    SUBCASE("unwrapped phases")
+    {
+        Spectrum<float> spectrum = vector<complex<float>>{ {-1, 0}, {-4, -5} };
+        auto unwrapped = spectrum.unwrappedPhases();
+        
+        CHECK(unwrapped[1].value == doctest::Approx(4.0377));
+    }
+    
     SUBCASE("replace magnitudes")
     {
         Spectrum<float> a = vector<complex<float>>{{0, 0}, {0, 0}};

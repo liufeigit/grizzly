@@ -1,23 +1,22 @@
 #! /bin/bash
 
-echo "installing..."
-
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+DIRNAME=${DIR##*/}
 
 # Check if Make directory exists
 if [ -d "$DIR/Make" ]
 then
+	printf "\ninstalling $DIRNAME with Make...\n"
 	cd $DIR/Make
 	make install
-	echo "installed with Make"
 else
 	# Check if Xcode directory exists
 	if [ -d "$DIR/Xcode" ]
 	then
+	printf "\ninstalling $DIRNAME with Xcode...\n"
 	cd $DIR/Xcode
 	xcodebuild -target install -configuration Release
-	echo "installed with Xcode"
 	else
-		echo "no build directory found"
+		printf "\nbuilt target not found for $DIRNAME\n"
 	fi
 fi

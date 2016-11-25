@@ -9,16 +9,15 @@
 #ifndef BEAR_AUDIO_SPECTRAL_CENTROID_HPP
 #define BEAR_AUDIO_SPECTRAL_CENTROID_HPP
 
+#include <dsperados/math/statistics.hpp>
 #include <unit/hertz.hpp>
-
-#include "Centroid.hpp"
 
 namespace dsp
 {
     template <class T>
     inline static unit::hertz<float> spectralCentroid(const std::vector<T>& magnitudes, unit::hertz<float> sampleRate)
     {
-        return dsp::centroid(magnitudes) * sampleRate / magnitudes.size();
+        return math::centroid(magnitudes.begin(), magnitudes.end()) * sampleRate / magnitudes.size();
     }
 }
 

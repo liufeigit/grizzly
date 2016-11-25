@@ -18,7 +18,6 @@ set(HEADERS
 	Biquad.hpp
 	BiquadCoefficients.hpp
 	Buffer.hpp
-	Centroid.hpp
     CircularBuffer.hpp
     CombFilter.hpp
 	Convolution.hpp
