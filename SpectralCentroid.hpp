@@ -9,15 +9,28 @@
 #ifndef BEAR_AUDIO_SPECTRAL_CENTROID_HPP
 #define BEAR_AUDIO_SPECTRAL_CENTROID_HPP
 
-#include <dsperados/math/statistics.hpp>
+//#include <dsperados/math/statistics.hpp>
 #include <unit/hertz.hpp>
 
 namespace dsp
 {
-    template <class T>
-    inline static unit::hertz<float> spectralCentroid(const std::vector<T>& magnitudes, unit::hertz<float> sampleRate)
+    //! The centroid of a range of values
+    /*! The centroid or 'center of gravity' is sum of values, weighted by its index, divided by the sum of values. */
+    template <typename Iterator>
+    inline static float spectralCentroidBin(Iterator begin, Iterator end)
     {
-        return math::centroid(magnitudes.begin(), magnitudes.end()) * sampleRate / magnitudes.size();
+        // Accumulation of the numerator and the denominator
+        typename Iterator::value_type numerator = 0;
+        typename Iterator::value_type denominator = 0;
+        
+        // Multiply each value with its index number and accumulate
+        for (auto index = 0; begin != end; ++begin)
+        {
+            numerator += *begin * index++;
+            denominator += *begin;
+        }
+        
+        return numerator / denominator;
     }
 }
 

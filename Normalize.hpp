@@ -34,7 +34,8 @@ namespace dsp
     void normalize(InputIterator inBegin, InputIterator inEnd, OutputIterator outBegin)
     {
         auto absoluteExtrema = std::abs(*math::findExtrema(inBegin, inEnd));
-        std::transform(inBegin, inEnd, outBegin, [&](const auto& x){ return x / absoluteExtrema; });
+        auto factor = 1.l / absoluteExtrema;
+        std::transform(inBegin, inEnd, outBegin, [&](const auto& x){ return x * factor; });
     }
 }
 
