@@ -32,62 +32,62 @@ namespace dsp
     
     void fourierTransform(const vector<float>& input, Spectrum<float>& output)
     {
-        getFastFourierTransform(input.size()).forward(input, output.data);
+        getFastFourierTransform(input.size()).forward(input.data(), output.begin());
     }
     
     void fourierTransform(const vector<float>& input, vector<float>& outputReal, vector<float>& outputImaginary)
     {
-        getFastFourierTransform(input.size()).forward(input, outputReal, outputImaginary);
+        getFastFourierTransform(input.size()).forward(input.data(), outputReal.data(), outputImaginary.data());
     }
     
     void fourierTransformComplex(const Spectrum<float>& input, Spectrum<float>& output)
     {
-        getFastFourierTransform(input.size()).forwardComplex(input.data, output.data);
+        getFastFourierTransform(input.size()).forwardComplex(input.begin(), output.begin());
     }
     
     void fourierTransformComplex(const vector<float>& inputReal, const vector<float>& inputImaginary, vector<float>& outputReal, vector<float>& outputImaginary)
     {
-        getFastFourierTransform(inputReal.size()).forwardComplex(inputReal, inputImaginary, outputReal, outputImaginary);
+        getFastFourierTransform(inputReal.size()).forwardComplex(inputReal.data(), inputImaginary.data(), outputReal.data(), outputImaginary.data());
     }
     
     Spectrum<float> fourierTransform(const vector<float>& input)
     {
-        return {getFastFourierTransform(input.size()).forward(input)};
+        return {getFastFourierTransform(input.size()).forward(input.data())};
     }
     
     Spectrum<float> fourierTransformComplex(const Spectrum<float>& input)
     {
-        return {getFastFourierTransform(input.size()).forwardComplex(input.data)};
+        return {getFastFourierTransform(input.size()).forwardComplex(input.begin())};
     }
     
     void inverseFourierTransform(const Spectrum<float>& input, vector<float>& output)
     {
-        getFastFourierTransform(output.size()).inverse(input.data, output);
+        getFastFourierTransform(output.size()).inverse(input.begin(), output.data());
     }
     
     void inverseFourierTransform(const vector<float>& inputReal, const vector<float>& inputImaginary, vector<float>& output)
     {
-        getFastFourierTransform(output.size()).inverse(inputReal, inputImaginary, output);
+        getFastFourierTransform(output.size()).inverse(inputReal.data(), inputImaginary.data(), output.data());
     }
     
     void inverseFourierTransformComplex(const Spectrum<float>& input, Spectrum<float>& output)
     {
-        getFastFourierTransform(output.size()).inverseComplex(input.data, output.data);
+        getFastFourierTransform(output.size()).inverseComplex(input.begin(), output.begin());
     }
     
     void inverseFourierTransformComplex(const vector<float>& inputReal, const vector<float>& inputImaginary, vector<float>& outputReal, vector<float>& outputImaginary)
     {
-        getFastFourierTransform(outputReal.size()).inverseComplex(inputReal, inputImaginary, outputReal, outputImaginary);
+        getFastFourierTransform(outputReal.size()).inverseComplex(inputReal.data(), inputImaginary.data(), outputReal.data(), outputImaginary.data());
     }
     
     vector<float> inverseFourierTransform(const Spectrum<float>& input)
     {
-        return getFastFourierTransform((input.size() - 1) * 2).inverse(input.data);
+        return getFastFourierTransform((input.size() - 1) * 2).inverse(input.begin());
     }
     
     Spectrum<float> inverseFourierTransformComplex(const Spectrum<float>& input)
     {
-        return {getFastFourierTransform(input.size()).inverseComplex(input.data)};
+        return {getFastFourierTransform(input.size()).inverseComplex(input.begin())};
     }
     
     vector<Spectrum<float>> shortTimeFourierTransform(const vector<float>& input, size_t frameSize, const vector<float>* window, size_t hopSize)
@@ -122,7 +122,7 @@ namespace dsp
             if (window)
                 std::transform(vec.begin(), vec.end(), window->begin(), vec.begin(), [](const float& lhs, const float& rhs){ return lhs * rhs; });
             
-            Spectra.emplace_back(fourier.forward(vector<float>(vec)));
+            Spectra.emplace_back(fourier.forward(vec.data()));
             
             i += hopSize;
         }

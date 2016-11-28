@@ -42,7 +42,7 @@ namespace dsp
         }
     }
     
-    void FastFourierTransformAccelerate::doForward(const float* input, float* real, float* imaginary)
+    void FastFourierTransformAccelerate::forward(const float* input, float* real, float* imaginary)
     {
         // Split the input signal to even and odd arrays
         math::deinterleave(input, input + size, evenFloat.begin(), oddFloat.begin());
@@ -67,7 +67,7 @@ namespace dsp
         imaginary[size / 2] = 0.0f;
     }
     
-    void FastFourierTransformAccelerate::doForward(const double* input, double* real, double* imaginary)
+    void FastFourierTransformAccelerate::forward(const double* input, double* real, double* imaginary)
     {
         // Split the input signal to even and odd arrays
         math::deinterleave(input, input + size, evenDouble.begin(), oddDouble.begin());
@@ -92,7 +92,7 @@ namespace dsp
         imaginary[size / 2] = 0.0f;
     }
     
-    void FastFourierTransformAccelerate::doInverse(const float* real, const float* imaginary, float* output)
+    void FastFourierTransformAccelerate::inverse(const float* real, const float* imaginary, float* output)
     {
         // Copy the input reals and imaginaries, so that we can change the format around to
         // the way vDSP accepts it
@@ -113,7 +113,7 @@ namespace dsp
         std::transform(output, output + size, output, [&](const float& lhs) { return lhs * factor; });
     }
     
-    void FastFourierTransformAccelerate::doInverse(const double* real, const double* imaginary, double* output)
+    void FastFourierTransformAccelerate::inverse(const double* real, const double* imaginary, double* output)
     {
         // Copy the input reals and imaginaries, so that we can change the format around to
         // the way vDSP accepts it
@@ -134,19 +134,19 @@ namespace dsp
         std::transform(output, output + size, output, [&](const double& lhs) { return lhs * factor; });
     }
     
-    void FastFourierTransformAccelerate::doForwardComplex(const float* inReal, const float* inImaginary, float* outReal, float* outImaginary)
+    void FastFourierTransformAccelerate::forwardComplex(const float* inReal, const float* inImaginary, float* outReal, float* outImaginary)
     {
         // Do the transform
         vDSP_DFT_Execute(floatComplexSetup.forward, inReal, inImaginary, outReal, outImaginary);
     }
     
-    void FastFourierTransformAccelerate::doForwardComplex(const double* inReal, const double* inImaginary, double* outReal, double* outImaginary)
+    void FastFourierTransformAccelerate::forwardComplex(const double* inReal, const double* inImaginary, double* outReal, double* outImaginary)
     {
         // Do the transform
         vDSP_DFT_ExecuteD(doubleComplexSetup.forward, inReal, inImaginary, outReal, outImaginary);
     }
     
-    void FastFourierTransformAccelerate::doInverseComplex(const float* inReal, const float* inImaginary, float* outReal, float* outImaginary)
+    void FastFourierTransformAccelerate::inverseComplex(const float* inReal, const float* inImaginary, float* outReal, float* outImaginary)
     {
         // Do the transform
         vDSP_DFT_Execute(floatComplexSetup.inverse, inReal, inImaginary, outReal, outImaginary);
@@ -157,7 +157,7 @@ namespace dsp
         std::transform(outImaginary, outImaginary + size, outImaginary, [&](const float& lhs) { return lhs * factor; });
     }
     
-    void FastFourierTransformAccelerate::doInverseComplex(const double* inReal, const double* inImaginary, double* outReal, double* outImaginary)
+    void FastFourierTransformAccelerate::inverseComplex(const double* inReal, const double* inImaginary, double* outReal, double* outImaginary)
     {
         // Do the transform
         vDSP_DFT_ExecuteD(doubleComplexSetup.inverse, inReal, inImaginary, outReal, outImaginary);

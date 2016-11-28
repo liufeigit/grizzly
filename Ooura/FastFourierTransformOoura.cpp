@@ -26,7 +26,7 @@ namespace dsp
         ip.front() = 0;
     }
 
-    void FastFourierTransformOoura::doForward(const float* input, float* real, float* imaginary)
+    void FastFourierTransformOoura::forward(const float* input, float* real, float* imaginary)
     {
         data.assign(input, input + size);
         
@@ -43,7 +43,7 @@ namespace dsp
         imaginary[size / 2] = 0;
     }
     
-    void FastFourierTransformOoura::doForward(const double* input, double* real, double* imaginary)
+    void FastFourierTransformOoura::forward(const double* input, double* real, double* imaginary)
     {
         data.assign(input, input + size);
         
@@ -60,7 +60,7 @@ namespace dsp
         imaginary[size / 2] = 0;
     }
     
-    void FastFourierTransformOoura::doInverse(const float* real, const float* imaginary, float* output)
+    void FastFourierTransformOoura::inverse(const float* real, const float* imaginary, float* output)
     {
         for (auto i = 0; i < size / 2; ++i)
         {
@@ -78,7 +78,7 @@ namespace dsp
         std::transform(output, output + size, output, [&](const float& x){ return x * factor; });
     }
     
-    void FastFourierTransformOoura::doInverse(const double* real, const double* imaginary, double* output)
+    void FastFourierTransformOoura::inverse(const double* real, const double* imaginary, double* output)
     {
         for (auto i = 0; i < size / 2; ++i)
         {
@@ -96,7 +96,7 @@ namespace dsp
         std::transform(output, output + size, output, [&](const double& x){ return x * factor; });
     }
     
-    void FastFourierTransformOoura::doForwardComplex(const float* inReal, const float* inImaginary, float* outReal, float* outImaginary)
+    void FastFourierTransformOoura::forwardComplex(const float* inReal, const float* inImaginary, float* outReal, float* outImaginary)
     {
         math::interleave(inReal, inReal + size, inImaginary, dataComplex.begin());
         
@@ -105,7 +105,7 @@ namespace dsp
         math::deinterleave(dataComplex.begin(), dataComplex.end(), outReal, outImaginary);
     }
     
-    void FastFourierTransformOoura::doForwardComplex(const double* inReal, const double* inImaginary, double* outReal, double* outImaginary)
+    void FastFourierTransformOoura::forwardComplex(const double* inReal, const double* inImaginary, double* outReal, double* outImaginary)
     {
         math::interleave(inReal, inReal + size, inImaginary, dataComplex.begin());
         
@@ -114,7 +114,7 @@ namespace dsp
         math::deinterleave(dataComplex.begin(), dataComplex.end(), outReal, outImaginary);
     }
     
-    void FastFourierTransformOoura::doInverseComplex(const float* inReal, const float* inImaginary, float* outReal, float* outImaginary)
+    void FastFourierTransformOoura::inverseComplex(const float* inReal, const float* inImaginary, float* outReal, float* outImaginary)
     {
         math::interleave(inReal, inReal + size, inImaginary, dataComplex.begin());
         
@@ -126,7 +126,7 @@ namespace dsp
         math::deinterleave(dataComplex.begin(), dataComplex.end(), outReal, outImaginary);
     }
     
-    void FastFourierTransformOoura::doInverseComplex(const double* inReal, const double* inImaginary, double* outReal, double* outImaginary)
+    void FastFourierTransformOoura::inverseComplex(const double* inReal, const double* inImaginary, double* outReal, double* outImaginary)
     {
         math::interleave(inReal, inReal + size, inImaginary, dataComplex.begin());
         
