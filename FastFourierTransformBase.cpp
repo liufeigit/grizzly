@@ -1,12 +1,16 @@
 //
-//  FastFourierTransform.cpp
+//  FastFourierTransformBase.cpp
 //  bear-dsp
 //
 //  Created by Stijn on 10/06/2016.
 //  Copyright © 2016 Dsperados. All rights reserved.
 //
 
-#include "FastFourierTransform.hpp"
+#include <cassert>
+
+#include <dsperados/math/interleave.hpp>
+
+#include "FastFourierTransformBase.hpp"
 
 using namespace math;
 using namespace std;

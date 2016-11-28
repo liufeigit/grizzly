@@ -9,7 +9,7 @@
 #include <dsperados/math/interleave.hpp>
 #include <stdexcept>
 
-#include "../FastFourierTransform.hpp"
+#include "FastFourierTransformAccelerate.hpp"
 
 using namespace math;
 using namespace std;

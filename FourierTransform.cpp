@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include <dsperados/math/access.hpp>
 
+#include "FastFourierTransform.hpp"
 #include "FourierTransform.hpp"
 
 using namespace std;
