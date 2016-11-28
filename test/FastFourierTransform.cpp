@@ -1,14 +1,19 @@
 #include "doctest.h"
 
-#include "../Apple/FastFourierTransformAccelerate.hpp"
 #include "../Ooura/FastFourierTransformOoura.hpp"
+#ifdef __APPLE__
+#include "../Apple/FastFourierTransformAccelerate.hpp"
+#endif
 
 using namespace dsp;
 using namespace std;
 
 TEST_CASE("FastFourierTransform")
 {
-    FastFourierTransformAccelerate ooura(8);
+    FastFourierTransformOoura ooura(8);
+#ifdef __APPLE__
+    FastFourierTransformAccelerate accelerate(8);
+#endif
     
     SUBCASE("Real")
     {
@@ -23,12 +28,26 @@ TEST_CASE("FastFourierTransform")
                 vector<float> real(5, 0);
                 vector<float> imaginary(5, 0);
                 
-                ooura.forward(realInputFloat.data(), real.data(), imaginary.data());
-                
-                for (auto i = 0; i < 5; ++i)
+                SUBCASE("Ooura")
                 {
-                    CHECK(real[i] == doctest::Approx(realOutputFloat[i]));
-                    CHECK(imaginary[i] == doctest::Approx(imaginaryOutputFloat[i]));
+                    ooura.forward(realInputFloat.data(), real.data(), imaginary.data());
+                    
+                    for (auto i = 0; i < 5; ++i)
+                    {
+                        CHECK(real[i] == doctest::Approx(realOutputFloat[i]));
+                        CHECK(imaginary[i] == doctest::Approx(imaginaryOutputFloat[i]));
+                    }
+                }
+                
+                SUBCASE("Accelerate")
+                {
+                    accelerate.forward(realInputFloat.data(), real.data(), imaginary.data());
+                    
+                    for (auto i = 0; i < 5; ++i)
+                    {
+                        CHECK(real[i] == doctest::Approx(realOutputFloat[i]));
+                        CHECK(imaginary[i] == doctest::Approx(imaginaryOutputFloat[i]));
+                    }
                 }
             }
             
@@ -36,10 +55,21 @@ TEST_CASE("FastFourierTransform")
             {
                 vector<float> output(8, 0);
                 
-                ooura.inverse(realOutputFloat.data(), imaginaryOutputFloat.data(), output.data());
+                SUBCASE("Ooura")
+                {
+                    ooura.inverse(realOutputFloat.data(), imaginaryOutputFloat.data(), output.data());
+                    
+                    for (auto i = 0; i < 8; ++i)
+                        CHECK(output[i] == doctest::Approx(realInputFloat[i]));
+                }
                 
-                for (auto i = 0; i < 8; ++i)
-                    CHECK(output[i] == doctest::Approx(realInputFloat[i]));
+                SUBCASE("Accelerate")
+                {
+                    accelerate.inverse(realOutputFloat.data(), imaginaryOutputFloat.data(), output.data());
+                    
+                    for (auto i = 0; i < 8; ++i)
+                        CHECK(output[i] == doctest::Approx(realInputFloat[i]));
+                }
             }
         }
         
@@ -54,12 +84,26 @@ TEST_CASE("FastFourierTransform")
                 vector<double> real(5, 0);
                 vector<double> imaginary(5, 0);
                 
-                ooura.forward(realInputDouble.data(), real.data(), imaginary.data());
-                
-                for (auto i = 0; i < 5; ++i)
+                SUBCASE("Ooura")
                 {
-                    CHECK(real[i] == doctest::Approx(realOutputDouble[i]));
-                    CHECK(imaginary[i] == doctest::Approx(imaginaryOutputDouble[i]));
+                    ooura.forward(realInputDouble.data(), real.data(), imaginary.data());
+                    
+                    for (auto i = 0; i < 5; ++i)
+                    {
+                        CHECK(real[i] == doctest::Approx(realOutputDouble[i]));
+                        CHECK(imaginary[i] == doctest::Approx(imaginaryOutputDouble[i]));
+                    }
+                }
+                
+                SUBCASE("Accelerate")
+                {
+                    accelerate.forward(realInputDouble.data(), real.data(), imaginary.data());
+                    
+                    for (auto i = 0; i < 5; ++i)
+                    {
+                        CHECK(real[i] == doctest::Approx(realOutputDouble[i]));
+                        CHECK(imaginary[i] == doctest::Approx(imaginaryOutputDouble[i]));
+                    }
                 }
             }
             
@@ -67,10 +111,21 @@ TEST_CASE("FastFourierTransform")
             {
                 vector<double> output(8, 0);
                 
-                ooura.inverse(realOutputDouble.data(), imaginaryOutputDouble.data(), output.data());
+                SUBCASE("Ooura")
+                {
+                    ooura.inverse(realOutputDouble.data(), imaginaryOutputDouble.data(), output.data());
+                    
+                    for (auto i = 0; i < 8; ++i)
+                        CHECK(output[i] == doctest::Approx(realInputDouble[i]));
+                }
                 
-                for (auto i = 0; i < 8; ++i)
-                    CHECK(output[i] == doctest::Approx(realInputDouble[i]));
+                SUBCASE("Accelerate")
+                {
+                    accelerate.inverse(realOutputDouble.data(), imaginaryOutputDouble.data(), output.data());
+                    
+                    for (auto i = 0; i < 8; ++i)
+                        CHECK(output[i] == doctest::Approx(realInputDouble[i]));
+                }
             }
         }
     }
