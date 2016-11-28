@@ -6,8 +6,6 @@
 //  Copyright © 2016 Dsperados. All rights reserved.
 //
 
-#include <dsperados/math/interleave.hpp>
-
 #include "FastFourierTransform.hpp"
 
 using namespace math;
@@ -19,7 +17,7 @@ namespace dsp
     void interleave(const std::vector<T1>& lhs, const std::vector<T2>& rhs, std::vector<std::complex<T3>>& out)
     {
         std::vector<T3> fout(out.size() * 2);
-        math::interleave(lhs.begin(), lhs.begin(), rhs.begin(), fout.begin());
+        math::interleave(lhs.begin(), lhs.end(), rhs.begin(), fout.begin());
         
         for (auto i = 0; i < out.size(); ++i)
         {
@@ -91,7 +89,7 @@ namespace dsp
         assert(real.size() == size / 2 + 1);
         assert(imaginary.size() == size / 2 + 1);
         
-        doForward(input, real, imaginary);
+        doForward(input.data(), real.data(), imaginary.data());
     }
     
     void FastFourierTransformBase::forward(const vector<double>& input, vector<double>& real, vector<double>& imaginary)
@@ -100,7 +98,7 @@ namespace dsp
         assert(real.size() == size / 2 + 1);
         assert(imaginary.size() == size / 2 + 1);
         
-        doForward(input, real, imaginary);
+        doForward(input.data(), real.data(), imaginary.data());
     }
     
     vector<float> FastFourierTransformBase::inverse(const vector<complex<float>>& input)
@@ -149,7 +147,7 @@ namespace dsp
         assert(imaginary.size() == size / 2 + 1);
         assert(output.size() == size);
         
-        doInverse(real, imaginary, output);
+        doInverse(real.data(), imaginary.data(), output.data());
     }
     
     void FastFourierTransformBase::inverse(const vector<double>& real, const vector<double>& imaginary, vector<double>& output)
@@ -158,7 +156,7 @@ namespace dsp
         assert(imaginary.size() == size / 2 + 1);
         assert(output.size() == size);
         
-        doInverse(real, imaginary, output);
+        doInverse(real.data(), imaginary.data(), output.data());
     }
     
     vector<complex<float>> FastFourierTransformBase::forwardComplex(const vector<complex<float>>& input)

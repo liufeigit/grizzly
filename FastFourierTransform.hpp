@@ -12,7 +12,10 @@
 #include <complex>
 #include <vector>
 
+#include <dsperados/math/interleave.hpp>
+
 #ifdef __APPLE__
+#define __FFT_ACCELERATE__
 #include <Accelerate/Accelerate.h>
 #endif
 
@@ -73,11 +76,11 @@ namespace dsp
         std::size_t size = 0;
         
     private:
-        virtual void doForward(const std::vector<float>& input, std::vector<float>& real, std::vector<float>& imaginary) = 0;
-        virtual void doForward(const std::vector<double>& input, std::vector<double>& real, std::vector<double>& imaginary) = 0;
+        virtual void doForward(const float* input, float* real, float* imaginary) = 0;
+        virtual void doForward(const double* input, double* real, double* imaginary) = 0;
         
-        virtual void doInverse(const std::vector<float>& real, const std::vector<float>& imaginary, std::vector<float>& output) = 0;
-        virtual void doInverse(const std::vector<double>& real, const std::vector<double>& imaginary, std::vector<double>& output) = 0;
+        virtual void doInverse(const float* real, const float* imaginary, float* output) = 0;
+        virtual void doInverse(const double* real, const double* imaginary, double* output) = 0;
         
         virtual void doForwardComplex(const std::vector<float>& inReal, const std::vector<float>& inImaginary, std::vector<float>& outReal, std::vector<float>& outImaginary) = 0;
         virtual void doForwardComplex(const std::vector<double>& inReal, const std::vector<double>& inImaginary, std::vector<double>& outReal, std::vector<double>& outImaginary) = 0;
@@ -94,11 +97,11 @@ namespace dsp
         FastFourierTransformAccelerate(std::size_t size);
         
     private:
-        void doForward(const std::vector<float>& input, std::vector<float>& real, std::vector<float>& imaginary) override final;
-        void doForward(const std::vector<double>& input, std::vector<double>& real, std::vector<double>& imaginary) override final;
+        void doForward(const float* input, float* real, float* imaginary) override final;
+        void doForward(const double* input, double* real, double* imaginary) override final;
         
-        void doInverse(const std::vector<float>& real, const std::vector<float>& imaginary, std::vector<float>& output) override final;
-        void doInverse(const std::vector<double>& real, const std::vector<double>& imaginary, std::vector<double>& output) override final;
+        void doInverse(const float* real, const float* imaginary, float* output) override final;
+        void doInverse(const double* real, const double* imaginary, double* output) override final;
         
         void doForwardComplex(const std::vector<float>& inReal, const std::vector<float>& inImaginary, std::vector<float>& outReal, std::vector<float>& outImaginary) override final;
         void doForwardComplex(const std::vector<double>& inReal, const std::vector<double>& inImaginary, std::vector<double>& outReal, std::vector<double>& outImaginary) override final;
@@ -152,11 +155,11 @@ namespace dsp
         FastFourierTransformOoura(std::size_t size);
         
     private:
-        void doForward(const std::vector<float>& input, std::vector<float>& real, std::vector<float>& imaginary) override final;
-        void doForward(const std::vector<double>& input, std::vector<double>& real, std::vector<double>& imaginary) override final;
+        void doForward(const float* input, float* real, float* imaginary) override final;
+        void doForward(const double* input, double* real, double* imaginary) override final;
         
-        void doInverse(const std::vector<float>& real, const std::vector<float>& imaginary, std::vector<float>& output) override final;
-        void doInverse(const std::vector<double>& real, const std::vector<double>& imaginary, std::vector<double>& output) override final;
+        void doInverse(const float* real, const float* imaginary, float* output) override final;
+        void doInverse(const double* real, const double* imaginary, double* output) override final;
         
         void doForwardComplex(const std::vector<float>& inReal, const std::vector<float>& inImaginary, std::vector<float>& outReal, std::vector<float>& outImaginary) override final;
         void doForwardComplex(const std::vector<double>& inReal, const std::vector<double>& inImaginary, std::vector<double>& outReal, std::vector<double>& outImaginary) override final;
@@ -172,7 +175,7 @@ namespace dsp
         std::vector<double> dataComplex;
     };
     
-#ifdef __APPLE__
+#ifdef __FFT_ACCELERATE__
     using FastFourierTransform = FastFourierTransformAccelerate;
 #else
     using FastFourierTransform = FastFourierTransformOoura;

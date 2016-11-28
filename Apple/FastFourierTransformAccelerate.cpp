@@ -42,19 +42,19 @@ namespace dsp
         }
     }
     
-    void FastFourierTransformAccelerate::doForward(const vector<float>& input, vector<float>& real, vector<float>& imaginary)
+    void FastFourierTransformAccelerate::doForward(const float* input, float* real, float* imaginary)
     {
         // Split the input signal to even and odd arrays
-        deinterleave(input.begin(), input.end(), evenFloat.begin(), oddFloat.begin());
+        math::deinterleave(input, input + size, evenFloat.begin(), oddFloat.begin());
 
         // Do the transform
-        vDSP_DFT_Execute(floatSetup.forward, evenFloat.data(), oddFloat.data(), real.data(), imaginary.data());
+        vDSP_DFT_Execute(floatSetup.forward, evenFloat.data(), oddFloat.data(), real, imaginary);
 
         // In the forward direction, the scale is 2 (for some reason), so scale back by a half
         // Probably because both the negative and positive frequencies get summed, or something. The complex-to-complex
         // DFT in Accelerate (see function below) doesn't need scaling).
-        std::transform(real.begin(), real.end(), real.begin(), [](const float& lhs) { return lhs * 0.5f; });
-        std::transform(imaginary.begin(), imaginary.end(), imaginary.begin(), [](const float& lhs) { return lhs * 0.5f; });
+        std::transform(real, real + (size / 2 + 1), real, [](const float& lhs) { return lhs * 0.5f; });
+        std::transform(imaginary, imaginary + (size / 2 + 1), imaginary, [](const float& lhs) { return lhs * 0.5f; });
 
         // Because the Im[0] and Im[Nyquist] are always 0, vDSP stores the Re[Nyquist]
         // in Im[0], so that it can return one complex number less. Imho, this only makes
@@ -67,19 +67,19 @@ namespace dsp
         imaginary[size / 2] = 0.0f;
     }
     
-    void FastFourierTransformAccelerate::doForward(const vector<double>& input, vector<double>& real, vector<double>& imaginary)
+    void FastFourierTransformAccelerate::doForward(const double* input, double* real, double* imaginary)
     {
         // Split the input signal to even and odd arrays
-        deinterleave(input.begin(), input.end(), evenDouble.begin(), oddDouble.begin());
+        math::deinterleave(input, input + size, evenDouble.begin(), oddDouble.begin());
         
         // Do the transform
-        vDSP_DFT_ExecuteD(doubleSetup.forward, evenDouble.data(), oddDouble.data(), real.data(), imaginary.data());
+        vDSP_DFT_ExecuteD(doubleSetup.forward, evenDouble.data(), oddDouble.data(), real, imaginary);
         
         // In the forward direction, the scale is 2 (for some reason), so scale back by a half
         // Probably because both the negative and positive frequencies get summed, or something. The complex-to-complex
         // DFT in Accelerate (see function below) doesn't need scaling).
-        std::transform(real.begin(), real.end(), real.begin(), [](const float& lhs) { return lhs * 0.5f; });
-        std::transform(imaginary.begin(), imaginary.end(), imaginary.begin(), [](const float& lhs) { return lhs * 0.5f; });
+        std::transform(real, real + (size / 2 + 1), real, [](const float& lhs) { return lhs * 0.5f; });
+        std::transform(imaginary, imaginary + (size / 2 + 1), imaginary, [](const float& lhs) { return lhs * 0.5f; });
         
         // Because the Im[0] and Im[Nyquist] are always 0, vDSP stores the Re[Nyquist]
         // in Im[0], so that it can return one complex number less. Imho, this only makes
@@ -92,46 +92,46 @@ namespace dsp
         imaginary[size / 2] = 0.0f;
     }
     
-    void FastFourierTransformAccelerate::doInverse(const vector<float>& real, const vector<float>& imaginary, vector<float>& output)
+    void FastFourierTransformAccelerate::doInverse(const float* real, const float* imaginary, float* output)
     {
         // Copy the input reals and imaginaries, so that we can change the format around to
         // the way vDSP accepts it
-        vector<float> real_(real.begin(), real.end());
-        vector<float> imaginary_(imaginary.begin(), imaginary.end());
+        vector<float> real_(real, real + size / 2 + 1);
+        vector<float> imaginary_(imaginary, imaginary + size / 2 + 1);
 
         // Re[Nyquist] is supposed to be stored in Im[0] for vDSP
         imaginary_[0] = real[size / 2];
 
         // Do the transform
-        vDSP_DFT_Execute(floatSetup.inverse, real.data(), imaginary_.data(), real_.data(), imaginary_.data());
+        vDSP_DFT_Execute(floatSetup.inverse, real_.data(), imaginary_.data(), real_.data(), imaginary_.data());
 
         // Combine the even and odd output signals into one interleaved output signal
-        interleave(real_.begin(), real_.end(), imaginary_.begin(), output.begin());
+        math::interleave(real_.begin(), real_.end(), imaginary_.begin(), output);
 
         // For inverse DFT, the scaling is Size, so scale back by multiplying with its reciprocal
-        const float factor = 1.0f / output.size();
-        std::transform(output.begin(), output.end(), output.begin(), [&](const float& lhs) { return lhs * factor; });
+        const float factor = 1.0 / size;
+        std::transform(output, output + size, output, [&](const float& lhs) { return lhs * factor; });
     }
     
-    void FastFourierTransformAccelerate::doInverse(const vector<double>& real, const vector<double>& imaginary, vector<double>& output)
+    void FastFourierTransformAccelerate::doInverse(const double* real, const double* imaginary, double* output)
     {
         // Copy the input reals and imaginaries, so that we can change the format around to
         // the way vDSP accepts it
-        vector<double> real_(real.begin(), real.end());
-        vector<double> imaginary_(imaginary.begin(), imaginary.end());
+        vector<double> real_(real, real + (size / 2 + 1));
+        vector<double> imaginary_(imaginary, imaginary + (size / 2 + 1));
         
         // Re[Nyquist] is supposed to be stored in Im[0] for vDSP
         imaginary_[0] = real[size / 2];
         
         // Do the transform
-        vDSP_DFT_ExecuteD(doubleSetup.inverse, real.data(), imaginary_.data(), real_.data(), imaginary_.data());
+        vDSP_DFT_ExecuteD(doubleSetup.inverse, real_.data(), imaginary_.data(), real_.data(), imaginary_.data());
         
         // Combine the even and odd output signals into one interleaved output signal
-        interleave(real_.begin(), real_.end(), imaginary_.begin(), output.begin());
+        math::interleave(real_.begin(), real_.end(), imaginary_.begin(), output);
         
         // For inverse DFT, the scaling is Size, so scale back by multiplying with its reciprocal
-        const double factor = 1.0 / output.size();
-        std::transform(output.begin(), output.end(), output.begin(), [&](const float& lhs) { return lhs * factor; });
+        const double factor = 1.0 / size;
+        std::transform(output, output + size, output, [&](const double& lhs) { return lhs * factor; });
     }
     
     void FastFourierTransformAccelerate::doForwardComplex(const vector<float>& inReal, const vector<float>& inImaginary, vector<float>& outReal, vector<float>& outImaginary)

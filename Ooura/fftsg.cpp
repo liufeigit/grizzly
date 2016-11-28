@@ -2,7 +2,7 @@
 //  Ooura's FFT implementation, which can be found here: http://www.kurims.kyoto-u.ac.jp/~ooura/fft.html
 //  Many thanks go out to Ooura Takuya for creating and distributing this so freely
 
-namespace bear::dsp
+namespace dsp
 {
     void cdft(int n, int isgn, double *a, int *ip, double *w)
     {
