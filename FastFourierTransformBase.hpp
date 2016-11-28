@@ -76,11 +76,11 @@ namespace dsp
         virtual void doInverse(const float* real, const float* imaginary, float* output) = 0;
         virtual void doInverse(const double* real, const double* imaginary, double* output) = 0;
         
-        virtual void doForwardComplex(const std::vector<float>& inReal, const std::vector<float>& inImaginary, std::vector<float>& outReal, std::vector<float>& outImaginary) = 0;
-        virtual void doForwardComplex(const std::vector<double>& inReal, const std::vector<double>& inImaginary, std::vector<double>& outReal, std::vector<double>& outImaginary) = 0;
+        virtual void doForwardComplex(const float* inReal, const float* inImaginary, float* outReal, float* outImaginary) = 0;
+        virtual void doForwardComplex(const double* inReal, const double* inImaginary, double* outReal, double* outImaginary) = 0;
         
-        virtual void doInverseComplex(const std::vector<float>& inReal, const std::vector<float>& inImaginary, std::vector<float>& outReal, std::vector<float>& outImaginary) = 0;
-        virtual void doInverseComplex(const std::vector<double>& inReal, const std::vector<double>& inImaginary, std::vector<double>& outReal, std::vector<double>& outImaginary) = 0;
+        virtual void doInverseComplex(const float* inReal, const float* inImaginary, float* outReal, float* outImaginary) = 0;
+        virtual void doInverseComplex(const double* inReal, const double* inImaginary, double* outReal, double* outImaginary) = 0;
     };
 }
 

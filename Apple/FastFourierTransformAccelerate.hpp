@@ -30,11 +30,11 @@ namespace dsp
         void doInverse(const float* real, const float* imaginary, float* output) override final;
         void doInverse(const double* real, const double* imaginary, double* output) override final;
         
-        void doForwardComplex(const std::vector<float>& inReal, const std::vector<float>& inImaginary, std::vector<float>& outReal, std::vector<float>& outImaginary) override final;
-        void doForwardComplex(const std::vector<double>& inReal, const std::vector<double>& inImaginary, std::vector<double>& outReal, std::vector<double>& outImaginary) override final;
+        void doForwardComplex(const float* inReal, const float* inImaginary, float* outReal, float* outImaginary) override final;
+        void doForwardComplex(const double* inReal, const double* inImaginary, double* outReal, double* outImaginary) override final;
         
-        void doInverseComplex(const std::vector<float>& inReal, const std::vector<float>& inImaginary, std::vector<float>& outReal, std::vector<float>& outImaginary) override final;
-        void doInverseComplex(const std::vector<double>& inReal, const std::vector<double>& inImaginary, std::vector<double>& outReal, std::vector<double>& outImaginary) override final;
+        void doInverseComplex(const float* inReal, const float* inImaginary, float* outReal, float* outImaginary) override final;
+        void doInverseComplex(const double* inReal, const double* inImaginary, double* outReal, double* outImaginary) override final;
         
     private:
         std::vector<float> evenFloat;

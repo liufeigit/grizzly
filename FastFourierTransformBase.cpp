@@ -226,7 +226,7 @@ namespace dsp
         assert(outReal.size() == size);
         assert(outImaginary.size() == size);
         
-        doForwardComplex(inReal, inImaginary, outReal, outImaginary);
+        doForwardComplex(inReal.data(), inImaginary.data(), outReal.data(), outImaginary.data());
     }
     
     void FastFourierTransformBase::forwardComplex(const vector<double>& inReal, const vector<double>& inImaginary, vector<double>& outReal, vector<double>& outImaginary)
@@ -236,7 +236,7 @@ namespace dsp
         assert(outReal.size() == size);
         assert(outImaginary.size() == size);
         
-        doForwardComplex(inReal, inImaginary, outReal, outImaginary);
+        doForwardComplex(inReal.data(), inImaginary.data(), outReal.data(), outImaginary.data());
     }
     
     vector<complex<float>> FastFourierTransformBase::inverseComplex(const vector<complex<float>>& input)
@@ -300,7 +300,7 @@ namespace dsp
         assert(outReal.size() == size);
         assert(outImaginary.size() == size);
         
-        doInverseComplex(inReal, inImaginary, outReal, outImaginary);
+        doInverseComplex(inReal.data(), inImaginary.data(), outReal.data(), outImaginary.data());
     }
     
     void FastFourierTransformBase::inverseComplex(const vector<double>& inReal, const vector<double>& inImaginary, vector<double>& outReal, vector<double>& outImaginary)
@@ -310,6 +310,6 @@ namespace dsp
         assert(outReal.size() == size);
         assert(outImaginary.size() == size);
         
-        doInverseComplex(inReal, inImaginary, outReal, outImaginary);
+        doInverseComplex(inReal.data(), inImaginary.data(), outReal.data(), outImaginary.data());
     }
 }

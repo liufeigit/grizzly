@@ -134,37 +134,37 @@ namespace dsp
         std::transform(output, output + size, output, [&](const double& lhs) { return lhs * factor; });
     }
     
-    void FastFourierTransformAccelerate::doForwardComplex(const vector<float>& inReal, const vector<float>& inImaginary, vector<float>& outReal, vector<float>& outImaginary)
+    void FastFourierTransformAccelerate::doForwardComplex(const float* inReal, const float* inImaginary, float* outReal, float* outImaginary)
     {
         // Do the transform
-        vDSP_DFT_Execute(floatComplexSetup.forward, inReal.data(), inImaginary.data(), outReal.data(), outImaginary.data());
+        vDSP_DFT_Execute(floatComplexSetup.forward, inReal, inImaginary, outReal, outImaginary);
     }
     
-    void FastFourierTransformAccelerate::doForwardComplex(const vector<double>& inReal, const vector<double>& inImaginary, vector<double>& outReal, vector<double>& outImaginary)
+    void FastFourierTransformAccelerate::doForwardComplex(const double* inReal, const double* inImaginary, double* outReal, double* outImaginary)
     {
         // Do the transform
-        vDSP_DFT_ExecuteD(doubleComplexSetup.forward, inReal.data(), inImaginary.data(), outReal.data(), outImaginary.data());
+        vDSP_DFT_ExecuteD(doubleComplexSetup.forward, inReal, inImaginary, outReal, outImaginary);
     }
     
-    void FastFourierTransformAccelerate::doInverseComplex(const vector<float>& inReal, const vector<float>& inImaginary, vector<float>& outReal, vector<float>& outImaginary)
+    void FastFourierTransformAccelerate::doInverseComplex(const float* inReal, const float* inImaginary, float* outReal, float* outImaginary)
     {
         // Do the transform
-        vDSP_DFT_Execute(floatComplexSetup.inverse, inReal.data(), inImaginary.data(), outReal.data(), outImaginary.data());
+        vDSP_DFT_Execute(floatComplexSetup.inverse, inReal, inImaginary, outReal, outImaginary);
         
         // For inverse DFT, the scaling is Size, so scale back by multiplying with its reciprocal
-        const float factor = 1.0f / outReal.size();
-        std::transform(outReal.begin(), outReal.end(), outReal.begin(), [&](const float& lhs) { return lhs * factor; });
-        std::transform(outImaginary.begin(), outImaginary.end(), outImaginary.begin(), [&](const float& lhs) { return lhs * factor; });
+        const float factor = 1.0 / size;
+        std::transform(outReal, outReal + size, outReal, [&](const float& lhs) { return lhs * factor; });
+        std::transform(outImaginary, outImaginary + size, outImaginary, [&](const float& lhs) { return lhs * factor; });
     }
     
-    void FastFourierTransformAccelerate::doInverseComplex(const vector<double>& inReal, const vector<double>& inImaginary, vector<double>& outReal, vector<double>& outImaginary)
+    void FastFourierTransformAccelerate::doInverseComplex(const double* inReal, const double* inImaginary, double* outReal, double* outImaginary)
     {
         // Do the transform
-        vDSP_DFT_ExecuteD(doubleComplexSetup.inverse, inReal.data(), inImaginary.data(), outReal.data(), outImaginary.data());
+        vDSP_DFT_ExecuteD(doubleComplexSetup.inverse, inReal, inImaginary, outReal, outImaginary);
         
         // For inverse DFT, the scaling is Size, so scale back by multiplying with its reciprocal
-        const double factor = 1.0 / outReal.size();
-        std::transform(outReal.begin(), outReal.end(), outReal.begin(), [&](const float& lhs) { return lhs * factor; });
-        std::transform(outImaginary.begin(), outImaginary.end(), outImaginary.begin(), [&](const float& lhs) { return lhs * factor; });
+        const double factor = 1.0 / size;
+        std::transform(outReal, outReal + size, outReal, [&](const float& lhs) { return lhs * factor; });
+        std::transform(outImaginary, outImaginary + size, outImaginary, [&](const float& lhs) { return lhs * factor; });
     }
 }
