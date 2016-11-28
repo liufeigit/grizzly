@@ -220,7 +220,7 @@ namespace dsp
     template <class ComplexIterator>
     std::vector<typename ComplexIterator::value_type::value_type> FastFourierTransformBase::inverse(ComplexIterator input)
     {
-        std::vector<typename ComplexIterator::value_type::value_type> output((size - 1) * 2);
+        std::vector<typename ComplexIterator::value_type::value_type> output(size);
         inverse(input, output.data());
         return output;
     }
