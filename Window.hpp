@@ -22,7 +22,7 @@ namespace dsp
     template <typename T>
     std::vector<T> createRectangularWindow(std::size_t size, T amplitude = T{1})
     {
-        return {size, amplitude};
+        return std::vector<T>(size, amplitude);
     }
     
     //! Create a triangle window
@@ -164,7 +164,7 @@ namespace dsp
     //! Helper function for Kaiser window
     constexpr double besselizero(double x)
     {
-        double temp;
+        double temp = 0;
         double sum = 1.0;
         double u = 1.0;
         double halfx = x / 2.0;
