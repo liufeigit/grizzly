@@ -13,18 +13,18 @@ TEST_CASE("Analog Envelope")
     auto sampleRate = 10000;
     AnalogEnvelope<float> envelope(0.0, 0.0, 0.0, 0.0, sampleRate);
     
-    envelope.setAttackTime(0.1, 10000);
-    envelope.setDecayTime(0.1, 10000);
-    envelope.setReleaseTime(0.1, 10000);
+    envelope.setAttackTime(0.1, sampleRate);
+    envelope.setDecayTime(0.1, sampleRate);
+    envelope.setReleaseTime(0.1, sampleRate);
     envelope.setSustain(0.5);
     
-    vector<float> output(10000);
+    vector<float> output(sampleRate);
     
     envelope.start();
     
     for (auto i = 0; i < output.size(); ++i)
     {
-        if (i == 5000)
+        if (i == 0.5 * sampleRate)
             envelope.release();
         
         output[i] = envelope();
@@ -32,17 +32,17 @@ TEST_CASE("Analog Envelope")
     
     SUBCASE("peak at one")
     {
-        CHECK(*max_element(output.begin(), output.end()) == doctest::Approx(1.f));
+        CHECK(*max_element(output.begin(), output.end()) == doctest::Approx(1.f).epsilon(0.005));
     }
     
     SUBCASE("sustain at 0.5")
     {
-        CHECK(output[4000] == doctest::Approx(0.5f));
+        CHECK(output[0.4 * sampleRate] == doctest::Approx(0.5f));
     }
     
     SUBCASE("releases to zero")
     {
-        CHECK(output[7500] == doctest::Approx(0.f));
+        CHECK(output[0.75 * sampleRate] == doctest::Approx(0.f));
     }
     
 }

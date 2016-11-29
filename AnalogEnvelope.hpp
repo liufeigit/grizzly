@@ -28,7 +28,7 @@ namespace dsp
     class AnalogEnvelope
     {
     public:
-        //! The states in which the envelope functions
+        //! The states in which the envelope can be at any given moment
         enum class State
         {
             IDLE,
@@ -39,13 +39,7 @@ namespace dsp
         
     public:
         //! Construct the envelope
-        /*! @param attackTime attack time
-         @param decayTime decay time
-         @param sustain sustain level
-         @param releaseTime release time
-         @param sampleRate sampleRate
-         @param attackShape attack shape */
-        AnalogEnvelope(unit::second<double> attackTime, unit::second<double> decayTime, double sustain, unit::second<double> releaseTime, unit::hertz<double> sampleRate, double attackShape = 0.77)
+        AnalogEnvelope(unit::second<double> attackTime, unit::second<double> decayTime, T sustain, unit::second<double> releaseTime, unit::hertz<double> sampleRate, double attackShape = 0.77)
         {
             // Initialise attack time constant factor
             setAttackShape(attackShape);
@@ -61,20 +55,10 @@ namespace dsp
         {
             switch (state)
             {
-                case State::ATTACK:
-                    lowPassFilter.coefficients = attackCoefficients;
-                    break;
-                    
-                case State::DECAY:
-                    lowPassFilter.coefficients = decayCoefficients;
-                    break;
-                    
-                case State::RELEASE:
-                    lowPassFilter.coefficients = releaseCoefficients;
-                    break;
-                    
-                default:
-                    break;
+                case State::IDLE: break;
+                case State::ATTACK: lowPassFilter.coefficients = attackCoefficients; break;
+                case State::DECAY: lowPassFilter.coefficients = decayCoefficients; break;
+                case State::RELEASE: lowPassFilter.coefficients = releaseCoefficients; break;
             }
         }
         
@@ -138,8 +122,8 @@ namespace dsp
         
         //! Returns the output of the envelope
         /*! A call to start() sets the envelope to the attack stage
-         After the release() call, the envelope will shut down when the output is significantly low and returns 0. */
-        T operator()()
+            After the release() call, the envelope will shut down when the output is significantly low and returns 0. */
+        T process()
         {
             switch (state)
             {
@@ -178,8 +162,17 @@ namespace dsp
             }
         }
         
+        //! Returns the output of the envelope
+        /*! A call to start() sets the envelope to the attack stage
+            After the release() call, the envelope will shut down when the output is significantly low and returns 0. */
+        T operator()() { return process(); }
+        
         // Return the current state
         State getState() const { return state; }
+        
+    public:
+        //! Called when the envelope reaches zero. Useful for updating some code elsewhere (e.g. free a voice)
+        std::function<void()> end = [](){};
         
     private:
         //! Set the shape, from flat to steap, of the attack
@@ -200,10 +193,6 @@ namespace dsp
             long double temp = 1.l - maximumCharge;
             attackTimeConstantFactor = -log(temp);
         }
-        
-    public:
-        //! Called when the envelope reaches zero. Useful for updating some code elsewhere (e.g. free a voice)
-        std::function<void()> end = [](){};
         
     private:
         //! The low-pass filter output is the envelope
@@ -229,7 +218,7 @@ namespace dsp
         
         //! The sustain level
         /*! The sustain is multiplied with the maximum charge to correct for nomalizing */
-        double sustain = 0.0;
+        T sustain = 0.0;
         
         //! Time constant factor for the attack
         double attackTimeConstantFactor = 1;
