@@ -19,7 +19,7 @@ namespace dsp
     class FeedBackCombFilter
     {
     public:
-        FeedBackCombFilter (const std::size_t maxDelay = 0):
+        FeedBackCombFilter(const std::size_t maxDelay):
             delay(maxDelay)
         {
             
@@ -64,8 +64,8 @@ namespace dsp
     class FeedForwardCombFilter
     {
     public:
-        FeedForwardCombFilter (const std::size_t maxDelay = 0):
-        delay(maxDelay)
+        FeedForwardCombFilter(const std::size_t maxDelay):
+        	delay(maxDelay)
         {
             
         }

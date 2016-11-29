@@ -12,11 +12,12 @@
 #include <complex>
 #include <vector>
 
-#include "FastFourierTransform.hpp"
 #include "Spectrum.hpp"
 
 namespace dsp
 {
+    class FastFourierTransformBase;
+    
     //! The real-to-complex forward Fourier transform
     void fourierTransform(const std::vector<float>& input, Spectrum<float>& output);
     

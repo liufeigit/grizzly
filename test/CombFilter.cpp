@@ -14,13 +14,6 @@ TEST_CASE("CombFilter")
     {
         SUBCASE("constructor")
         {
-            SUBCASE("size is 0")
-            {
-                FeedBackCombFilter<int> filter = FeedBackCombFilter<int>();
-                
-                CHECK(filter.getMaxDelayTime() == 0);
-            }
-            
             SUBCASE("is initialized to 0")
             {
                 FeedBackCombFilter<int> filter (4);
@@ -66,13 +59,6 @@ TEST_CASE("CombFilter")
     {
         SUBCASE("constructor")
         {
-            SUBCASE("size is 0")
-            {
-                FeedForwardCombFilter<int> filter = FeedForwardCombFilter<int>();
-                
-                CHECK(filter.getMaxDelayTime() == 0);
-            }
-            
             SUBCASE("is initialized to 0")
             {
                 FeedForwardCombFilter<int> filter (4);

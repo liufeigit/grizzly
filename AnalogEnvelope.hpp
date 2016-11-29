@@ -13,6 +13,7 @@
 #include <unit/hertz.hpp>
 #include <unit/proportion.hpp>
 #include <unit/time.hpp>
+#include <functional>
 
 #include "FirstOrderFilter.hpp"
 #include <dsperados/math/utility.hpp>
@@ -21,13 +22,13 @@ namespace dsp
 {
     //! Analog style ADSR envelope generator
     /*! Envelope generator based on a charging and discharging a capacitor.
-        The curve determines the skew factor (slope) of the attack (see setAttackSkew for more info).
-        By tweaking the ADSR parameters, a AR, ASR or ADSD envelope is possible. */
+     The curve determines the skew factor (slope) of the attack (see setAttackSkew for more info).
+     By tweaking the ADSR parameters, a AR, ASR or ADSD envelope is possible. */
     template <class T, class CoeffType = double>
     class AnalogEnvelope
     {
     public:
-        //! The states in which the envelope functions
+        //! The states in which the envelope can be at any given moment
         enum class State
         {
             IDLE,
@@ -37,75 +38,76 @@ namespace dsp
         };
         
     public:
-        AnalogEnvelope()
+        //! Default constructor
+        AnalogEnvelope(unit::hertz<double> sampleRate) :
+            sampleRate(sampleRate)
         {
-            // Initialise attack time constant factor
+            // Initialize the constant factors per stage
             setAttackShape(0.77);
-        }
-        
-        void setSampleRate(unit::hertz<float> sampleRate)
-        {
-            this->sampleRate = sampleRate;
-        }
-        
-        //! Sets the shape, flat to steap, of the attack
-        /*! The shape of the attack is determined by the curve factor (clamped to > 0 & < 1).
-            A higher value results in a steaper curve and is analogous to the maximum charge of a capacitor.
-            By default, the setting is 0.77 and approximates a CEM3310 chip wichh charges to a maximum of 77 percent.
-         
-            The output (y) of charging is given by: y(n) = 1 - e^(-n/RC), where time constant RC is set to 1 and time n is in samples.
-            At n = 1, y = 0.63. We need 5 samples to a full charge of 0.99. In other words, we can go from 0 to 0.99 in one sample (1 - e^((-1 * 5) / 1))
-            and use this value to set a maximum charge. In this case 5 is the time constant factor to make this step in one sample.
-         
-            We can then solve time constant factors for different charges between 0% and 100% with maximum charge = 1 - e^-factor. If we normalise the envelope, the factor determines the shape.
-            The envelope is the output of a one-pole filter using a gate signal of 1 or 0 as input. */
-        void setAttackShape(unit::proportion<float> maximumCharge)
-        {
-            maximumCharge = math::clamp<float>(maximumCharge, 0.1, 0.99);
-            this->maximumCharge = maximumCharge;
-            normaliseFactor = 1.0 / maximumCharge;
+            decayStage.timeConstantReciprocal = 4.95;
+            releaseStage.timeConstantReciprocal = 4.95;
             
-            // solve time constant factor for maximum charge = 1 - e^-factor
-            double temp = 1.0 - maximumCharge;
-            attackTimeConstantFactor = -log(temp);
+            setAttackTime(0.1);
+            setDecayTime(0.1);
+            setSustain(0.5);
+            setReleaseTime(0.1);
         }
         
-        void setAttackTime(unit::millisecond<float> time)
+        //! Construct the envelope
+        AnalogEnvelope(unit::hertz<double> sampleRate, unit::second<double> attackTime, unit::second<double> decayTime, T sustain, unit::second<double> releaseTime, double attackShape = 0.77) :
+            sampleRate(sampleRate)
         {
-            if (time <= 0)
-                time = 1;
+            // Initialize the constant factors per stage
+            setAttackShape(attackShape);
+            decayStage.timeConstantReciprocal = 4.95;
+            releaseStage.timeConstantReciprocal = 4.95;
             
-            attackTime = time;
+            setAttackTime(attackTime);
+            setDecayTime(decayTime);
+            setSustain(sustain);
+            setReleaseTime(releaseTime);
         }
         
-        void setDecayTime(unit::millisecond<float> time)
+        //! Set the attack time
+        void setAttackTime(unit::second<double> time)
         {
-            if (time <= 0)
-                time = 1;
+            attackStage.set(time, sampleRate);
             
-            decayTime = time;
+            if (state == State::ATTACK)
+                updateFilterCoefficients();
         }
         
-        void setReleaseTime(unit::millisecond<float> time)
+        //! Set the decay time
+        void setDecayTime(unit::second<double> time)
         {
-            if (time <= 0)
-                time = 1;
+            decayStage.set(time, sampleRate);
             
-            releaseTime = time;
+            if (state == State::DECAY)
+                updateFilterCoefficients();
         }
         
-        void setSustain(T sustain)
+        
+        //! Set the release time
+        void setReleaseTime(unit::second<double> time)
         {
-            this->sustain = sustain;
+            releaseStage.set(time, sampleRate);
+            
+            if (state == State::RELEASE)
+                updateFilterCoefficients();
+        }
+        
+        //! Set the sustain level
+        void setSustain(const double& sustain)
+        {
+            // multiply with maximum charge to correct for normalizing
+            this->sustain = math::clamp(sustain, 0.0, 1.0) * maximumCharge;
         }
         
         //! Start the envelop by setting the mode to attack
         void start()
         {
             state = State::ATTACK;
-            
-            // set coefficients
-            lowPassOnePole(lowPassFilter.coefficients, sampleRate, attackTime, attackTimeConstantFactor);
+            updateFilterCoefficients();
         }
         
         //! End the envelope by setting the mode to release
@@ -114,121 +116,144 @@ namespace dsp
             if (state != State::IDLE)
                 state = State::RELEASE;
             
-            // set coefficients
-            lowPassOnePole(lowPassFilter.coefficients, sampleRate, releaseTime, decayReleaseTimeConstantFactor);
+            updateFilterCoefficients();
         }
         
         //! Sets the envelope to 0 and goes to idle state
         void reset()
         {
-            lowPassFilter.clear();
             state = State::IDLE;
+            lowPassFilter.clear();
         }
         
         //! Returns the output of the envelope
         /*! A call to start() sets the envelope to the attack stage
             After the release() call, the envelope will shut down when the output is significantly low and returns 0. */
-        T operator()()
+        T process()
         {
-            T output = 0;
-            
             switch (state)
             {
                 case State::IDLE:
-                    return output;
+                    return 0;
                     
                 case State::ATTACK:
                 {
-                    output = lowPassFilter(gateOn);
-                    
+                    T output = lowPassFilter(gateOn);
                     if (output >= maximumCharge)
                     {
                         state = State::DECAY;
-                        
-                        // set coefficients
-                        lowPassOnePole(lowPassFilter.coefficients, sampleRate, decayTime, decayReleaseTimeConstantFactor);
+                        updateFilterCoefficients();
                     }
                     
-                    break;
+                    return output * normalizeFactor;
                 }
                     
                 case State::DECAY:
-                {
-                    // sustain is adjusted with the maximum charge because of the normalisation factor before return
-                    auto adjustedSustain = sustain * maximumCharge;
-                    
-                    output = lowPassFilter(adjustedSustain);
-        
-                    break;
-                }
+                    return lowPassFilter(sustain) * normalizeFactor;
                     
                 case State::RELEASE:
                 {
-                    output = lowPassFilter(gateOff);
-                    
+                    T output = lowPassFilter(gateOff) * normalizeFactor;
                     if (output < 0.00001) // ~ -100 dB
                     {
-                        state = State::IDLE;
-                        lowPassFilter.clear();
-                        if (done)
-                            done();
+                        reset();
+                        if (end) end();
                         return 0;
                     }
-
-                    break;
+                    return output;
                 }
                     
-                // Should never get here
                 default:
                     return 0;
             }
-            
-            // Multiply with the normalise factor to get a ouput range between 0 and 1
-            return output * normaliseFactor;
         }
         
-        //! Called when the envelope reaches zero. Useful for updating some code elsewhere (e.g. free a voice)
-        std::function<void()> done;
-
-        unit::second<float> getAttackTime() const { return attackTime; }
-        unit::second<float> getDecayTime() const { return decayTime; }
-        unit::second<float> getReleaseTime() const { return releaseTime; }
+        //! Returns the output of the envelope
+        /*! A call to start() sets the envelope to the attack stage
+            After the release() call, the envelope will shut down when the output is significantly low and returns 0. */
+        T operator()() { return process(); }
         
+        // Return the current state
         State getState() const { return state; }
         
+    public:
+        //! Called when the envelope reaches zero. Useful for updating some code elsewhere (e.g. free a voice)
+        std::function<void()> end = [](){};
+        
     private:
-        //! The low-pass filter output is the envelope
+        //! Set the shape, from flat to steap, of the attack
+        /*! see Stage::timeConstantReciprocal for more information */
+        void setAttackShape(unit::proportion<double> maximumCharge)
+        {
+            maximumCharge = math::clamp<double>(maximumCharge, 0.1, 0.99);
+            this->maximumCharge = maximumCharge;
+            normalizeFactor = 1.0 / maximumCharge;
+            
+            // solve time constant factor for maximum charge = 1 - e^-timeConstantReciprocal
+            long double temp = 1.l - maximumCharge;
+            attackStage.timeConstantReciprocal = -log(temp);
+        }
+        
+        //! Make sure we're using the correct coefficients
+        void updateFilterCoefficients()
+        {
+            switch (state)
+            {
+                case State::IDLE: break;
+                case State::ATTACK: lowPassFilter.coefficients = attackStage.coefficients; break;
+                case State::DECAY: lowPassFilter.coefficients = decayStage.coefficients; break;
+                case State::RELEASE: lowPassFilter.coefficients = releaseStage.coefficients; break;
+            }
+        }
+        
+    private:
+        //! The envelope consists goes through three stages, each needing the same set of variables
+        class Stage
+        {
+        public:
+            void set(unit::second<double> time, unit::hertz<double> sampleRate)
+            {
+                lowPassOnePole(coefficients, sampleRate, time, timeConstantReciprocal);
+            }
+            
+        public:
+            //! The filter coefficients set to function as the state
+            FirstOrderCoefficients<CoeffType> coefficients;
+            
+            //! The shape of the filter curve is determined by the maximum charge of a 'capacitor' (0.1 - 0.99)
+            /*! By default, the maximum charge is 77% and approximates a CEM3310 chip.
+                The output (y) of charging is given by: y(n) = 1 - e^(-n/RC), where time constant RC is set to 1 and time n is in samples.
+                At n = 1, y = 0.63. We need 5 samples to a full charge of 0.99. If we replace n with -5, we can go from 0 to 0.99 in one tick (1 - e^-5)
+                and use this value to set a maximum charge. In this case 5 is the time constant factor to make this step in one sample.
+                We can then solve time constant factors for different charges between 0% and 100% with maximum charge = 1 - e^-factor.
+                If we then normalize the envelope, the maximum charge results in changing the filter shape. */
+            double timeConstantReciprocal = 0;
+        };
+        
+    private:
+        //! The output of the envelope is generated using a simple low-pass filter
         FirstOrderFilter<T, CoeffType> lowPassFilter;
+        
+        //! The envelope consists of three different stages, each with their own coefficients
+        Stage attackStage;
+        Stage decayStage;
+        Stage releaseStage;
         
         //! The Envelope State
         State state = State::IDLE;
         
-        //! The sample rate
-        unit::hertz<float> sampleRate = 44100;
+        //! The sample rate at which the envelope runs
+        unit::hertz<double> sampleRate;
         
         //! Maximum charge for the capacitor
-        unit::proportion<float> maximumCharge = 0.77; // CEM chip specs
+        unit::proportion<double> maximumCharge = 0.77;
         
-        //! The normalise factor makes the output in the range 0 to 1
-        double normaliseFactor = 1.0 / maximumCharge;
+        //! The normalise factor
+        double normalizeFactor = 1.0 / maximumCharge;
         
-        //! Time constant factor for the attack, set in setAttackShape()
-        double attackTimeConstantFactor = 1;
-        
-        //! Time constant factor for decay and release. A factor of 4.95 aproximates a real-world capacitor
-        double decayReleaseTimeConstantFactor = 4.95;
-        
-        //! The attack time
-        unit::second<float> attackTime = 0.1;
-        
-        //! The decay time
-        unit::second<float> decayTime = 0.1;
-        
-        //! The rlease time
-        unit::second<float> releaseTime = 0.1;
-        
-        //! The sustain level (range of 0 to 1)
-        T sustain = 0.5;
+        //! The sustain level
+        /*! The sustain is multiplied with the maximum charge to correct for nomalizing */
+        T sustain = 0.0;
         
         //! A gate signal of 1
         const double gateOn = 1.0;

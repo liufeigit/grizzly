@@ -5,4 +5,31 @@ project(grizzly-test)
 add_definitions(-std=c++1z -Wall)
 include_directories(/usr/local/include)
 
-add_executable(grizzly-test main.cpp Delay.cpp CircularBuffer.cpp CombFilter.cpp MidSide.cpp Normalize.cpp Ramp.cpp Waveform.cpp Window.cpp)
+set(SOURCES
+    main.cpp
+    AllPassFilter.cpp
+    AnalogEnvelope.cpp
+    CircularBuffer.cpp
+    CombFilter.cpp
+    Convolution.cpp
+    FastFourierTransformOoura.cpp
+    MidSide.cpp
+    Normalize.cpp
+    Ramp.cpp
+    SpectralCentroid.cpp
+    Spectrum.cpp
+    Waveform.cpp
+    WaveShaper.cpp
+    Window.cpp)
+
+add_executable(grizzly-test ${SOURCES})
+target_sources(grizzly-test PRIVATE ${SOURCES})
+
+find_library(Grizzly grizzly)
+target_link_libraries(grizzly-test ${Grizzly})
+
+if (APPLE)
+    target_sources(grizzly-test PRIVATE FastFourierTransformAccelerate.cpp)
+	find_library(Accelerate Accelerate REQUIRED)
+	target_link_libraries(grizzly-test ${Accelerate})
+endif (APPLE)

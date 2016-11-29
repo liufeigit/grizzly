@@ -123,13 +123,13 @@ namespace dsp
         }
         
         //! Replace the phases of the spectrum
-        void replacePhases(const std::vector<T>& phases)
+        void replacePhases(const std::vector<unit::radian<T>>& phases)
         {
             if (phases.size() != data.size())
                 throw std::invalid_argument("Sizes not equal");
             
             for (auto bin = 0; bin < data.size(); ++bin)
-                data[bin] = std::polar(std::abs(data[bin]), phases[bin]);
+                data[bin] = std::polar(std::abs(data[bin]), phases[bin].value);
         }
         
         //! Return the size of the spectrum

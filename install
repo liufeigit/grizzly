@@ -1,0 +1,22 @@
+#! /bin/bash
+
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+DIRNAME=${DIR##*/}
+
+# Check if Make directory exists
+if [ -d "$DIR/Make" ]
+then
+	printf "\ninstalling $DIRNAME with Make...\n"
+	cd $DIR/Make
+	make install
+else
+	# Check if Xcode directory exists
+	if [ -d "$DIR/Xcode" ]
+	then
+	printf "\ninstalling $DIRNAME with Xcode...\n"
+	cd $DIR/Xcode
+	xcodebuild -target install -configuration Release
+	else
+		printf "\nbuilt target not found for $DIRNAME\n"
+	fi
+fi

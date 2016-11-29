@@ -18,7 +18,6 @@ set(HEADERS
 	Biquad.hpp
 	BiquadCoefficients.hpp
 	Buffer.hpp
-	Centroid.hpp
     CircularBuffer.hpp
     CombFilter.hpp
 	Convolution.hpp
@@ -26,7 +25,8 @@ set(HEADERS
 	DownSample.hpp
 	Envelope.hpp
 	EnvelopeDetector.hpp
-	FastFourierTransform.hpp
+    FastFourierTransform.hpp
+	FastFourierTransformBase.hpp
 	FirstOrderCoefficients.hpp
 	FirstOrderFilter.hpp
 	FourierTransform.hpp
@@ -38,6 +38,7 @@ set(HEADERS
 	MidSide.hpp
     Normalize.hpp
     Ramp.hpp
+    SegmentEnvelope.hpp
     SpectralCentroid.hpp
     Spectrum.hpp
     Transfer.hpp
@@ -48,7 +49,7 @@ set(HEADERS
 
 set(SOURCES
 	AnalyticTransform.cpp
-	FastFourierTransform.cpp
+	FastFourierTransformBase.cpp
 	FourierTransform.cpp
 	HilbertTransform.cpp)
 
@@ -58,9 +59,10 @@ install (FILES ${HEADERS} DESTINATION include/grizzly)
 
 # Ooura
 set(OOURA_HEADERS
+    Ooura/FastFourierTransformOoura.hpp
 	Ooura/fftsg.h)
 
-set(OORUA_SOURCES
+set(OOURA_SOURCES
 	Ooura/FastFourierTransformOoura.cpp
 	Ooura/fftsg.cpp)
 
@@ -71,7 +73,7 @@ install (FILES ${OOURA_HEADERS} DESTINATION include/grizzly/Ooura)
 # Apple
 if (APPLE)
     set(APPLE_HEADERS
-        "")
+        Apple/FastFourierTransformAccelerate.hpp)
 
 	set(APPLE_SOURCES
 		Apple/FastFourierTransformAccelerate.cpp)

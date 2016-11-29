@@ -1,27 +1,65 @@
+#include <vector>
+
 #include "doctest.h"
 
 #include "../CircularBuffer.hpp"
 
 using namespace dsp;
+using namespace std;
 
 TEST_CASE("CircularBuffer")
 {
-	SUBCASE("Empty initialization")
+	SUBCASE("Construct empty initialization")
 	{
 		CircularBuffer<int> buffer(5);
 
 		CHECK(buffer.size() == 5);
 		for (auto i = 0; i < 5; ++i)
 			CHECK(buffer[i] == 0);
+
+		SUBCASE("size 0")
+		{
+			CircularBuffer<int> buffer(0);
+			CHECK(buffer.size() == 0);
+		}
 	}
 
-	SUBCASE("Initializer list")
+	SUBCASE("Construct with initializer list")
 	{
 		CircularBuffer<int> buffer = { 4, 4, 4, 4 };
 
 		CHECK(buffer.size() == 4);
 		for (auto i = 0; i < 4; ++i)
 			CHECK(buffer[i] == 4);
+	}
+
+	SUBCASE("Construct with iterators")
+	{
+		vector<int> vec = { 1, 1, 1, 1, 1, 1 };
+		CircularBuffer<int> buffer(vec.begin(), vec.end());
+
+		CHECK(buffer.size() == 6);
+		for (auto i = 0; i < 6; ++i)
+			CHECK(buffer[i] == 1);
+	}
+
+	SUBCASE("Resizing")
+	{
+		CircularBuffer<int> buffer = { 1, 2, 3, 4 };
+
+		SUBCASE("resize_front")
+		{
+			buffer.resize_front(5);
+			CHECK(buffer[0] == 0);
+			CHECK(buffer[4] == 4);
+		}
+
+		SUBCASE("resize_back")
+		{
+			buffer.resize_back(5);
+			CHECK(buffer[0] == 1);
+			CHECK(buffer[4] == 0);
+		}
 	}
 
 	SUBCASE("emplace_back")
@@ -92,6 +130,15 @@ TEST_CASE("CircularBuffer")
 			int i = 4;
 			for (auto it = buffer.crbegin(); it != buffer.crend(); ++it)
 				CHECK(*it == i--);
+		}
+
+		SUBCASE("size 0")
+		{
+			CircularBuffer<int> buffer(0);
+			CHECK(buffer.begin() == buffer.end());
+			CHECK(buffer.cbegin() == buffer.cend());
+			CHECK(buffer.rbegin() == buffer.rend());
+			CHECK(buffer.crbegin() == buffer.crend());
 		}
 	}
 }
