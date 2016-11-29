@@ -23,7 +23,8 @@ namespace dsp
         w(size / 2 - 1),
         dataComplex(size * 2)
     {
-        ip.front() = 0;
+        // Ensure ip[0] is zero, otherwise the zero and cosines won't be generated
+        ip[0] = 0;
     }
 
     void FastFourierTransformOoura::forward(const float* input, float* real, float* imaginary)
@@ -65,7 +66,7 @@ namespace dsp
         for (auto i = 0; i < size / 2; ++i)
         {
             data[i * 2] = real[i];
-            data[i * 2 + 1] = imaginary[i];
+            data[i * 2 + 1] = -imaginary[i];
         }
         
         data[1] = real[size / 2];
@@ -83,7 +84,7 @@ namespace dsp
         for (auto i = 0; i < size / 2; ++i)
         {
             data[i * 2] = real[i];
-            data[i * 2 + 1] = imaginary[i];
+            data[i * 2 + 1] = -imaginary[i];
         }
         
         data[1] = real[size / 2];
