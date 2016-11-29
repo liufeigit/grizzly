@@ -37,6 +37,7 @@ set(HEADERS
 	MidSide.hpp
     Normalize.hpp
     Ramp.hpp
+    SegmentEnvelope.hpp
     SpectralCentroid.hpp
     Spectrum.hpp
     Transfer.hpp

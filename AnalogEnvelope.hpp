@@ -153,7 +153,6 @@ namespace dsp
                     {
                         state = State::DECAY;
                         updateFilter();
-                        return lowPassFilter(gateOff) * normalizeFactor;
                     }
                     
                     return output * normalizeFactor;

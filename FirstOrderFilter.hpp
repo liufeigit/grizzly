@@ -32,17 +32,23 @@ namespace dsp
             return output;
         }
         
-        //! Compute a sample
-        constexpr T operator()(const T& x)
+        //! Set the filter state
+        void setState(const T& state)
         {
-            return process(x);
+            xz1 = state;
+            yz1 = state;
         }
         
         //! Clear the delay elements
         void clear()
         {
-            xz1 = 0;
-            yz1 = 0;
+            setState(0);
+        }
+        
+        //! Compute a sample
+        constexpr T operator()(const T& x)
+        {
+            return process(x);
         }
         
     public:
@@ -55,7 +61,7 @@ namespace dsp
         
         //! The previous output z^-1
         T yz1 = 0;
-    };    
+    };
 }
 
 
