@@ -19,15 +19,15 @@
 namespace dsp
 {
     //! Create a rectangular window
-    template <typename T1, typename T2 = T1>
-    std::vector<T1> createRectangularWindow(size_t size, T2 amplitude = 1)
+    template <typename T>
+    std::vector<T> createRectangularWindow(std::size_t size, T amplitude = T{1})
     {
-        return std::vector<T1>(size, amplitude);
+        return {size, amplitude};
     }
     
     //! Create a triangle window
     template <typename T>
-    std::vector<T> createTriangleWindow(size_t size)
+    std::vector<T> createTriangleWindow(std::size_t size)
     {
         std::vector<T> window(size);
         auto increment = 1.l / size;
@@ -40,7 +40,7 @@ namespace dsp
     
     //! Create a symmetric triangle window
     template <typename T>
-    std::vector<T> createSymmetricTriangleWindow(size_t size)
+    std::vector<T> createSymmetricTriangleWindow(std::size_t size)
     {
         std::vector<T> window(size);
         auto increment = 1.l / (size-1);
@@ -53,7 +53,7 @@ namespace dsp
     
     //! Create a Hanning window
     template <typename T>
-    std::vector<T> createHanningWindow(size_t size)
+    std::vector<T> createHanningWindow(std::size_t size)
     {
         std::vector<T> window(size);
         
@@ -65,7 +65,7 @@ namespace dsp
     
     //! Create a symmetric Hanning window
     template <typename T>
-    std::vector<T> createSymmetricHanningWindow(size_t size)
+    std::vector<T> createSymmetricHanningWindow(std::size_t size)
     {
         std::vector<T> window(size);
         
@@ -77,7 +77,7 @@ namespace dsp
     
     //! Create a Hamming window
     template <typename T>
-    std::vector<T> createHammingWindow(size_t size)
+    std::vector<T> createHammingWindow(std::size_t size)
     {
         std::vector<T> window(size);
         
@@ -89,7 +89,7 @@ namespace dsp
     
     //! Create a symmetric Hamming window
     template <typename T>
-    std::vector<T> createSymmetricHammingWindow(size_t size)
+    std::vector<T> createSymmetricHammingWindow(std::size_t size)
     {
         std::vector<T> window(size);
         
@@ -101,7 +101,7 @@ namespace dsp
     
     //! Create a Blackman window
     template <typename T>
-    std::vector<T> createBlackmanWindow(size_t size)
+    std::vector<T> createBlackmanWindow(std::size_t size)
     {
         std::vector<T> window(size);
         
@@ -113,7 +113,7 @@ namespace dsp
     
     //! Create a symmetric Blackman window
     template <typename T>
-    std::vector<T> createSymmetricBlackmanWindow(size_t size)
+    std::vector<T> createSymmetricBlackmanWindow(std::size_t size)
     {
         std::vector<T> window(size);
         
@@ -125,7 +125,7 @@ namespace dsp
     
     // Create a sinc window
     template <typename T>
-    std::vector<T> createSincWindow(size_t size, unit::radian<double> cutOff)
+    std::vector<T> createSincWindow(std::size_t size, unit::radian<double> cutOff)
     {
         std::vector<T> sinc(size);
 
@@ -144,7 +144,7 @@ namespace dsp
     
     //! Create a symmetrical sinc window
     template <typename T>
-    std::vector<T> createSymmetricSincWindow(size_t size, unit::radian<double> cutOff)
+    std::vector<T> createSymmetricSincWindow(std::size_t size, unit::radian<double> cutOff)
     {
         std::vector<T> sinc(size);
         
@@ -162,13 +162,13 @@ namespace dsp
     }
     
     //! Helper function for Kaiser window
-    double besselizero(double x)
+    constexpr double besselizero(double x)
     {
         double temp;
         double sum = 1.0;
         double u = 1.0;
         double halfx = x / 2.0;
-        size_t n = 1;
+        std::size_t n = 1;
         
         do
         {
@@ -184,13 +184,13 @@ namespace dsp
     
     //! Create a symmetric Kaiser window. The Beta factor (>= 1) determines the steepness
     template <typename T>
-    std::vector<T> createSymmetricKaiserWindow(size_t size, double betaFactor)
+    std::vector<T> createSymmetricKaiserWindow(std::size_t size, double betaFactor)
     {
         std::vector<T> window(size);
         double tmp;
         double k1 = 1.0 / besselizero(betaFactor);
-        size_t k2 = 1 - (size & 1);
-        size_t halfSize = (size + 1) >> 1;
+        std::size_t k2 = 1 - (size & 1);
+        std::size_t halfSize = (size + 1) >> 1;
         
         for (auto i = 0; i < halfSize; ++i)
         {
