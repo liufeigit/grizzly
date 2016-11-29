@@ -8,7 +8,7 @@ include_directories(/usr/local/include)
 set(SOURCES
     main.cpp
     AllPassFilter.cpp
-# AnalogEnvelope.cpp
+    AnalogEnvelope.cpp
     CircularBuffer.cpp
     Convolution.cpp
     FastFourierTransformOoura.cpp
