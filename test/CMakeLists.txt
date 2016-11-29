@@ -10,6 +10,7 @@ set(SOURCES
     AllPassFilter.cpp
     AnalogEnvelope.cpp
     CircularBuffer.cpp
+    CombFilter.cpp
     Convolution.cpp
     FastFourierTransformOoura.cpp
     MidSide.cpp
