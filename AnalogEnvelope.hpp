@@ -38,56 +38,62 @@ namespace dsp
         };
         
     public:
-        //! Construct the envelope
-        AnalogEnvelope(unit::second<double> attackTime, unit::second<double> decayTime, T sustain, unit::second<double> releaseTime, unit::hertz<double> sampleRate, double attackShape = 0.77)
+        //! Default constructor
+        AnalogEnvelope(unit::hertz<double> sampleRate) :
+            sampleRate(sampleRate)
         {
-            // Initialise attack time constant factor
-            setAttackShape(attackShape);
+            // Initialize the constant factors per stage
+            setAttackShape(0.77);
+            decayStage.timeConstantReciprocal = 4.95;
+            releaseStage.timeConstantReciprocal = 4.95;
             
-            setAttackTime(attackTime, sampleRate);
-            setDecayTime(decayTime, sampleRate);
-            setSustain(sustain);
-            setReleaseTime(releaseTime, sampleRate);
+            setAttackTime(0.1);
+            setDecayTime(0.1);
+            setSustain(0.5);
+            setReleaseTime(0.1);
         }
         
-        //! Update filter coefficients
-        void updateFilter()
+        //! Construct the envelope
+        AnalogEnvelope(unit::hertz<double> sampleRate, unit::second<double> attackTime, unit::second<double> decayTime, T sustain, unit::second<double> releaseTime, double attackShape = 0.77) :
+            sampleRate(sampleRate)
         {
-            switch (state)
-            {
-                case State::IDLE: break;
-                case State::ATTACK: lowPassFilter.coefficients = attackCoefficients; break;
-                case State::DECAY: lowPassFilter.coefficients = decayCoefficients; break;
-                case State::RELEASE: lowPassFilter.coefficients = releaseCoefficients; break;
-            }
+            // Initialize the constant factors per stage
+            setAttackShape(attackShape);
+            decayStage.timeConstantReciprocal = 4.95;
+            releaseStage.timeConstantReciprocal = 4.95;
+            
+            setAttackTime(attackTime);
+            setDecayTime(decayTime);
+            setSustain(sustain);
+            setReleaseTime(releaseTime);
         }
         
         //! Set the attack time
-        void setAttackTime(unit::second<double> time, unit::hertz<double> sampleRate)
+        void setAttackTime(unit::second<double> time)
         {
-            lowPassOnePole(attackCoefficients, sampleRate, time, attackTimeConstantFactor);
+            attackStage.set(time, sampleRate);
             
             if (state == State::ATTACK)
-                updateFilter();
+                updateFilterCoefficients();
         }
         
         //! Set the decay time
-        void setDecayTime(unit::second<double> time, unit::hertz<double> sampleRate)
+        void setDecayTime(unit::second<double> time)
         {
-            lowPassOnePole(decayCoefficients, sampleRate, time, decayReleaseTimeConstantFactor);
+            decayStage.set(time, sampleRate);
             
             if (state == State::DECAY)
-                updateFilter();
+                updateFilterCoefficients();
         }
         
         
         //! Set the release time
-        void setReleaseTime(unit::second<double> time, unit::hertz<double> sampleRate)
+        void setReleaseTime(unit::second<double> time)
         {
-            lowPassOnePole(releaseCoefficients, sampleRate, time, decayReleaseTimeConstantFactor);
+            releaseStage.set(time, sampleRate);
             
             if (state == State::RELEASE)
-                updateFilter();
+                updateFilterCoefficients();
         }
         
         //! Set the sustain level
@@ -101,7 +107,7 @@ namespace dsp
         void start()
         {
             state = State::ATTACK;
-            updateFilter();
+            updateFilterCoefficients();
         }
         
         //! End the envelope by setting the mode to release
@@ -110,7 +116,7 @@ namespace dsp
             if (state != State::IDLE)
                 state = State::RELEASE;
             
-            updateFilter();
+            updateFilterCoefficients();
         }
         
         //! Sets the envelope to 0 and goes to idle state
@@ -136,7 +142,7 @@ namespace dsp
                     if (output >= maximumCharge)
                     {
                         state = State::DECAY;
-                        updateFilter();
+                        updateFilterCoefficients();
                     }
                     
                     return output * normalizeFactor;
@@ -176,39 +182,68 @@ namespace dsp
         
     private:
         //! Set the shape, from flat to steap, of the attack
-        /*! The shape of the attack is determined by the maximum charge of a 'capacitor' (0.1 - 0.99)
-         By default, the maximu charge is 77% and approximates a CEM3310 chip.
-         The output (y) of charging is given by: y(n) = 1 - e^(-n/RC), where time constant RC is set to 1 and time n is in samples.
-         At n = 1, y = 0.63. We need 5 samples to a full charge of 0.99. If we replace n with -5, we can go from 0 to 0.99 in one tick (1 - e^-5)
-         and use this value to set a maximum charge. In this case 5 is the time constant factor to make this step in one sample.
-         We can then solve time constant factors for different charges between 0% and 100% with maximum charge = 1 - e^-factor.
-         If we then normalize the envelope, the maximum charge results in changing the attack shape. */
+        /*! see Stage::timeConstantReciprocal for more information */
         void setAttackShape(unit::proportion<double> maximumCharge)
         {
             maximumCharge = math::clamp<double>(maximumCharge, 0.1, 0.99);
             this->maximumCharge = maximumCharge;
             normalizeFactor = 1.0 / maximumCharge;
             
-            // solve time constant factor for maximum charge = 1 - e^-factor
+            // solve time constant factor for maximum charge = 1 - e^-timeConstantReciprocal
             long double temp = 1.l - maximumCharge;
-            attackTimeConstantFactor = -log(temp);
+            attackStage.timeConstantReciprocal = -log(temp);
+        }
+        
+        //! Make sure we're using the correct coefficients
+        void updateFilterCoefficients()
+        {
+            switch (state)
+            {
+                case State::IDLE: break;
+                case State::ATTACK: lowPassFilter.coefficients = attackStage.coefficients; break;
+                case State::DECAY: lowPassFilter.coefficients = decayStage.coefficients; break;
+                case State::RELEASE: lowPassFilter.coefficients = releaseStage.coefficients; break;
+            }
         }
         
     private:
-        //! The low-pass filter output is the envelope
+        //! The envelope consists goes through three stages, each needing the same set of variables
+        class Stage
+        {
+        public:
+            void set(unit::second<double> time, unit::hertz<double> sampleRate)
+            {
+                lowPassOnePole(coefficients, sampleRate, time, timeConstantReciprocal);
+            }
+            
+        public:
+            //! The filter coefficients set to function as the state
+            FirstOrderCoefficients<CoeffType> coefficients;
+            
+            //! The shape of the filter curve is determined by the maximum charge of a 'capacitor' (0.1 - 0.99)
+            /*! By default, the maximum charge is 77% and approximates a CEM3310 chip.
+                The output (y) of charging is given by: y(n) = 1 - e^(-n/RC), where time constant RC is set to 1 and time n is in samples.
+                At n = 1, y = 0.63. We need 5 samples to a full charge of 0.99. If we replace n with -5, we can go from 0 to 0.99 in one tick (1 - e^-5)
+                and use this value to set a maximum charge. In this case 5 is the time constant factor to make this step in one sample.
+                We can then solve time constant factors for different charges between 0% and 100% with maximum charge = 1 - e^-factor.
+                If we then normalize the envelope, the maximum charge results in changing the filter shape. */
+            double timeConstantReciprocal = 0;
+        };
+        
+    private:
+        //! The output of the envelope is generated using a simple low-pass filter
         FirstOrderFilter<T, CoeffType> lowPassFilter;
         
-        //! The attack coefficients
-        FirstOrderCoefficients<CoeffType> attackCoefficients;
-        
-        //! The decay coefficients
-        FirstOrderCoefficients<CoeffType> decayCoefficients;
-        
-        //! The release coefficients
-        FirstOrderCoefficients<CoeffType> releaseCoefficients;
+        //! The envelope consists of three different stages, each with their own coefficients
+        Stage attackStage;
+        Stage decayStage;
+        Stage releaseStage;
         
         //! The Envelope State
         State state = State::IDLE;
+        
+        //! The sample rate at which the envelope runs
+        unit::hertz<double> sampleRate;
         
         //! Maximum charge for the capacitor
         unit::proportion<double> maximumCharge = 0.77;
@@ -219,12 +254,6 @@ namespace dsp
         //! The sustain level
         /*! The sustain is multiplied with the maximum charge to correct for nomalizing */
         T sustain = 0.0;
-        
-        //! Time constant factor for the attack
-        double attackTimeConstantFactor = 1;
-        
-        //! Time constant factor for decay and release. A factor of 4.95 aproximates a real-world capacitor
-        const double decayReleaseTimeConstantFactor = 4.95;
         
         //! A gate signal of 1
         const double gateOn = 1.0;

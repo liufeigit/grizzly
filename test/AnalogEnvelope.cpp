@@ -11,11 +11,11 @@ using namespace std;
 TEST_CASE("Analog Envelope")
 {
     auto sampleRate = 10000;
-    AnalogEnvelope<float> envelope(0.0, 0.0, 0.0, 0.0, sampleRate);
+    AnalogEnvelope<float> envelope(sampleRate, 0.0, 0.0, 0.0, 0.0);
     
-    envelope.setAttackTime(0.1, sampleRate);
-    envelope.setDecayTime(0.1, sampleRate);
-    envelope.setReleaseTime(0.1, sampleRate);
+    envelope.setAttackTime(0.1);
+    envelope.setDecayTime(0.1);
+    envelope.setReleaseTime(0.1);
     envelope.setSustain(0.5);
     
     vector<float> output(sampleRate);
