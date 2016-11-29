@@ -5,13 +5,13 @@ project(grizzly-test)
 add_definitions(-std=c++1z -Wall)
 include_directories(/usr/local/include)
 
-add_executable(grizzly-test
+set(SOURCES
     main.cpp
     AllPassFilter.cpp
-    AnalogEnvelope.cpp
+# AnalogEnvelope.cpp
     CircularBuffer.cpp
     Convolution.cpp
-    FastFourierTransform.cpp
+    FastFourierTransformOoura.cpp
     MidSide.cpp
     Normalize.cpp
     Ramp.cpp
@@ -21,10 +21,14 @@ add_executable(grizzly-test
     WaveShaper.cpp
     Window.cpp)
 
+add_executable(grizzly-test ${SOURCES})
+target_sources(grizzly-test PRIVATE ${SOURCES})
+
 find_library(Grizzly grizzly)
 target_link_libraries(grizzly-test ${Grizzly})
 
 if (APPLE)
+    target_sources(grizzly-test PRIVATE FastFourierTransformAccelerate.cpp)
 	find_library(Accelerate Accelerate REQUIRED)
 	target_link_libraries(grizzly-test ${Accelerate})
 endif (APPLE)

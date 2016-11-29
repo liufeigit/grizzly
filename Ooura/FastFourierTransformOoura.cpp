@@ -53,7 +53,7 @@ namespace dsp
         for (auto i = 0; i < size / 2; ++i)
         {
             real[i] = data[i * 2];
-            imaginary[i] = -data[i * 2 + 1];
+            imaginary[i] = -data[i * 2 + 1]; // Flip imaginary axis, otherwise Ooura will invert the signal
         }
         
         real[size / 2] = - imaginary[0];
@@ -66,7 +66,7 @@ namespace dsp
         for (auto i = 0; i < size / 2; ++i)
         {
             data[i * 2] = real[i];
-            data[i * 2 + 1] = -imaginary[i];
+            data[i * 2 + 1] = -imaginary[i]; // Flip imaginary axis, otherwise Ooura will invert the signal
         }
         
         data[1] = real[size / 2];
@@ -102,8 +102,9 @@ namespace dsp
         math::interleave(inReal, inReal + size, inImaginary, dataComplex.begin());
         
         cdft(static_cast<int>(size * 2), 1, dataComplex.data(), ip.data(), w.data());
-
+        
         math::deinterleave(dataComplex.begin(), dataComplex.end(), outReal, outImaginary);
+        std::transform(outImaginary, outImaginary + size, outImaginary, std::negate<>());
     }
     
     void FastFourierTransformOoura::forwardComplex(const double* inReal, const double* inImaginary, double* outReal, double* outImaginary)
@@ -113,6 +114,7 @@ namespace dsp
         cdft(static_cast<int>(size * 2), 1, dataComplex.data(), ip.data(), w.data());
         
         math::deinterleave(dataComplex.begin(), dataComplex.end(), outReal, outImaginary);
+        std::transform(outImaginary, outImaginary + size, outImaginary, std::negate<>());
     }
     
     void FastFourierTransformOoura::inverseComplex(const float* inReal, const float* inImaginary, float* outReal, float* outImaginary)
@@ -125,6 +127,7 @@ namespace dsp
         std::transform(dataComplex.begin(), dataComplex.end(), dataComplex.begin(), [&](const double& x){ return x * factor; });
         
         math::deinterleave(dataComplex.begin(), dataComplex.end(), outReal, outImaginary);
+        std::transform(outReal, outReal + size, outReal, std::negate<>());
     }
     
     void FastFourierTransformOoura::inverseComplex(const double* inReal, const double* inImaginary, double* outReal, double* outImaginary)
@@ -137,5 +140,6 @@ namespace dsp
         std::transform(dataComplex.begin(), dataComplex.end(), dataComplex.begin(), [&](const double& x){ return x * factor; });
         
         math::deinterleave(dataComplex.begin(), dataComplex.end(), outReal, outImaginary);
+        std::transform(outReal, outReal + size, outReal, std::negate<>());
     }
 }
