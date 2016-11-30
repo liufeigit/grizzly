@@ -40,7 +40,7 @@ namespace dsp
     
     //! Set biquad to through pass
     template <typename T>
-    constexpr void biquadThroughPass(BiquadCoefficients<T>& coefficients)
+    constexpr void throughPass(BiquadCoefficients<T>& coefficients)
     {
         coefficients.a0 = 1;
         coefficients.a1 = 0;
@@ -50,10 +50,10 @@ namespace dsp
     }
     
     //! Set biquad to low pass filtering
-    template <class T, class Q>
-    constexpr void lowPass(BiquadCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff, const Q& q)
+    template <class T>
+    constexpr void lowPass(BiquadCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff, float q)
     {
-        const auto w = 2 * math::PI<float> * cutOff / sampleRate;
+        const auto w = math::TWO_PI<float> * cutOff / sampleRate;
         const auto sinw = sin(w);
         const auto cosw = cos(w);
         const auto alpha = sinw / (2 * q);
@@ -69,10 +69,10 @@ namespace dsp
     }
     
     //! Set biquad to high pass filtering
-    template <class T, class Q>
-    constexpr void highPass(BiquadCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff, const Q& q)
+    template <class T>
+    constexpr void highPass(BiquadCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff, float q)
     {
-        const auto w = 2 * math::PI<float> * cutOff / sampleRate;
+        const auto w = math::TWO_PI<float> * cutOff / sampleRate;
         const auto sinw = sin(w);
         const auto cosw = cos(w);
         const auto alpha = sinw / (2 * q);
@@ -88,10 +88,10 @@ namespace dsp
     }
     
     //! Set biquad to band pass filtering with a constant skirt gain
-    template <class T, class Q>
-    constexpr void bandPassConstantSkirt(BiquadCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff, const Q& q)
+    template <class T>
+    constexpr void bandPassConstantSkirt(BiquadCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff, float q)
     {
-        const auto w = 2 * math::PI<float> * cutOff / sampleRate;
+        const auto w = math::TWO_PI<float> * cutOff / sampleRate;
         const auto sinw = sin(w);
         const auto cosw = cos(w);
         const auto alpha = sinw / (2 * q);
@@ -107,10 +107,10 @@ namespace dsp
     }
     
     //! Set biquad to band pass filtering with a constant peak gain
-    template <class T, class Q>
-    constexpr void bandPassConstantPeak(BiquadCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff, const Q& q)
+    template <class T>
+    constexpr void bandPassConstantPeak(BiquadCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff, float q)
     {
-        const auto w = 2 * math::PI<float> * cutOff / sampleRate;
+        const auto w = math::TWO_PI<float> * cutOff / sampleRate;
         const auto sinw = sin(w);
         const auto cosw = cos(w);
         const auto alpha = sinw / (2 * q);
@@ -126,10 +126,10 @@ namespace dsp
     }
     
     //! Set biquad to peak filtering with a constant peak gain
-    template <class T, class Q, class Gain>
-    constexpr void peakConstantSkirt(BiquadCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff, const Q& q, const unit::decibel<Gain>& gain)
+    template <class T>
+    constexpr void peakConstantSkirt(BiquadCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff, float q, const unit::decibel<float>& gain)
     {
-        const auto w = 2 * math::PI<float> * cutOff / sampleRate;
+        const auto w = math::TWO_PI<float> * cutOff / sampleRate;
         const auto sinw = sin(w);
         const auto cosw = cos(w);
         const auto alpha = sinw / (2 * q);
@@ -146,10 +146,10 @@ namespace dsp
     }
     
     //! Set biquad to peak filtering with a constant Q
-    template <class T, class Q, class Gain>
-    constexpr void peakConstantQ(BiquadCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff, const Q& q, const unit::decibel<Gain>& gain)
+    template <class T>
+    constexpr void peakConstantQ(BiquadCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff, float q, unit::decibel<float> gain)
     {
-        const auto w = 2 * math::PI<float> * cutOff / sampleRate;
+        const auto w = math::TWO_PI<float> * cutOff / sampleRate;
         const auto sinw = sin(w);
         const auto cosw = cos(w);
         const auto alpha = sinw / (2 * q);
@@ -180,10 +180,10 @@ namespace dsp
     }
     
     //! Set biquad to low shelf filtering
-    template <class T, class Q, class Gain>
-    constexpr void lowShelf(BiquadCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff, const Q& q, const unit::decibel<Gain>& gain)
+    template <class T>
+    constexpr void lowShelf(BiquadCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff, float q, unit::decibel<float> gain)
     {
-        const auto w = 2 * math::PI<float> * cutOff / sampleRate;
+        const auto w = math::TWO_PI<float> * cutOff / sampleRate;
         const auto sinw = sin(w);
         const auto cosw = cos(w);
         const auto alpha = sinw / (2 * q);
@@ -201,10 +201,10 @@ namespace dsp
     }
     
     //! Set biquad to high shelf filtering
-    template <class T, class Q, class Gain>
-    constexpr void highShelf(BiquadCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff, const Q& q, const unit::decibel<Gain>& gain)
+    template <class T>
+    constexpr void highShelf(BiquadCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff, float q, unit::decibel<float> gain)
     {
-        const auto w = 2 * math::PI<float> * cutOff / sampleRate;
+        const auto w = math::TWO_PI<float> * cutOff / sampleRate;
         const auto sinw = sin(w);
         const auto cosw = cos(w);
         const auto alpha = sinw / (2 * q);
@@ -222,10 +222,10 @@ namespace dsp
     }
     
     //! Set biquad to notch filtering
-    template <class T, class Q>
-    constexpr void notch(BiquadCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff, const Q& q)
+    template <class T>
+    constexpr void notch(BiquadCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff, float q)
     {
-        const auto w = 2 * math::PI<float> * cutOff / sampleRate;
+        const auto w = math::TWO_PI<float> * cutOff / sampleRate;
         const auto sinw = sin(w);
         const auto cosw = cos(w);
         const auto alpha = sinw / (2 * q);
@@ -240,10 +240,10 @@ namespace dsp
     }
     
     //! Set biquad to all pass filtering
-    template <class T, class Q>
-    constexpr void allPass(BiquadCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff, const Q& q)
+    template <class T>
+    constexpr void allPass(BiquadCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff, float q)
     {
-        const auto w = 2 * math::PI<float> * cutOff / sampleRate;
+        const auto w = math::TWO_PI<float> * cutOff / sampleRate;
         const auto sinw = sin(w);
         const auto cosw = cos(w);
         const auto alpha = sinw / (2 * q);

@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "doctest.h"
 
 #include "../FirstOrderFilter.hpp"
@@ -9,10 +7,10 @@ using namespace std;
 
 TEST_CASE("FirstOrderFilter")
 {
-    FirstOrderFilter<float> filter;
-    
-    SUBCASE("Manual coefficients")
+    SUBCASE("process()")
     {
+        FirstOrderFilter<float> filter;
+        
         filter.coefficients.a0 = 0.5;
         filter.coefficients.a1 = 0.5;
         filter.coefficients.b1 = 0.5;
@@ -25,51 +23,56 @@ TEST_CASE("FirstOrderFilter")
         CHECK(filter.process(0) == doctest::Approx(0.046875));
     }
     
-    SUBCASE("throughPass()")
+    SUBCASE("Coefficients setup")
     {
-        throughPass(filter.coefficients);
+        FirstOrderCoefficients<float> coefficients;
         
-        CHECK(filter.coefficients.a0 == doctest::Approx(1));
-        CHECK(filter.coefficients.a1 == doctest::Approx(0));
-        CHECK(filter.coefficients.b1 == doctest::Approx(0));
-    }
-    
-    SUBCASE("lowPassOnePole")
-    {
-        SUBCASE("with cutoff")
+        SUBCASE("throughPass()")
         {
-            lowPassOnePole(filter.coefficients, 44100, 10000);
+            throughPass(coefficients);
             
-            CHECK(filter.coefficients.a0 == doctest::Approx(0.759433464558704));
-            CHECK(filter.coefficients.a1 == doctest::Approx(0));
-            CHECK(filter.coefficients.b1 == doctest::Approx(0.240566535441296));
+            CHECK(coefficients.a0 == doctest::Approx(1));
+            CHECK(coefficients.a1 == doctest::Approx(0));
+            CHECK(coefficients.b1 == doctest::Approx(0));
         }
         
-        SUBCASE("with time and constant")
+        SUBCASE("lowPassOnePole")
         {
-            lowPassOnePole(filter.coefficients, 44100, 1, 5);
+            SUBCASE("with cutoff")
+            {
+                lowPassOnePole(coefficients, 44100, 10000);
+                
+                CHECK(coefficients.a0 == doctest::Approx(0.759433464558704));
+                CHECK(coefficients.a1 == doctest::Approx(0));
+                CHECK(coefficients.b1 == doctest::Approx(0.240566535441296));
+            }
             
-            CHECK(filter.coefficients.a0 == doctest::Approx(0.0001133723));
-            CHECK(filter.coefficients.a1 == doctest::Approx(0));
-            CHECK(filter.coefficients.b1 == doctest::Approx(0.9998866277));
+            SUBCASE("with time and constant")
+            {
+                lowPassOnePole(coefficients, 44100, 1, 5);
+                
+                CHECK(coefficients.a0 == doctest::Approx(0.0001133723));
+                CHECK(coefficients.a1 == doctest::Approx(0));
+                CHECK(coefficients.b1 == doctest::Approx(0.9998866277));
+            }
         }
-    }
-    
-    SUBCASE("lowPassOnePoleZero")
-    {
-        lowPassOnePoleZero(filter.coefficients, 44100, 10000);
         
-        CHECK(filter.coefficients.a0 == doctest::Approx(0.379716732279352));
-        CHECK(filter.coefficients.a1 == doctest::Approx(0.379716732279352));
-        CHECK(filter.coefficients.b1 == doctest::Approx(0.240566535441296));
-    }
-    
-    SUBCASE("highPassOnePoleZero")
-    {
-        highPassOnePoleZero(filter.coefficients, 44100, 10000);
+        SUBCASE("lowPassOnePoleZero")
+        {
+            lowPassOnePoleZero(coefficients, 44100, 10000);
+            
+            CHECK(coefficients.a0 == doctest::Approx(0.379716732279352));
+            CHECK(coefficients.a1 == doctest::Approx(0.379716732279352));
+            CHECK(coefficients.b1 == doctest::Approx(0.240566535441296));
+        }
         
-        CHECK(filter.coefficients.a0 == doctest::Approx(0.620283267720648));
-        CHECK(filter.coefficients.a1 == doctest::Approx(-0.620283267720648));
-        CHECK(filter.coefficients.b1 == doctest::Approx(0.240566535441296));
+        SUBCASE("highPassOnePoleZero")
+        {
+            highPassOnePoleZero(coefficients, 44100, 10000);
+            
+            CHECK(coefficients.a0 == doctest::Approx(0.620283267720648));
+            CHECK(coefficients.a1 == doctest::Approx(-0.620283267720648));
+            CHECK(coefficients.b1 == doctest::Approx(0.240566535441296));
+        }
     }
 }
