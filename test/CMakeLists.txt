@@ -16,6 +16,7 @@ set(SOURCES
     Delay.cpp
     FastFourierTransformOoura.cpp
     FirstOrderFilter.cpp
+    GordonSmithOscillator.cpp
     MidSide.cpp
     Normalize.cpp
     Ramp.cpp

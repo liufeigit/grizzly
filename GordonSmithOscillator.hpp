@@ -11,6 +11,7 @@
 
 #include <cmath>
 #include <unit/hertz.hpp>
+#include <unit/radian.hpp>
 
 #include <dsperados/math/constants.hpp>
 
@@ -22,17 +23,16 @@ namespace dsp
     {
     public:
         //! Construct the oscillator
-        GordonSmithOscillator() = default;
+        constexpr GordonSmithOscillator() = default;
         
         //! Construct the oscillator
-        GordonSmithOscillator(unit::hertz<float> frequency) :
-            frequency(frequency)
+        constexpr GordonSmithOscillator(unit::radian<float> angle)
         {
-            recomputeEpsilon();
+            setAngle(angle);
         }
         
         //! Compute the next sample
-        T process()
+        constexpr T process()
         {
             yq -= epsilon * y;
             
@@ -40,34 +40,17 @@ namespace dsp
         }
         
         //! Compute the next sample
-        T operator()()
+        constexpr T operator()()
         {
             return process();
         }
         
-        //! Change the frequency
-        void setFrequency(unit::hertz<float> frequency)
+        //! Change the angle the oscillator should increment every process
+        constexpr void setAngle(unit::radian<float> angle)
         {
-            this->frequency = frequency;
-            recomputeEpsilon();
-        }
-        
-        //! Set the sample rate
-        void setSampleRate(unit::hertz<float> sampleRate)
-        {
-            this->sampleRate = sampleRate;
-            recomputeEpsilon();
-        }
-        
-    private:
-        //! Recompute epsilon
-        void recomputeEpsilon()
-        {
-            auto theta = frequency / sampleRate * bear::TWO_PI<float>;
-            
-            epsilon = 2 * sin(theta / 2);
-            y = sin(-theta);
-            yq = cos(-theta);            
+            epsilon = 2 * sin(angle / 2);
+            y = sin(-angle);
+            yq = cos(-angle);
         }
         
     private:
@@ -82,9 +65,6 @@ namespace dsp
         
         //! The frequency of the sine
         unit::hertz<float> frequency;
-        
-        //! The sample rate at which the object runs
-        unit::hertz<float> sampleRate = 44100;
     };
 }
 
