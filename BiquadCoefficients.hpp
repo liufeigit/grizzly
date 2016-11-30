@@ -186,7 +186,6 @@ namespace dsp
         const auto w = math::TWO_PI<float> * cutOff / sampleRate;
         const auto sinw = sin(w);
         const auto cosw = cos(w);
-        const auto alpha = sinw / (2 * q);
         const auto A = std::pow(10, gain / 40);
         
         const auto beta = sqrt(A)/q;
@@ -207,7 +206,6 @@ namespace dsp
         const auto w = math::TWO_PI<float> * cutOff / sampleRate;
         const auto sinw = sin(w);
         const auto cosw = cos(w);
-        const auto alpha = sinw / (2 * q);
         const auto A = std::pow(10, gain / 40);
         
         const auto beta = sqrt(A)/q;

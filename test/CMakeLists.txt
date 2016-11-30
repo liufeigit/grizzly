@@ -13,6 +13,7 @@ set(SOURCES
     CircularBuffer.cpp
     CombFilter.cpp
     Convolution.cpp
+    Delay.cpp
     FastFourierTransformOoura.cpp
     FirstOrderFilter.cpp
     MidSide.cpp
