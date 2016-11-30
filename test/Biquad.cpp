@@ -9,10 +9,28 @@ using namespace std;
 
 TEST_CASE("Biquad")
 {
-    SUBCASE("process()")
+    SUBCASE("BiquadDirectFormI")
     {
         BiquadDirectFormI<float> filter;
 
+        filter.coefficients.a0 = 0.1;
+        filter.coefficients.a1 = 0.2;
+        filter.coefficients.a2 = 0.3;
+        filter.coefficients.b1 = 0.4;
+        filter.coefficients.b2 = 0.5;
+        
+        CHECK(filter.process(1) == doctest::Approx(0.1));
+        CHECK(filter.process(0) == doctest::Approx(0.16));
+        CHECK(filter.process(0) == doctest::Approx(0.186));
+        CHECK(filter.process(0) == doctest::Approx(-0.1544));
+        CHECK(filter.process(0) == doctest::Approx(-0.03124));
+        CHECK(filter.process(0) == doctest::Approx(0.0897));
+    }
+    
+    SUBCASE("BiquadTransposedDirectFormII")
+    {
+        BiquadTransposedDirectFormII<float> filter;
+        
         filter.coefficients.a0 = 0.1;
         filter.coefficients.a1 = 0.2;
         filter.coefficients.a2 = 0.3;

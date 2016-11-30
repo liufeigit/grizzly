@@ -50,9 +50,36 @@ namespace dsp
         T yz2 = 0; //!< 2-sample output delay
     };
     
-    //! The default biquad is a DFI biquad
+    //! A biquad using Transposed Direct Form II
+    /*! Biquad that computes samples using the Direct Form I topology */
     template <class T, class CoeffType = double>
-    using Biquad = BiquadDirectFormI<T, CoeffType>;
+    class BiquadTransposedDirectFormII
+    {
+    public:
+        //! Compute a sample
+        constexpr T process(const T& x)
+        {
+            const auto y = x * coefficients.a0 + z1;
+            z1 = x * coefficients.a1 + y * -coefficients.b1 + z2;
+            z2 = x * coefficients.a2 + y * -coefficients.b2;
+ 
+            return y;
+        }
+        
+        //! Compute a sample
+        constexpr T operator()(const T& x)
+        {
+            return process(x);
+        }
+        
+    public:
+        //! The coefficients to the biquad
+        BiquadCoefficients<CoeffType> coefficients;
+        
+    private:
+        T z1 = 0; //!< 1-sample delay
+        T z2 = 0; //!< 2-sample delay
+    };
 }
 
 #endif
