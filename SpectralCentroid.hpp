@@ -17,7 +17,7 @@ namespace dsp
     //! The centroid of a range of values
     /*! The centroid or 'center of gravity' is sum of values, weighted by its index, divided by the sum of values. */
     template <typename Iterator>
-    inline static float spectralCentroidBin(Iterator begin, Iterator end)
+    constexpr double spectralCentroidBin(Iterator begin, Iterator end)
     {
         // Accumulation of the numerator and the denominator
         typename Iterator::value_type numerator = 0;
@@ -30,7 +30,7 @@ namespace dsp
             denominator += *begin;
         }
         
-        return numerator / denominator;
+        return numerator / static_cast<double>(denominator);
     }
 }
 

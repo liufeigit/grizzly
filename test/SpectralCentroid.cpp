@@ -11,15 +11,15 @@ TEST_CASE("Spectral Centroid Bin")
 {
     SUBCASE("equal values")
     {
-        vector<float> x{1, 1, 1, 1, 1};
+        vector<int> x{1, 1, 1, 1, 2};
         auto centroid = spectralCentroidBin(x.begin(), x.end());
         
-        CHECK(centroid == doctest::Approx(2));
+        CHECK(centroid == doctest::Approx(2.33333));
     }
     
     SUBCASE("value at middle bin")
     {
-        vector<float> x{0, 0, 1, 0, 0};
+        vector<int> x{0, 0, 1, 0, 0};
         auto centroid = spectralCentroidBin(x.begin(), x.end());
         
         CHECK(centroid == doctest::Approx(2));
@@ -27,7 +27,7 @@ TEST_CASE("Spectral Centroid Bin")
     
     SUBCASE("value at last bin")
     {
-        vector<float> x{0, 0, 0, 0, 1};
+        vector<int> x{0, 0, 0, 0, 1};
         auto centroid = spectralCentroidBin(x.begin(), x.end());
         
         CHECK(centroid == doctest::Approx(4));

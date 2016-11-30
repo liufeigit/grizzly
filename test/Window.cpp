@@ -15,14 +15,15 @@ TEST_CASE("Window")
         SUBCASE("default")
         {
             auto window = createRectangularWindow<float>(4);
-            for(auto& value: window)
+            for(auto& value : window)
                 CHECK(value == doctest::Approx(1));
         }
         
         SUBCASE("with argument")
         {
             auto window = createRectangularWindow<float>(4, 2.3);
-            for(auto& value: window)
+            
+            for(auto& value : window)
                 CHECK(value == doctest::Approx(2.3));
         }
     }
@@ -32,6 +33,7 @@ TEST_CASE("Window")
         SUBCASE("symmetric")
         {
             auto window = createSymmetricTriangleWindow<float>(10);
+            
             CHECK(window[4] == window[5]);
         }
         
@@ -39,6 +41,7 @@ TEST_CASE("Window")
         {
             auto window = createTriangleWindow<float>(10);
             float peakValue = *max_element(window.begin(), window.end());
+            
             CHECK(peakValue == doctest::Approx(1));
         }
     }
@@ -48,6 +51,7 @@ TEST_CASE("Window")
         SUBCASE("symmetric")
         {
             auto window = createSymmetricHanningWindow<float>(10);
+            
             CHECK(window[4] == window[5]);
         }
         
@@ -55,6 +59,7 @@ TEST_CASE("Window")
         {
             auto window = createHanningWindow<float>(10);
             float peakValue = *max_element(window.begin(), window.end());
+            
             CHECK(peakValue == doctest::Approx(1));
         }
     }
@@ -64,6 +69,7 @@ TEST_CASE("Window")
         SUBCASE("symmetric")
         {
             auto window = createSymmetricHammingWindow<float>(10);
+            
             CHECK(window[4] == window[5]);
         }
         
@@ -71,6 +77,7 @@ TEST_CASE("Window")
         {
             auto window = createHammingWindow<float>(10);
             float peakValue = *max_element(window.begin(), window.end());
+            
             CHECK(peakValue == doctest::Approx(1));
         }
     }
@@ -80,6 +87,7 @@ TEST_CASE("Window")
         SUBCASE("symmetric")
         {
             auto window = createSymmetricBlackmanWindow<float>(10);
+            
             CHECK(window[4] == window[5]);
         }
         
@@ -87,6 +95,7 @@ TEST_CASE("Window")
         {
             auto window = createBlackmanWindow<float>(10);
             float peakValue = *max_element(window.begin(), window.end());
+            
             CHECK(peakValue == doctest::Approx(1));
         }
     }
@@ -96,9 +105,11 @@ TEST_CASE("Window")
         SUBCASE("symmetric")
         {
             auto window = createSymmetricSincWindow<float>(10, M_PI);
+            
             CHECK(window[4] == window[5]);
             
             window = createSymmetricSincWindow<float>(10, 0.1);
+            
             CHECK(window[4] == window[5]);
         }
         
@@ -106,10 +117,12 @@ TEST_CASE("Window")
         {
             auto window = createSincWindow<float>(10, M_PI);
             float peakValue = *max_element(window.begin(), window.end());
+            
             CHECK(peakValue == doctest::Approx(1));
             
             window = createSincWindow<float>(10, 0.1);
             peakValue = *max_element(window.begin(), window.end());
+            
             CHECK(peakValue == doctest::Approx(0.1 / M_PI));
         }
     }
@@ -119,6 +132,7 @@ TEST_CASE("Window")
         SUBCASE("symmetric")
         {
             auto window = createSymmetricKaiserWindow<float>(10, 1);
+            
             CHECK(window[4] == window[5]);
         }
     }
