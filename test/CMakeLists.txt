@@ -13,6 +13,7 @@ set(SOURCES
     CombFilter.cpp
     Convolution.cpp
     FastFourierTransformOoura.cpp
+    FirstOrderFilter.cpp
     MidSide.cpp
     Normalize.cpp
     Ramp.cpp

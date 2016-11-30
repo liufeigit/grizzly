@@ -1,3 +1,5 @@
+#include <vector>
+
 #include "doctest.h"
 
 #include "../Apple/FastFourierTransformAccelerate.hpp"

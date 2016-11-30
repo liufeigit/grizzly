@@ -1,3 +1,5 @@
+#include <vector>
+
 #include "doctest.h"
 
 #include "../Ooura/FastFourierTransformOoura.hpp"

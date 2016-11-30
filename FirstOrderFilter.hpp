@@ -32,6 +32,12 @@ namespace dsp
             return output;
         }
         
+        //! Compute a sample
+        constexpr T operator()(const T& x)
+        {
+            return process(x);
+        }
+        
         //! Set the filter state
         void setState(const T& state)
         {
@@ -43,12 +49,6 @@ namespace dsp
         void clear()
         {
             setState(0);
-        }
-        
-        //! Compute a sample
-        constexpr T operator()(const T& x)
-        {
-            return process(x);
         }
         
     public:

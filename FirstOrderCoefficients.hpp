@@ -33,20 +33,18 @@ namespace dsp
     
     //! Set filter to through pass
     template <typename T>
-    constexpr void firstOrderThroughPass(FirstOrderCoefficients<T>& coefficients)
+    constexpr void throughPass(FirstOrderCoefficients<T>& coefficients)
     {
         coefficients.a0 = 1;
         coefficients.a1 = 0;
         coefficients.b1 = 0;
     }
     
-    
-    
     //! Set filter to low pass filtering using one pole, given a samplerate and a cutoff
-    template <typename T1, typename T2, typename T3>
-    constexpr void lowPassOnePole(FirstOrderCoefficients<T1>& coefficients, unit::hertz<T2> sampleRate, unit::hertz<T3> cutOff)
+    template <typename T1>
+    constexpr void lowPassOnePole(FirstOrderCoefficients<T1>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff)
     {
-        const auto w = 2.0 * math::PI<T3> * cutOff / static_cast<long double>(sampleRate);
+        const auto w = math::TWO_PI<double> * cutOff / static_cast<long double>(sampleRate);
         
         coefficients.b1 = exp(-w);
         coefficients.a0 = 1.0 - coefficients.b1;
@@ -54,17 +52,14 @@ namespace dsp
     }
     
     //! Set filter to low pass filtering using one pole, given a samplerate, time and and a time constant factor.
-    /*! The timeconstant factor affects the actual time. A factor of 1 means a step response where the output reaches to ~63% in the given time. A factor of 5 reaches to ~99%. */
-    template <typename T1, typename T2, typename T3, typename T4>
-    constexpr void lowPassOnePole(FirstOrderCoefficients<T1>& coefficients, unit::hertz<T2> sampleRate, unit::second<T3> time, T4 timeConstantFactor)
+    /*! @param timeConstantReciprocal: Affects the actual time. A factor of 1 means a step response where the output reaches to ~63% in the given time. A factor of 5 reaches to ~99%. */
+    template <typename T>
+    constexpr void lowPassOnePole(FirstOrderCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::second<float> time, float timeConstantReciprocal)
     {
         if (time <= 0)
-        {
-            firstOrderThroughPass(coefficients);
-            return;
-        }
+            return throughPass(coefficients);
             
-        const auto w = timeConstantFactor / static_cast<long double>(time * sampleRate);
+        const auto w = timeConstantReciprocal / static_cast<long double>(time * sampleRate);
         
         coefficients.b1 = exp(-w);
         coefficients.a0 = 1.0 - coefficients.b1;
@@ -72,10 +67,10 @@ namespace dsp
     }
     
     //! Set filter to low pass filtering using one pole and one zero, given a samplerate and a cutoff
-    template <typename T1, typename T2, typename T3>
-    constexpr void lowPassOnePoleZero(FirstOrderCoefficients<T1>& coefficients, unit::hertz<T2> sampleRate, unit::hertz<T3> cutOff)
+    template <typename T>
+    constexpr void lowPassOnePoleZero(FirstOrderCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff)
     {
-        const auto w = 2.0 * math::PI<T3> * cutOff / static_cast<long double>(sampleRate);
+        const auto w = math::TWO_PI<double> * cutOff / static_cast<long double>(sampleRate);
         
         coefficients.b1 = exp(-w);
         coefficients.a0 = (1.0 - coefficients.b1) / 2;
@@ -83,10 +78,10 @@ namespace dsp
     }
     
     //! Set filter to high pass filtering using one pole and one zero, given a samplerate and a cutoff
-    template <typename T1, typename T2, typename T3>
-    constexpr void highPassOnePoleZero(FirstOrderCoefficients<T1>& coefficients, unit::hertz<T2> sampleRate, unit::hertz<T3> cutOff)
+    template <typename T>
+    constexpr void highPassOnePoleZero(FirstOrderCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff)
     {
-        const auto w = 2.0 * math::PI<T3> * cutOff / static_cast<long double>(sampleRate);
+        const auto w = math::TWO_PI<double> * cutOff / static_cast<long double>(sampleRate);
         
         coefficients.b1 = exp(-w);
         coefficients.a0 = (1 + coefficients.b1) / 2;

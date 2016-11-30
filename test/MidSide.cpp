@@ -4,7 +4,7 @@
 
 using namespace dsp;
 
-TEST_CASE("test mid-side conversion")
+TEST_CASE("MidSide")
 {
 	SUBCASE("stereo")
 	{
