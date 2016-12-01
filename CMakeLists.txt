@@ -20,7 +20,6 @@ set(HEADERS
 	Convolution.hpp
 	Delay.hpp
 	DownSample.hpp
-	Envelope.hpp
 	EnvelopeDetector.hpp
     FastFourierTransform.hpp
 	FastFourierTransformBase.hpp
