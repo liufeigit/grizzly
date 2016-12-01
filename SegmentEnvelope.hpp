@@ -4,11 +4,11 @@
 
 
 #include <dsperados/math/utility.hpp>
-#include <initializer_list>
 #include <dsperados/math/ease.hpp>
 #include <dsperados/math/interpolation.hpp>
 #include <experimental/optional>
 #include <functional>
+#include <initializer_list>
 #include <numeric>
 #include <unit/time.hpp>
 #include <utility>
@@ -73,6 +73,15 @@ namespace dsp
         /*! Jump directly to a certain point, changing the current segment accordingly. */
         void setState(unit::second<Time> to)
         {
+            if (segments.empty() || to <= 0)
+            {
+                envelopeTime = 0;
+                segmentTime = 0;
+                index = 0;
+                return;
+            }
+            
+            // accumulate all segments durations
             auto envelopeDuration = std::accumulate(segments.begin(), segments.end(), unit::second<Time>(0) , [](const auto& acc, const auto& segment) { return acc + segment.duration; } );
             
             if (to >= envelopeDuration)
@@ -80,33 +89,38 @@ namespace dsp
                 envelopeTime = envelopeDuration;
                 segmentTime = segments.back().duration;
                 index = segments.size();
-                
-                if (hold)
-                    hold->enabled = false;
+                return;
             }
-            else
+            
+            envelopeTime = to;
+            
+            unit::second<Time> parialTime = 0;
+            for (auto i = 0; i < segments.size(); ++i)
             {
-                envelopeTime = to;
-                
-                unit::second<Time> parialTime = 0;
-                for (auto i = 0; i < segments.size(); ++i)
+                if (parialTime + segments[i].duration < envelopeTime)
                 {
-                    if (parialTime + segments[i].duration < envelopeTime)
-                    {
-                        parialTime += segments[i].duration;
-                        continue;
-                    }
-                    
-                    index = i;
-                    segmentTime = envelopeTime - parialTime;
-                    break;
+                    parialTime += segments[i].duration;
+                    continue;
                 }
+                
+                index = i;
+                segmentTime = envelopeTime - parialTime;
+                break;
             }
+        }
+        
+        //! Reset the envelope
+        void reset()
+        {
+            setState(0);
         }
         
         //! Increment the time
         void increment(const Time& increment)
         {
+            if (segments.empty() || index >= segments.size())
+                return;
+            
             segmentTime += increment;
             envelopeTime += increment;
             
@@ -116,7 +130,7 @@ namespace dsp
                 envelopeTime = hold->timePoint;
             }
             
-            while (segmentTime >= segments[index].duration && index < segments.size())
+            while (segmentTime >= segments[index].duration)
             {
                 segmentTime -= segments[index].duration;
                 ++index;
@@ -126,7 +140,9 @@ namespace dsp
         //! Return the current envelope value
         Value read()
         {
-            if (index >= segments.size())
+            if (segments.empty())
+                return 0;
+            else if (index >= segments.size())
                 return segments.back().destination;
             
             auto currentSegment = segments[index];
@@ -134,6 +150,29 @@ namespace dsp
             auto normalizedOutput = currentSegment.ease(segmentTime / static_cast<double>(currentSegment.duration));
             
             return math::interpolateLinear(normalizedOutput, index == 0 ? Value(0) : segments[index - 1].destination, currentSegment.destination);
+        }
+        
+        //! Add a segment
+        void addSegment(Segment segment)
+        {
+            segments.emplace_back(segment);
+        }
+        
+        //! Insert a segment
+        void insertSegment(size_t index, Segment segment)
+        {
+            segments.insert(segments.begin() + index, segment);
+            setState(envelopeTime);
+        }
+        
+        //! Erase a segment
+        void eraseSegment(size_t index)
+        {
+            if (segments.empty() || index >= segments.size())
+                return;
+            
+            segments.erase(segments.begin() + index);
+            setState(envelopeTime);
         }
         
         //! Set a hold point
@@ -162,13 +201,15 @@ namespace dsp
             hold = std::experimental::nullopt;
         }
         
-    public:
-        //! Vector for Segments
-        std::vector<Segment> segments;
+        //! Get a segment
+        Segment& operator[](size_t index) { return segments[index]; }
+        
+        //! Get a segment, const
+        const Segment& operator[](size_t index) const { return segments[index]; }
         
         
     private:
-        //! Hold structure
+        //! Hold point
         /*! Containts a time point from which the envelope stops incrementing and a boolian to indicate whether the hold is enabled or not. */
         struct Hold
         {
@@ -178,6 +219,9 @@ namespace dsp
         
         
     private:
+        //! Vector for Segments
+        std::vector<Segment> segments;
+        
         //! The segment index
         size_t index = 0;
         
