@@ -20,6 +20,7 @@ set(SOURCES
     MidSide.cpp
     Normalize.cpp
     Ramp.cpp
+SegmentEnvelope.cpp
     SpectralCentroid.cpp
     Spectrum.cpp
     Waveform.cpp
