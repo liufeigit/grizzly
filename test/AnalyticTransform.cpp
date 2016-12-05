@@ -42,13 +42,4 @@ TEST_CASE("AnalyticTransform")
     REQUIRE(std::abs(out[7]) == doctest::Approx(1));
     CHECK(out[7].real() == doctest::Approx(-0.70710678118655));
     CHECK(out[7].imag() == doctest::Approx(-0.70710678118655));
-    
-    
-//    CHECK(out[1] == doctest::Approx(-0.70710678118655));
-//    CHECK(out[2] == doctest::Approx(0));
-//    CHECK(out[3] == doctest::Approx(0.70710678118655));
-//    CHECK(out[4] == doctest::Approx(1));
-//    CHECK(out[5] == doctest::Approx(0.70710678118655));
-//    CHECK(out[6] == doctest::Approx(0));
-//    CHECK(out[7] == doctest::Approx(-0.70710678118655));
 }
