@@ -31,7 +31,6 @@ set(HEADERS
 	HilbertTransform.hpp
 	HighFrequencyContent.hpp
 	MidSide.hpp
-    Normalize.hpp
     Ramp.hpp
     SegmentEnvelope.hpp
     SpectralCentroid.hpp
