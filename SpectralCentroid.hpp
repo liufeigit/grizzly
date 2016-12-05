@@ -6,10 +6,9 @@
 //  Copyright © 2015 FrisHertz. All rights reserved.
 //
 
-#ifndef BEAR_AUDIO_SPECTRAL_CENTROID_HPP
-#define BEAR_AUDIO_SPECTRAL_CENTROID_HPP
+#ifndef GRIZZLY_SPECTRAL_CENTROID_HPP
+#define GRIZZLY_SPECTRAL_CENTROID_HPP
 
-//#include <dsperados/math/statistics.hpp>
 #include <unit/hertz.hpp>
 
 namespace dsp
@@ -17,7 +16,7 @@ namespace dsp
     //! The centroid of a range of values
     /*! The centroid or 'center of gravity' is sum of values, weighted by its index, divided by the sum of values. */
     template <typename Iterator>
-    constexpr double spectralCentroidBin(Iterator begin, Iterator end)
+    constexpr double spectralCentroid(Iterator begin, Iterator end)
     {
         // Accumulation of the numerator and the denominator
         typename Iterator::value_type numerator = 0;
@@ -34,4 +33,4 @@ namespace dsp
     }
 }
 
-#endif /* BEAR_AUDIO_SPECTRAL_CENTROID_HPP */
+#endif /* GRIZZLY_SPECTRAL_CENTROID_HPP */

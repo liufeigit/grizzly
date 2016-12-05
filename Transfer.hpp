@@ -6,8 +6,8 @@
 //  Copyright © 2016 Dsperados. All rights reserved.
 //
 
-#ifndef BEAR_CORE_TRANSFER_HPP
-#define BEAR_CORE_TRANSFER_HPP
+#ifndef GRIZZLY_TRANSFER_HPP
+#define GRIZZLY_TRANSFER_HPP
 
 #include <functional>
 #include <stdexcept>

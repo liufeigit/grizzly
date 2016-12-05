@@ -9,10 +9,10 @@ using namespace std;
 
 TEST_CASE("Spectral Centroid Bin")
 {
-    SUBCASE("equal values")
+    SUBCASE("inequal values")
     {
         vector<int> x{1, 1, 1, 1, 2};
-        auto centroid = spectralCentroidBin(x.begin(), x.end());
+        auto centroid = spectralCentroid(x.begin(), x.end());
         
         CHECK(centroid == doctest::Approx(2.33333));
     }
@@ -20,7 +20,7 @@ TEST_CASE("Spectral Centroid Bin")
     SUBCASE("value at middle bin")
     {
         vector<int> x{0, 0, 1, 0, 0};
-        auto centroid = spectralCentroidBin(x.begin(), x.end());
+        auto centroid = spectralCentroid(x.begin(), x.end());
         
         CHECK(centroid == doctest::Approx(2));
     }
@@ -28,7 +28,7 @@ TEST_CASE("Spectral Centroid Bin")
     SUBCASE("value at last bin")
     {
         vector<int> x{0, 0, 0, 0, 1};
-        auto centroid = spectralCentroidBin(x.begin(), x.end());
+        auto centroid = spectralCentroid(x.begin(), x.end());
         
         CHECK(centroid == doctest::Approx(4));
     }

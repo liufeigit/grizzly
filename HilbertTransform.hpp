@@ -6,8 +6,8 @@
 //  Copyright © 2016 FrisHertz. All rights reserved.
 //
 
-#ifndef BEAR_HILBERT_TRANSFORM_HPP
-#define BEAR_HILBERT_TRANSFORM_HPP
+#ifndef GRIZZLY_HILBERT_TRANSFORM_HPP
+#define GRIZZLY_HILBERT_TRANSFORM_HPP
 
 #include <algorithm>
 #include <complex>
