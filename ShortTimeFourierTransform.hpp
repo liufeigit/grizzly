@@ -1,17 +1,18 @@
 //
-//  FourierTransform.hpp
+//  ShortTimeFourierTransform.hpp
 //  libbear
 //
 //  Created by Stijn on 04/11/2015.
 //  Copyright © 2015 FrisHertz. All rights reserved.
 //
 
-#ifndef GRIZZLY_FOURIER_TRANSFORM_HPP
-#define GRIZZLY_FOURIER_TRANSFORM_HPP
+#ifndef GRIZZLY_SHORT_TIME_FOURIER_TRANSFORM_HPP
+#define GRIZZLY_SHORT_TIME_FOURIER_TRANSFORM_HPP
 
 #include <cstddef>
 #include <cmath>
 #include <complex>
+#include <experimental/optional>
 #include <stdexcept>
 #include <vector>
 
@@ -22,13 +23,10 @@ namespace dsp
     class FastFourierTransformBase;
     
     //! The short-time Fourier transform
-    template <typename InputIterator>
-    std::vector<Spectrum<float>> shortTimeFourierTransform(InputIterator begin, InputIterator end, FastFourierTransformBase& fourier, const std::vector<float>* window, size_t hopSize)
+    template <typename InputIterator, typename WindowIterator>
+    std::vector<Spectrum<float>> shortTimeFourierTransform(InputIterator begin, InputIterator end, FastFourierTransformBase& fourier, std::experimental::optional<WindowIterator> windowBegin, size_t hopSize)
     {
         const auto frameSize = fourier.getSize();
-        
-        if (window && frameSize != window->size())
-            throw std::runtime_error("Frame size not equal to window size");
         
         // Generate space for all spectra
         const auto size = std::distance(begin, end);
@@ -44,8 +42,8 @@ namespace dsp
             frame.resize(frameSize);
             
             // Multiply the frame with the window if we have one
-            if (window)
-                std::transform(frame.begin(), frame.end(), window->begin(), frame.begin(), [](const float& lhs, const float& rhs){ return lhs * rhs; });
+            if (windowBegin)
+                std::transform(frame.begin(), frame.end(), *windowBegin, frame.begin(), [](const float& lhs, const float& rhs){ return lhs * rhs; });
             
             spectra.emplace_back(fourier.forward(frame.data()));
         }
@@ -54,11 +52,11 @@ namespace dsp
     }
     
     //! The short-time Fourier transform
-    template <typename InputIterator>
-    std::vector<Spectrum<float>> shortTimeFourierTransform(InputIterator begin, InputIterator end, size_t frameSize, const std::vector<float>* window, size_t hopSize)
+    template <typename InputIterator, typename WindowIterator>
+    std::vector<Spectrum<float>> shortTimeFourierTransform(InputIterator begin, InputIterator end, size_t frameSize, std::experimental::optional<WindowIterator> windowBegin, size_t hopSize)
     {
         FastFourierTransform fft(frameSize);
-        return shortTimeFourierTransform(begin, end, fft, window, hopSize);
+        return shortTimeFourierTransform(begin, end, fft, windowBegin, hopSize);
     }
 }
 

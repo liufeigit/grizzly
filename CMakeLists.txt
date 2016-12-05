@@ -24,7 +24,6 @@ set(HEADERS
 	FastFourierTransformBase.hpp
 	FirstOrderCoefficients.hpp
 	FirstOrderFilter.hpp
-	FourierTransform.hpp
 	GainComputer.hpp
 	GordonSmithOscillator.hpp
 	HaarWaveletTransform.hpp
@@ -33,6 +32,7 @@ set(HEADERS
 	MidSide.hpp
     Ramp.hpp
     SegmentEnvelope.hpp
+    ShortTimeFourierTransform.hpp
     SpectralCentroid.hpp
     Spectrum.hpp
     Transfer.hpp
