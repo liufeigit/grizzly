@@ -40,6 +40,21 @@ namespace dsp
             return process(x);
         }
         
+        //! Set the filter state
+        void setState(const T& state)
+        {
+            xz1 = state;
+            yz1 = state;
+            xz2 = state;
+            yz2 = state;
+        }
+        
+        //! Clear the delay elements
+        void clear()
+        {
+            setState(0);
+        }
+        
     public:
         //! The coefficients to the biquad
         BiquadCoefficients<CoeffType> coefficients;
@@ -73,6 +88,19 @@ namespace dsp
         constexpr T operator()(const T& x)
         {
             return process(x);
+        }
+        
+        //! Set the filter state
+        void setState(const T& state)
+        {
+            z1 = state;
+            z1 = state;
+        }
+        
+        //! Clear the delay elements
+        void clear()
+        {
+            setState(0);
         }
         
     public:
