@@ -18,65 +18,62 @@ namespace dsp
 {
     //! Topology preserving one pole filter with resolved zero feedback delay
     /*! See "The Art Of VA Filter Design" by Vadim Zavalishin. */
-    template <class T1, class T2 = double>
+    template <class T>
     class AnalogOnePoleFilter
     {
     public:
-        //! Set filter coefficients
-        void setCoefficients(unit::hertz<T2> cutOff, unit::hertz<T2> sampleRate)
+        //! Set cut-off
+        void setCutOff(unit::hertz<float> cutOff, unit::hertz<float> sampleRate)
         {
-            auto integratorGainFactor = std::tan(PI<T2> * cutOff / sampleRate);
-            gainFactor = integratorGainFactor / (1.0 + integratorGainFactor);
+            auto unresolvedCutOffGain = std::tan(PI<T> * cutOff / sampleRate);
+            cutOffGain = unresolvedCutOffGain / (1.0 + unresolvedCutOffGain);
         }
         
-        //! Use an external gain factor, useful for creating more complex filter structures
-        void setGainFactor(T2 gainFactor)
+        //! Set cutoff gain directly, useful when creating more complex filter structures
+        void setCutOffGain(T cutOffGain)
         {
-            this->gainFactor = gainFactor;
+            this->cutOffGain = cutOffGain;
         }
         
         //! Set filter state
-        void setState(T2 state)
+        void setState(T state)
         {
             integratorState = state;
         }
         
-        //! Get the integrator state, useful for creating more complex filter structures
+        //! Get the integrator state, useful when creating more complex filter structures
         auto getState() const
         {
             return integratorState;
         }
         
-        //! Set optional distortion factor for non-linear processing
-        void setDistortion(std::experimental::optional<T2> factor)
+        //! Process and return with optional distortion for non-linear processing
+        T process(const T& x, std::experimental::optional<float> distortionFactor)
         {
-            distortionFactor = factor;
-        }
-        
-        //! Process and return the output with optional distortion
-        T1 operator()(const T1& x)
-        {
-            auto integratorInput = (x - integratorState) * gainFactor;
+            auto integratorInput = (x - integratorState) * cutOffGain;
             
             auto y = integratorInput + integratorState;
             
             integratorState = y + integratorInput;
+            
             if (distortionFactor)
                 integratorState = tanh(integratorState * *distortionFactor);
             
             return y;
         }
         
+        //! Process and return the output with optional distortion
+        T operator()(const T& x)
+        {
+            return process(x);
+        }
+        
     private:
         //! Filter gain factor with resolved zero delay feedback
-        T2 gainFactor = 0;
+        T cutOffGain = 0;
         
         //! Integrator state
-        T2 integratorState = 0;
-        
-        //! Optinal distortion factor for non-linear processing
-        std::experimental::optional<T2> distortionFactor;
-        
+        T integratorState = 0;
     };
 }
 

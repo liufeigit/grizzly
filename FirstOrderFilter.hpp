@@ -19,7 +19,7 @@ namespace dsp
     {
     public:
         //! Compute a sample
-        constexpr T process(const T& x)
+        T process(const T& x)
         {
             // Compute the output
             const auto output = coefficients.a0 * x + coefficients.a1 * xz1 + coefficients.b1 * yz1;
@@ -33,7 +33,7 @@ namespace dsp
         }
         
         //! Compute a sample
-        constexpr T operator()(const T& x)
+        T operator()(const T& x)
         {
             return process(x);
         }
