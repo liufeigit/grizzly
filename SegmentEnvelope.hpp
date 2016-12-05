@@ -2,7 +2,7 @@
 #ifndef GRIZZLY_SEGMENTENVELOPE
 #define GRIZZLY_SEGMENTENVELOPE
 
-
+#include <cstddef>
 #include <dsperados/math/utility.hpp>
 #include <dsperados/math/ease.hpp>
 #include <dsperados/math/interpolation.hpp>
@@ -18,8 +18,8 @@ namespace dsp
 {
     //! Segment Envelope
     /*! Envelope generator using segments.
-     A segment represents a single path over time. */
-    template <class Value, class Time = double>
+        A segment represents a single path over time. */
+    template <class Value, class Time = float>
     class SegmentEnvelope
     {
     public:
@@ -29,25 +29,23 @@ namespace dsp
         public:
             //! Construct a segment
             /*! @param destination The destination value, starting from the pervious destination or zero at envelope start
-             @param duration The duration in seconds to get to the destination. */
-            Segment(Value destination, Time duration) :
-            destination(destination),
-            duration(duration)
+                @param duration: The duration in seconds to get to the destination.
+                @param ease An: easing function to alther the shape of the segment */
+            Segment(Value destination, unit::second<Time> duration, std::function<double(double)> ease = nullptr) :
+                destination(destination),
+                duration(duration),
+                ease(ease)
             {
                 
             }
             
-            //! Construct a segment
-            /*! @param destination The destination value, starting from the pervious destination or zero at envelope start
-             @param duration The duration in seconds to get to the destination.
-             @param ease An easing function to alther the shape of the segment */
-            Segment(Value destination, Time duration, std::function<double(double)> ease) :
-            destination(destination),
-            duration(duration),
-            ease(ease)
+            //! Given a time within the segment and its starting value, compute an interpolated value
+            Value interpolate(unit::second<Time> time, const Value& startValue)
             {
+                return math::interpolateLinear(computeTimeProportion(time), startValue, destination);
             }
             
+        public:
             //! Destination value
             Value destination = 0;
             
@@ -55,9 +53,16 @@ namespace dsp
             unit::second<Time> duration = 0;
             
             //! Ease function to shape the segment
-            std::function<double(double)> ease = math::easeLinear<double>;
+            std::function<double(double)> ease = [](auto x){ return math::easeLinear(x); };
+            
+        private:
+            //! Return the eased proportion along the time axis of this axis
+            double computeTimeProportion(unit::second<Time> time)
+            {
+                double x = time / static_cast<double>(duration);
+                return ease ? ease(x) : x;
+            }
         };
-        
         
     public:
         //! Construct an envelope without any segments
@@ -65,127 +70,60 @@ namespace dsp
         
         //! Construct an envelope with segments
         SegmentEnvelope(std::initializer_list<Segment> segments) :
-        segments{segments}
+            segments{segments}
         {
-        }
-        
-        //! Set the state of the envelope
-        /*! Jump directly to a certain point, changing the current segment accordingly. */
-        void setState(unit::second<Time> to)
-        {
-            if (segments.empty() || to <= 0)
-            {
-                envelopeTime = 0;
-                segmentTime = 0;
-                index = 0;
-                return;
-            }
             
-            // accumulate all segments durations
-            auto envelopeDuration = std::accumulate(segments.begin(), segments.end(), unit::second<Time>(0) , [](const auto& acc, const auto& segment) { return acc + segment.duration; } );
-            
-            if (to >= envelopeDuration)
-            {
-                envelopeTime = envelopeDuration;
-                segmentTime = segments.back().duration;
-                index = segments.size();
-                return;
-            }
-            
-            envelopeTime = to;
-            
-            unit::second<Time> parialTime = 0;
-            for (auto i = 0; i < segments.size(); ++i)
-            {
-                if (parialTime + segments[i].duration < envelopeTime)
-                {
-                    parialTime += segments[i].duration;
-                    continue;
-                }
-                
-                index = i;
-                segmentTime = envelopeTime - parialTime;
-                break;
-            }
-        }
-        
-        //! Reset the envelope
-        void reset()
-        {
-            setState(0);
         }
         
         //! Increment the time
-        void increment(const Time& increment)
-        {
-            if (segments.empty() || index >= segments.size())
-                return;
-            
-            segmentTime += increment;
-            envelopeTime += increment;
-            
-            if (hold && hold->enabled && envelopeTime >= hold->timePoint)
-            {
-                segmentTime -= envelopeTime - hold->timePoint;
-                envelopeTime = hold->timePoint;
-            }
-            
-            while (index < segments.size() && segmentTime >= segments[index].duration)
-            {
-                segmentTime -= segments[index].duration;
-                ++index;
-            }
-        }
+        void increment(unit::second<Time> increment);
         
         //! Return the current envelope value
-        Value read()
+        Value read();
+        
+        //! Set the state of the envelope
+        /*! Jump directly to a certain point, changing the current segment accordingly. */
+        void setTime(unit::second<Time> to);
+        
+        //! Reset the envelope to its starting position
+        void reset()
         {
-            if (segments.empty())
-                return 0;
-            else if (index >= segments.size())
-                return segments.back().destination;
-            
-            auto currentSegment = segments[index];
-            
-            auto normalizedOutput = currentSegment.ease(segmentTime / static_cast<double>(currentSegment.duration));
-            
-            return math::interpolateLinear(normalizedOutput, index == 0 ? Value(0) : segments[index - 1].destination, currentSegment.destination);
+            setTime(0);
         }
         
+    // --- Segment insertion/removal --- //
+        
         //! Add a segment
-        void addSegment(Segment segment)
+        template <typename... Args>
+        void addSegment(Args&&... args)
         {
-            segments.emplace_back(segment);
+            segments.emplace_back(std::forward<Args&&>(args)...);
         }
         
         //! Insert a segment
-        void insertSegment(size_t index, Segment segment)
+        template <typename... Args>
+        void insertSegment(std::size_t index, Args&&... args)
         {
-            segments.insert(segments.begin() + index, segment);
-            setState(envelopeTime);
+            segments.insert(segments.begin() + index, std::forward<Args&&>(args)...);
+            setTime(envelopeTime);
         }
         
         //! Erase a segment
-        void eraseSegment(size_t index)
+        void eraseSegment(std::size_t index)
         {
             if (segments.empty() || index >= segments.size())
                 return;
             
             segments.erase(segments.begin() + index);
-            setState(envelopeTime);
+            setTime(envelopeTime);
         }
         
-        //! Set a hold point
+    // --- Hold point manipulation --- ///
+        
+        //! Set a hold point (and enable it on default)
         void setAndEnableHoldPoint(unit::second<Time> at)
         {
             hold = Hold{at, true};
-        }
-        
-        //! Disable the holdpoint, if there is one
-        void disableHold()
-        {
-            if (hold)
-                hold->enabled = false;
         }
         
         //! Enable the holdpoint, if there is one
@@ -195,18 +133,27 @@ namespace dsp
                 hold->enabled = true;
         }
         
+        //! Disable the holdpoint, if there is one
+        /*! The hold time will be remembered for enable calls in the future */
+        void disableHold()
+        {
+            if (hold)
+                hold->enabled = false;
+        }
+        
         //! Remove hold point
         void removeHoldPoint()
         {
             hold = std::experimental::nullopt;
         }
         
+    // --- Access to the segments --- //
+        
         //! Get a segment
-        Segment& operator[](size_t index) { return segments[index]; }
+        auto& operator[](size_t index) { return segments[index]; }
         
         //! Get a segment, const
-        const Segment& operator[](size_t index) const { return segments[index]; }
-        
+        const auto& operator[](size_t index) const { return segments[index]; }
         
     private:
         //! Hold point
@@ -217,9 +164,8 @@ namespace dsp
             bool enabled = false;
         };
         
-        
     private:
-        //! Vector for Segments
+        //! All the segments in the envelope (in sequential order)
         std::vector<Segment> segments;
         
         //! The segment index
@@ -228,12 +174,85 @@ namespace dsp
         //! The current time in the current segment
         unit::second<Time> segmentTime = 0;
         
-        //! The current time in the whole envelope
+        //! The current time in the entire envelope
         unit::second<Time> envelopeTime = 0;
         
-        //! Optinal hold point
+        //! Optional hold point
+        /*! The envelope will remain at this point until the hold point is disable */
         std::experimental::optional<Hold> hold = std::experimental::nullopt;
     };
+    
+    template <class Value, class Time>
+    void SegmentEnvelope<Value, Time>::increment(unit::second<Time> increment)
+    {
+        if (segments.empty() || index >= segments.size())
+            return;
+        
+        segmentTime += increment;
+        envelopeTime += increment;
+        
+        if (hold && hold->enabled && envelopeTime >= hold->timePoint)
+        {
+            segmentTime -= envelopeTime - hold->timePoint;
+            envelopeTime = hold->timePoint;
+        }
+        
+        while (index < segments.size() && segmentTime >= segments[index].duration)
+        {
+            segmentTime -= segments[index].duration;
+            ++index;
+        }
+    }
+    
+    template <class Value, class Time>
+    Value SegmentEnvelope<Value, Time>::read()
+    {
+        if (segments.empty())
+            return 0;
+        else if (index >= segments.size())
+            return segments.back().destination;
+        
+        return segments[index].interpolate(segmentTime, index == 0 ? Value(0) : segments[index - 1].destination);
+    }
+    
+    template <class Value, class Time>
+    void SegmentEnvelope<Value, Time>::setTime(unit::second<Time> to)
+    {
+        if (segments.empty() || to <= 0)
+        {
+            envelopeTime = 0;
+            segmentTime = 0;
+            index = 0;
+            return;
+        }
+        
+        // accumulate all segments durations
+        auto envelopeDuration = std::accumulate(segments.begin(), segments.end(), unit::second<Time>(0) , [](const auto& acc, const auto& segment) { return acc + segment.duration; } );
+        
+        if (to >= envelopeDuration)
+        {
+            envelopeTime = envelopeDuration;
+            segmentTime = segments.back().duration;
+            index = segments.size();
+            return;
+        }
+        
+        envelopeTime = to;
+        
+        unit::second<Time> partialTime = 0;
+        for (auto i = 0; i < segments.size(); ++i)
+        {
+            if (partialTime + segments[i].duration < envelopeTime)
+            {
+                partialTime += segments[i].duration;
+                continue;
+            }
+            
+            index = i;
+            segmentTime = envelopeTime - partialTime;
+            break;
+        }
+    }
 }
 
 

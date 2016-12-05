@@ -6,8 +6,8 @@
 //  Copyright © 2016 Dsperados. All rights reserved.
 //
 
-#ifndef GRIZZLY_ENVELOPEDETECTOR_HPP
-#define GRIZZLY_ENVELOPEDETECTOR_HPP
+#ifndef GRIZZLY_ENVELOPE_DETECTOR_HPP
+#define GRIZZLY_ENVELOPE_DETECTOR_HPP
 
 #include <dsperados/math/utility.hpp>
 

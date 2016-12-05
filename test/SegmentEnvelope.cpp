@@ -12,8 +12,8 @@ using namespace std;
 TEST_CASE("Segment Envelope")
 {
     SegmentEnvelope<float> env;
-    env.addSegment({1, 0.5});
-    env.addSegment({0.1, 0.5});
+    env.addSegment(1, 0.5);
+    env.addSegment(0.1, 0.5);
     
     env[0].destination = 2.2;
     
