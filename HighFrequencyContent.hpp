@@ -11,37 +11,45 @@
 
 #include <unit/hertz.hpp>
 
-#include "../Dsp/WeightedSum.hpp"
-
 namespace dsp
 {
     //! Retrieve the high-frequency content according to Brossier
-    template <class T>
-    constexpr auto highFrequencyContentBrossier(const std::vector<T>& magnitudes, const unit::hertz<float>& sampleRate)
+    template <typename Iterator>
+    constexpr double highFrequencyContentBrossier(Iterator begin, Iterator end)
     {
-        return dsp::indexWeightedSum<T>(magnitudes) * sampleRate / magnitudes.size();
+        typename Iterator::value_type acc = 0;
+        const auto size = std::distance(begin, end);
+        for (auto i = 0; i < size; ++i)
+            acc += *begin++ * i;
+        
+        return acc / static_cast<double>(size);
     }
     
     //! Retrieve the high-frequency content according to Masri
-    template <class T>
-    constexpr auto highFrequencyContentMasri(const std::vector<T>& magnitudes, const unit::hertz<float>& sampleRate)
+    template <typename Iterator>
+    constexpr double highFrequencyContentMasri(Iterator begin, Iterator end)
     {
-        T acc = 0;
-        for (auto i = 0; i < magnitudes.size(); ++i)
-            acc += i * magnitudes[i] * magnitudes[i];
+        typename Iterator::value_type acc = 0;
+        const auto size = std::distance(begin, end);
+        for (auto i = 0; i < size; ++i)
+        {
+            acc += i * (*begin * *begin);
+            ++begin;
+        }
         
-        return acc * sampleRate / magnitudes.size();
+        return acc / static_cast<double>(size);
     }
     
     //! Retrieve the high-frequency content according to Jensen
-    template <class T>
-    constexpr auto highFrequencyContentJensen(const std::vector<T>& magnitudes, const unit::hertz<float>& sampleRate)
+    template <typename Iterator>
+    constexpr double highFrequencyContentJensen(Iterator begin, Iterator end)
     {
-        T acc = 0;
-        for (auto i = 0; i < magnitudes.size(); ++i)
-            acc += i * i * magnitudes[i];
+        typename Iterator::value_type acc = 0;
+        const auto size = std::distance(begin, end);
+        for (auto i = 0; i < size; ++i)
+            acc += *begin++ * (i * i);
         
-        return acc * sampleRate / magnitudes.size();
+        return acc / static_cast<double>(size);
     }
 }
 

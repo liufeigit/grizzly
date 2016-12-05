@@ -18,6 +18,7 @@ set(SOURCES
     FirstOrderFilter.cpp
     GordonSmithOscillator.cpp
     HilbertTransform.cpp
+    HighFrequencyContent.cpp
     MidSide.cpp
     Ramp.cpp
     SegmentEnvelope.cpp

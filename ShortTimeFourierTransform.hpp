@@ -53,7 +53,7 @@ namespace dsp
     
     //! The short-time Fourier transform
     template <typename InputIterator, typename WindowIterator>
-    std::vector<Spectrum<float>> shortTimeFourierTransform(InputIterator begin, InputIterator end, size_t frameSize, std::experimental::optional<WindowIterator> windowBegin, size_t hopSize)
+    std::vector<Spectrum<float>> shortTimeFourierTransform(InputIterator begin, InputIterator end, std::size_t frameSize, std::experimental::optional<WindowIterator> windowBegin, size_t hopSize)
     {
         FastFourierTransform fft(frameSize);
         return shortTimeFourierTransform(begin, end, fft, windowBegin, hopSize);
