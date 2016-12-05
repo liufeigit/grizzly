@@ -9,7 +9,6 @@ set(SOURCES
     main.cpp
     AllPassFilter.cpp
     AnalyticTransform.cpp
-    AnalogEnvelope.cpp
     Biquad.cpp
     CircularBuffer.cpp
     CombFilter.cpp
