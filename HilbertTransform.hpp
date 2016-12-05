@@ -16,15 +16,45 @@
 #include <iterator>
 #include <vector>
 
+#include "FastFourierTransform.hpp"
 #include "Spectrum.hpp"
 
 namespace dsp
 {
-    //! The Hilbert transform of a real signal
-    std::vector<float> hilbertTransform(const std::vector<float>& input, bool inverse = false);
+    //! The direction in which a hilbert transform can be done
+    enum class HilbertTransformDirection { FORWARD, INVERSE };
     
     //! The Hilbert transform fo a complex signal
-    Spectrum<float> hilbertTransformComplex(const std::vector<std::complex<float>>& input, bool inverse = false);
+    template <typename InputIterator, typename OutputIterator>
+    void hilbertTransformComplex(InputIterator begin, InputIterator end, OutputIterator outBegin, HilbertTransformDirection direction)
+    {
+        // Take the forward Fourier
+        const auto size = std::distance(begin, end);
+        FastFourierTransform fft(size);
+        auto spectrum = fft.forwardComplex(begin);
+        
+        // Multiply the first half with -j1 (or j1 for inverse)
+        const auto halfSize = spectrum.size() / 2;
+        for (auto i = 0; i < halfSize; ++i)
+            spectrum[i] *= std::complex<float>(0, (direction == HilbertTransformDirection::INVERSE) ? 1 : -1);
+        
+        // Multiply the second half with j1 (or -j1 for inverse)
+        for (auto i = halfSize; i < spectrum.size(); ++i)
+            spectrum[i] *= std::complex<float>(0, (direction == HilbertTransformDirection::INVERSE) ? -1 : 1);
+        
+        // Return the inverse fourier
+        fft.inverseComplex(spectrum.begin(), outBegin);
+    }
+    
+    //! The Hilbert transform of a real signal
+    template <typename InputIterator, typename OutputIterator>
+    void hilbertTransform(InputIterator begin, InputIterator end, OutputIterator outBegin, HilbertTransformDirection direction)
+    {
+        std::vector<std::complex<typename InputIterator::value_type>> complex(begin, end);
+        hilbertTransformComplex(complex.begin(), complex.end(), complex.begin(), direction);
+        
+        transform(complex.begin(), complex.end(), outBegin, [](const auto& x){ return x.real(); });
+    }
     
     //! Find the intrinsic mode function inside a signal
     template <class Iterator>

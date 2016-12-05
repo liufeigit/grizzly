@@ -8,6 +8,8 @@ include_directories(/usr/local/include)
 set(SOURCES
     main.cpp
     AllPassFilter.cpp
+    AnalyticTransform.cpp
+    AnalogEnvelope.cpp
     Biquad.cpp
     CircularBuffer.cpp
     CombFilter.cpp
@@ -16,6 +18,7 @@ set(SOURCES
     FastFourierTransformOoura.cpp
     FirstOrderFilter.cpp
     GordonSmithOscillator.cpp
+    HilbertTransform.cpp
     MidSide.cpp
     Ramp.cpp
     SegmentEnvelope.cpp
