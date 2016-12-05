@@ -130,7 +130,7 @@ namespace dsp
                 envelopeTime = hold->timePoint;
             }
             
-            while (segmentTime >= segments[index].duration)
+            while (index < segments.size() && segmentTime >= segments[index].duration)
             {
                 segmentTime -= segments[index].duration;
                 ++index;

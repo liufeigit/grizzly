@@ -99,7 +99,7 @@ namespace dsp
     {
         const auto frameSize = fourier.getSize();
         
-        if (frameSize != window->size())
+        if (window && frameSize != window->size())
             throw runtime_error("Frame size not equal to window size");
         
         size_t numberOfFramesRequired = ceil(input.size() / hopSize);

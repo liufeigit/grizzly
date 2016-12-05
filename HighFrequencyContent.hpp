@@ -33,7 +33,7 @@ namespace dsp
         return acc * sampleRate / magnitudes.size();
     }
     
-    //! Retrieve the high-frequency content according to Masri
+    //! Retrieve the high-frequency content according to Jensen
     template <class T>
     constexpr auto highFrequencyContentJensen(const std::vector<T>& magnitudes, const unit::hertz<float>& sampleRate)
     {

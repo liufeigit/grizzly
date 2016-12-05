@@ -38,10 +38,10 @@ namespace dsp
         void setFactor(size_t factor);
         
         //! Retrieve the up-sampling factor
-        inline auto getFactor() const { return factor; }
+        auto getFactor() const { return factor; }
         
         //! The size of the filter kernel
-        inline auto getFilterSize() const { return filterSize; }
+        auto getFilterSize() const { return filterSize; }
         
         //! Set the beta factor for shaping the Kaiser window
         void setBetaFactor(float beta);

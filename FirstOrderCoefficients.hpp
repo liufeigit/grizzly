@@ -41,8 +41,8 @@ namespace dsp
     }
     
     //! Set filter to low pass filtering using one pole, given a samplerate and a cutoff
-    template <typename T1>
-    constexpr void lowPassOnePole(FirstOrderCoefficients<T1>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff)
+    template <typename T>
+    constexpr void lowPassOnePole(FirstOrderCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff)
     {
         const auto w = math::TWO_PI<double> * cutOff / static_cast<long double>(sampleRate);
         

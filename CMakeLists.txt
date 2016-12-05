@@ -10,7 +10,6 @@ install(TARGETS grizzly DESTINATION lib)
 
 set(HEADERS
     AllPassFilter.hpp
-	AnalogEnvelope.hpp
 	AnalogOnePoleFilter.hpp
 	AnalyticTransform.hpp
 	Biquad.hpp

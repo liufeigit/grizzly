@@ -9,7 +9,6 @@
 #ifndef GRIZZLY_DELAY_HPP
 #define GRIZZLY_DELAY_HPP
 
-#include <boost/circular_buffer.hpp>
 #include <dsperados/math/interpolation.hpp>
 
 #include "CircularBuffer.hpp"

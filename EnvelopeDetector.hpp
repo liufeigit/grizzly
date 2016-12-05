@@ -9,9 +9,10 @@
 #ifndef GRIZZLY_ENVELOPEDETECTOR_HPP
 #define GRIZZLY_ENVELOPEDETECTOR_HPP
 
+#include <dsperados/math/utility.hpp>
+
 #include "FirstOrderCoefficients.hpp"
 #include "FirstOrderFilter.hpp"
-#include <dsperados/math/utility.hpp>
 
 namespace dsp
 {

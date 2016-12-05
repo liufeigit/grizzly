@@ -9,8 +9,9 @@
 #ifndef GRIZZLY_COMB_FILTER_HPP
 #define GRIZZLY_COMB_FILTER_HPP
 
+#include <functional>
+
 #include "Delay.hpp"
-#include <Functional>
 
 namespace dsp
 {
