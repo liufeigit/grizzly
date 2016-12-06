@@ -170,10 +170,12 @@ namespace dsp
             if (x > y)
             {
                 lowPassFilter.coefficients = attackCoefficients;
-                y = lowPassFilter(x);
+                lowPassFilter.write(x);
+                y = lowPassFilter.read();
             } else {
                 lowPassFilter.coefficients = releaseCoefficients;
-                releaseToInput ? y = lowPassFilter(x) : y = lowPassFilter(0);
+                lowPassFilter.write(releaseToInput ? x : 0);
+                y = lowPassFilter.read();
             }
         }
         
