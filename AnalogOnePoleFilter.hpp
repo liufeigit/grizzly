@@ -39,33 +39,47 @@ namespace dsp
         void setState(T state)
         {
             integratorState = state;
+            lowPassOutputState = state;
+            highPassOutputState = 0;
+        }
+        
+        //! Reset the filter
+        void reset()
+        {
+            setState(0);
         }
         
         //! Get the integrator state, useful when creating more complex filter structures
-        auto getState() const
+        T getIntegratorState() const
         {
             return integratorState;
         }
         
-        //! Process and return with optional distortion for non-linear processing
-        T process(const T& x, std::experimental::optional<float> distortionFactor)
+        //! Process with optional distortion for non-linear processing
+        void increment(const T& x, std::experimental::optional<float> distortionFactor)
         {
             auto integratorInput = (x - integratorState) * cutOffGain;
             
-            auto y = integratorInput + integratorState;
+            lowPassOutputState = integratorInput + integratorState;
             
-            integratorState = y + integratorInput;
+            highPassOutputState = x - lowPassOutputState;
+            
+            integratorState = lowPassOutputState + integratorInput;
             
             if (distortionFactor)
                 integratorState = tanh(integratorState * *distortionFactor);
-            
-            return y;
         }
         
-        //! Process and return the output with optional distortion
-        T operator()(const T& x)
+        //! Read the low-pass output
+        T readLowPass() const
         {
-            return process(x);
+            return lowPassOutputState;
+        }
+        
+        //! Read the high-pass output
+        T readHighPass() const
+        {
+            return highPassOutputState;
         }
         
     private:
@@ -74,6 +88,12 @@ namespace dsp
         
         //! Integrator state
         T integratorState = 0;
+        
+        //! Low-pass output state
+        T lowPassOutputState = 0;
+        
+        //! Low-pass output state
+        T highPassOutputState = 0;
     };
 }
 

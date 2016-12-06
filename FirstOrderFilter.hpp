@@ -19,20 +19,6 @@ namespace dsp
     {
     public:
         //! Compute a sample
-        T process(const T& x)
-        {
-            // Compute the output
-            const auto output = coefficients.a0 * x + coefficients.a1 * xz1 + coefficients.b1 * yz1;
-            
-            // Update the delays
-            xz1 = x;
-            yz1 = output;
-            
-            // Return the outputs
-            return output;
-        }
-        
-        //! Compute a sample
         T operator()(const T& x)
         {
             return process(x);
@@ -43,12 +29,30 @@ namespace dsp
         {
             xz1 = state;
             yz1 = state;
+            y = state;
         }
         
         //! Clear the delay elements
-        void clear()
+        void reset()
         {
             setState(0);
+        }
+        
+        //! Compute a sample
+        void increment(const T& x)
+        {
+            // Compute the output
+            y = coefficients.a0 * x + coefficients.a1 * xz1 + coefficients.b1 * yz1;
+            
+            // Update the delays
+            xz1 = x;
+            yz1 = y;
+        }
+        
+        //! Read output
+        T read() const
+        {
+            return y;
         }
         
     public:
@@ -61,6 +65,9 @@ namespace dsp
         
         //! The previous output z^-1
         T yz1 = 0;
+        
+        //! The output
+        T y = 0;
     };
 }
 

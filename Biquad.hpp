@@ -20,26 +20,6 @@ namespace dsp
     class BiquadDirectFormI
     {
     public:
-        //! Compute a sample
-        constexpr T process(const T& x)
-        {
-            const auto y = x * coefficients.a0 + xz1 * coefficients.a1 + xz2 * coefficients.a2 - coefficients.b1 * yz1 - coefficients.b2 * yz2;
-            
-            xz2 = xz1;
-            xz1 = x;
-            
-            yz2 = yz1;
-            yz1 = y;
-            
-            return y;
-        }
-        
-        //! Compute a sample
-        constexpr T operator()(const T& x)
-        {
-            return process(x);
-        }
-        
         //! Set the filter state
         void setState(const T& state)
         {
@@ -47,12 +27,30 @@ namespace dsp
             yz1 = state;
             xz2 = state;
             yz2 = state;
+            y = state;
         }
         
         //! Clear the delay elements
-        void clear()
+        void reset()
         {
             setState(0);
+        }
+        
+        //! Compute a sample
+        void increment(const T& x)
+        {
+            y = x * coefficients.a0 + xz1 * coefficients.a1 + xz2 * coefficients.a2 - coefficients.b1 * yz1 - coefficients.b2 * yz2;
+            
+            // Update the delays
+            xz2 = xz1;
+            xz1 = x;
+            yz2 = yz1;
+            yz1 = y;
+        }
+        
+        T read() const
+        {
+            return y;
         }
         
     public:
@@ -60,6 +58,7 @@ namespace dsp
         BiquadCoefficients<CoeffType> coefficients;
 
     private:
+        T y = 0; //! output
         T xz1 = 0; //!< 1-sample input delay
         T xz2 = 0; //!< 2-sample input delay
         T yz1 = 0; //!< 1-sample output delay
@@ -74,33 +73,33 @@ namespace dsp
     class BiquadTransposedDirectFormII
     {
     public:
-        //! Compute a sample
-        constexpr T process(const T& x)
-        {
-            const auto y = x * coefficients.a0 + z1;
-            z1 = x * coefficients.a1 + y * -coefficients.b1 + z2;
-            z2 = x * coefficients.a2 + y * -coefficients.b2;
- 
-            return y;
-        }
-        
-        //! Compute a sample
-        constexpr T operator()(const T& x)
-        {
-            return process(x);
-        }
-        
         //! Set the filter state
         void setState(const T& state)
         {
             z1 = state;
             z1 = state;
+            y = state;
         }
         
         //! Clear the delay elements
-        void clear()
+        void reset()
         {
             setState(0);
+        }
+        
+        //! Compute a sample
+        void process(const T& x)
+        {
+            y = x * coefficients.a0 + z1;
+            
+            // Update the delays
+            z1 = x * coefficients.a1 + y * -coefficients.b1 + z2;
+            z2 = x * coefficients.a2 + y * -coefficients.b2;
+        }
+        
+        T read() const
+        {
+            return y;
         }
         
     public:
@@ -108,6 +107,7 @@ namespace dsp
         BiquadCoefficients<CoeffType> coefficients;
         
     private:
+        T y = 0; //! output
         T z1 = 0; //!< 1-sample delay
         T z2 = 0; //!< 2-sample delay
     };

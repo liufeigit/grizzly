@@ -8,6 +8,7 @@ include_directories(/usr/local/include)
 set(SOURCES
     main.cpp
     AllPassFilter.cpp
+    AnalogOnePoleFilter.cpp
     AnalyticTransform.cpp
     Biquad.cpp
     CircularBuffer.cpp
