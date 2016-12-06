@@ -132,8 +132,13 @@ TEST_CASE("Window")
         SUBCASE("symmetric")
         {
             auto window = createSymmetricKaiserWindow<float>(10, 1);
-            
             CHECK(window[4] == window[5]);
+        }
+        
+        SUBCASE("periodic")
+        {
+            auto window = createKaiserWindow<float>(10, 1);
+            CHECK(window[5] == doctest::Approx(1));
         }
     }
 }

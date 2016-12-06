@@ -183,6 +183,21 @@ namespace dsp
         return y;
     }
     
+    //! Create an asymmetric Kaiser window.
+    /*! The Beta factor (>= 1) determines the steepness */
+    template <typename T>
+    std::vector<T> createKaiserWindow(std::size_t size, double beta)
+    {
+        std::vector<T> kaiser(size);
+        
+        const double bb = besseli0(beta);
+        
+        for (auto n = 0; n < size; ++n)
+            kaiser[n] = besseli0(beta * std::sqrt(4 * n * (size - n)) / size) / bb;
+        
+        return kaiser;
+    }
+    
     //! Create a symmetric Kaiser window.
     /*! The Beta factor (>= 1) determines the steepness */
     template <typename T>
@@ -191,7 +206,7 @@ namespace dsp
         std::vector<T> kaiser(size);
         
         const auto sizeMinusOne = size - 1;
-        const T& bb = besseli0(beta);
+        const double bb = besseli0(beta);
         
         for (auto n = 0; n < size; ++n)
             kaiser[n] = besseli0(beta * std::sqrt(4 * n * (sizeMinusOne - n)) / (sizeMinusOne)) / bb;
