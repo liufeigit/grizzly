@@ -10,28 +10,28 @@
 #ifndef GRIZZLY_MUTLI_TAP_RESONATOR_HPP
 #define GRIZZLY_MUTLI_TAP_RESONATOR_HPP
 
+#include <cmath>
 #include <cstddef>
 #include <functional>
+#include <initializer_list>
 #include <numeric>
 #include <vector> 
 
 #include "Delay.hpp"
-#include "Filter.hpp"
 
-
-namespace bear::dsp
+namespace dsp
 {
     //! Multi tap resonator
     template <class T>
-    class MultiTapResonator : public dsp::Filter<T>
+    class MultiTapResonator
     {
     public:
-        //! Multi Tap delay tap info, the postDelay function can be changed by the user to add functionalities
+        //! Delay tap info
+        /*! the postDelay function can be changed by the user to add functionalities */
         class Stage
         {
         public:
-            //! processing of the delay tap
-            /*! if the postDelay function has not been declared, the delay and the feedback will simply be applied */
+            //! Process a single tap in the resonator
             T processStage (const dsp::Delay<T>& delay) const
             {
                 const auto d = delay.read(delayTime);
@@ -39,65 +39,63 @@ namespace bear::dsp
             }
             
         public:
-            //! PostDelay function
-            std::function<T(const T&)> postDelay;
-            
+            //! The delay time for this stage in the resonator
             double delayTime;
             
             //! Feedback, 0. to 1.
-            /*!  If there are multiple delay lines, it is recommended to set the feedback to 1 / number of stages. */
-            double feedback;
+            /*! If there are multiple delay lines, it is recommended to set the feedback to (1 / number of stages). */
+            double feedback = 0;
+            
+            //! PostDelay function
+            std::function<T(const T&)> postDelay;
         };
         
     public:
         //! Create a multi tap resonator
         /*! Initialize the delay buffer with an initial maximum length and create a number of delay lines,
             it is posible to initialize the gain compensation*/
-        MultiTapResonator (const std::size_t maxDelay, const std::size_t numberOfStages,const bool gainCompensation = false) :
-            maxDelay(maxDelay),
-            delay(maxDelay),
+        MultiTapResonator(std::size_t maxDelay, std::size_t numberOfStages) :
             stages(numberOfStages),
-            gainCompensation(gainCompensation)
+            delay(maxDelay)
         {
             
         }
         
-        //! Process function, take an input, execute all delay taps and write the output in the delay line.
-        T process (const T& x) final override
+        MultiTapResonator(std::initializer_list<Stage> stages) :
+            stages{stages},
+            delay(0)
         {
-            auto y = std::accumulate(stages.begin(), stages.end(), T(), [&](const T& acc, auto& stage)
-            {
-                return acc + stage.processStage(delay);
-            });
-            
-//            if (gainCompensation)
-////                y /= stages.size();
-            
-            y += x;
-            delay.write(y);
-            
-            return y;
+            auto it = std::max_element(stages.begin(), stages.end(), [](const auto& lhs, const auto& rhs){ return lhs.delayTime < rhs.delayTime; });
+            if (it != stages.end())
+                delay.resize(std::ceil(it->delayTime));
         }
         
-        //! Gain Compensation
-        /*! If the gain compensation is activated the output of the taps will be scaled by the reciprocal 
-            of the number of taps */
-        void setGainCompensation (const bool gainCompensation)
+        //! Take an input, execute all delay taps and write the output in the delay line.
+        /*! @param x: The input to the resonator
+            @param compensateGain: Should all taps be divided by the number of taps, that they add up to 1? */
+        void write(const T& x, bool compensateGain = false)
         {
-            this->gainCompensation = gainCompensation;
+            auto y = std::accumulate(stages.begin(), stages.end(), T(), [&](const T& acc, auto& stage) { return acc + stage.processStage(delay); });
+            
+            if (compensateGain)
+                y /= static_cast<double>(stages.size());
+            
+            delay.write(x + y);
         }
+        
+        //! Read the most recently computed value
+        T read() const { return delay.read(0); }
         
         //! Resize the delay buffer
-        void resize (const std::size_t maxDelay)
+        void resize(std::size_t maxDelay)
         {
-            this->maxDelay = maxDelay;
             delay.resize(maxDelay);
         }
         
         //! Get the maximum size of the delay buffer
-        const std::size_t getMaxDelaySize () const
+        std::size_t getMaximumDelayTime() const
         {
-            return maxDelay;
+            return delay.getMaximumDelayTime();
         }
         
         //! Overide operator[] to allow easy acces to the delay lines
@@ -106,22 +104,24 @@ namespace bear::dsp
             return stages[index];
         }
         
+        //! Return the size of the resonator (the number of stages)
+        std::size_t size() const { return stages.size(); }
+        
+        //! Is the resonator empty of stages?
+        bool empty() const { return stages.empty(); }
+        
         // Add iterative functionalities to allow easy acces to the delay lines
         auto begin() { return stages.begin(); }
+        auto begin() const { return stages.begin(); }
         auto end() { return stages.end(); }
-        
+        auto end() const { return stages.end(); }
         
     private:
         //! Delay Lines
         std::vector<Stage> stages;
         
-        std::size_t maxDelay;
-        
         //! The single delay buffer that will be used for all stages
         dsp::Delay<T> delay;
-        
-        //! Gain Compensation
-        bool gainCompensation;
     };
 }
 

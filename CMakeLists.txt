@@ -30,6 +30,7 @@ set(HEADERS
 	HighFrequencyContent.hpp
     ImpulseResponse.hpp
 	MidSide.hpp
+	MultiTapResonator.hpp
     Ramp.hpp
     SegmentEnvelope.hpp
     ShortTimeFourierTransform.hpp

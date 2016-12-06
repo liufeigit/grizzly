@@ -23,6 +23,7 @@ set(SOURCES
     HighFrequencyContent.cpp
     ImpulseResponse.cpp
     MidSide.cpp
+    MultiTapResonator.cpp
     Ramp.cpp
     SegmentEnvelope.cpp
     SpectralCentroid.cpp
