@@ -7,7 +7,7 @@ using namespace std;
 
 TEST_CASE("FirstOrderFilter")
 {
-    SUBCASE("process()")
+    SUBCASE("process")
     {
         FirstOrderFilter<float> filter;
         

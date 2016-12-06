@@ -57,7 +57,7 @@ namespace dsp
         }
         
         //! Process with optional distortion for non-linear processing
-        void increment(const T& x, std::experimental::optional<float> distortionFactor)
+        void increment(const T& x, std::experimental::optional<float> distortionFactor = std::experimental::nullopt)
         {
             auto integratorInput = (x - integratorState) * cutOffGain;
             
