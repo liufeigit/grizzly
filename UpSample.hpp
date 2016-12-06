@@ -20,7 +20,7 @@
 
 namespace dsp
 {
-    //! Upsamples a single value by a factor
+    //! Upsample a single scalar by a factor
     template <class T>
     class UpSample
     {
@@ -30,10 +30,10 @@ namespace dsp
             @param size The size of the filter kernel */
         UpSample(std::size_t factor, std::size_t size);
         
-        //! Upsample a single float to a vector float of size factor
+        //! Upsample a single scalar to a vector of size factor
         std::vector<T> process(const T& x);
         
-        //! Upsample a single float to a vector float of size factor
+        //! Upsample a single scalar to a vector of size factor
         std::vector<T> operator()(const T& x) { return process(x); }
         
         //! Set the up-sampling factor and recompute the filter
@@ -57,8 +57,8 @@ namespace dsp
         //! The up-sampling factor
         std::size_t factor = 4;
         
-        //std::vector<float> kernel;
-        std::size_t filterSize = 64;
+        //! The size of the kernel
+        const std::size_t filterSize = 64;
         
         //! The filter kernel
         std::vector<T> filterKernel;

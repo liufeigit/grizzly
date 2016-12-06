@@ -15,6 +15,7 @@ set(SOURCES
     CombFilter.cpp
     Convolution.cpp
     Delay.cpp
+    DownSample.cpp
     FastFourierTransformOoura.cpp
     FirstOrderFilter.cpp
     GordonSmithOscillator.cpp
