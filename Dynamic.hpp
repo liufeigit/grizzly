@@ -25,8 +25,8 @@
  
  */
 
-#ifndef GRIZZLY_WAVESHAPER_HPP
-#define GRIZZLY_WAVESHAPER_HPP
+#ifndef GRIZZLY_DYNAMIC_HPP
+#define GRIZZLY_DYNAMIC_HPP
 
 #include <stdexcept>
 #include <unit/amplitude.hpp>
