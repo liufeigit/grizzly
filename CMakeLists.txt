@@ -26,7 +26,6 @@ set(HEADERS
 	FirstOrderFilter.hpp
 	GainComputer.hpp
 	GordonSmithOscillator.hpp
-	HaarWaveletTransform.hpp
 	HilbertTransform.hpp
 	HighFrequencyContent.hpp
     ImpulseResponse.hpp

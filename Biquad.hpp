@@ -48,10 +48,8 @@ namespace dsp
             yz1 = y;
         }
         
-        T read() const
-        {
-            return y;
-        }
+        //! Read in the last computed value
+        T read() const { return y; }
         
     public:
         //! The coefficients to the biquad

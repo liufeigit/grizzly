@@ -18,12 +18,6 @@ namespace dsp
     class FirstOrderFilter
     {
     public:
-        //! Compute a sample
-        T operator()(const T& x)
-        {
-            return process(x);
-        }
-        
         //! Set the filter state
         void setState(const T& state)
         {
@@ -49,11 +43,8 @@ namespace dsp
             yz1 = y;
         }
         
-        //! Read output
-        T read() const
-        {
-            return y;
-        }
+        //! Read the last computed value
+        T read() const { return y; }
         
     public:
         //! The filter coefficients
