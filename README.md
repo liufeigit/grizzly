@@ -60,7 +60,7 @@ env.read();
 
 ## Installation
 
-A [Homebrew](http://brew.sh) and [LinuxBrew](http://linuxbrew.sh) formula also for macOS and Linux respectively.
+A [Homebrew](http://brew.sh) and [LinuxBrew](http://linuxbrew.sh) formula exists for macOS and Linux respectively.
 
 ```
 brew tap dsperados/tap

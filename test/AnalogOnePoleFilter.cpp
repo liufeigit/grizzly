@@ -12,27 +12,27 @@ TEST_CASE("Analog one-pole filter")
     
     SUBCASE("process")
     {
-        filter.increment(1);
+        filter.write(1);
         CHECK(filter.readLowPass() == doctest::Approx(0.24524f));
         CHECK(filter.readHighPass() == doctest::Approx(0.75476f));
         
-        filter.increment(0);
+        filter.write(0);
         CHECK(filter.readLowPass() == doctest::Approx(0.37019f));
         CHECK(filter.readHighPass() == doctest::Approx(-0.37019f));
         
-        filter.increment(0);
+        filter.write(0);
         CHECK(filter.readLowPass() == doctest::Approx(0.18862f));
         CHECK(filter.readHighPass() == doctest::Approx(-0.18862f));
         
-        filter.increment(0);
+        filter.write(0);
         CHECK(filter.readLowPass() == doctest::Approx(0.09611f));
         CHECK(filter.readHighPass() == doctest::Approx(-0.09611f));
         
-        filter.increment(0);
+        filter.write(0);
         CHECK(filter.readLowPass() == doctest::Approx(0.04897f));
         CHECK(filter.readHighPass() == doctest::Approx(-0.04897f));
         
-        filter.increment(0);
+        filter.write(0);
         CHECK(filter.readLowPass() == doctest::Approx(0.02495f));
         CHECK(filter.readHighPass() == doctest::Approx(-0.02495f));
     }

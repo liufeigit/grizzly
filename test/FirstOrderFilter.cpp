@@ -15,22 +15,22 @@ TEST_CASE("FirstOrderFilter")
         filter.coefficients.a1 = 0.5;
         filter.coefficients.b1 = 0.5;
         
-        filter.increment(1);
+        filter.write(1);
         CHECK(filter.read() == doctest::Approx(0.5));
         
-        filter.increment(0);
+        filter.write(0);
         CHECK(filter.read() == doctest::Approx(0.75));
         
-        filter.increment(0);
+        filter.write(0);
         CHECK(filter.read() == doctest::Approx(0.375));
         
-        filter.increment(0);
+        filter.write(0);
         CHECK(filter.read() == doctest::Approx(0.1875));
         
-        filter.increment(0);
+        filter.write(0);
         CHECK(filter.read() == doctest::Approx(0.09375));
         
-        filter.increment(0);
+        filter.write(0);
         CHECK(filter.read() == doctest::Approx(0.046875));
     }
     
