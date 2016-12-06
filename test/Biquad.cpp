@@ -19,12 +19,23 @@ TEST_CASE("Biquad")
         filter.coefficients.b1 = 0.4;
         filter.coefficients.b2 = 0.5;
         
-        CHECK(filter.process(1) == doctest::Approx(0.1));
-        CHECK(filter.process(0) == doctest::Approx(0.16));
-        CHECK(filter.process(0) == doctest::Approx(0.186));
-        CHECK(filter.process(0) == doctest::Approx(-0.1544));
-        CHECK(filter.process(0) == doctest::Approx(-0.03124));
-        CHECK(filter.process(0) == doctest::Approx(0.0897));
+        filter.increment(1);
+        CHECK(filter.read() == doctest::Approx(0.1));
+        
+        filter.increment(0);
+        CHECK(filter.read() == doctest::Approx(0.16));
+        
+        filter.increment(0);
+        CHECK(filter.read() == doctest::Approx(0.186));
+        
+        filter.increment(0);
+        CHECK(filter.read() == doctest::Approx(-0.1544));
+        
+        filter.increment(0);
+        CHECK(filter.read() == doctest::Approx(-0.03124));
+        
+        filter.increment(0);
+        CHECK(filter.read() == doctest::Approx(0.0897));
     }
     
     SUBCASE("BiquadTransposedDirectFormII")
@@ -37,12 +48,23 @@ TEST_CASE("Biquad")
         filter.coefficients.b1 = 0.4;
         filter.coefficients.b2 = 0.5;
         
-        CHECK(filter.process(1) == doctest::Approx(0.1));
-        CHECK(filter.process(0) == doctest::Approx(0.16));
-        CHECK(filter.process(0) == doctest::Approx(0.186));
-        CHECK(filter.process(0) == doctest::Approx(-0.1544));
-        CHECK(filter.process(0) == doctest::Approx(-0.03124));
-        CHECK(filter.process(0) == doctest::Approx(0.0897));
+        filter.increment(1);
+        CHECK(filter.read() == doctest::Approx(0.1));
+        
+        filter.increment(0);
+        CHECK(filter.read() == doctest::Approx(0.16));
+        
+        filter.increment(0);
+        CHECK(filter.read() == doctest::Approx(0.186));
+        
+        filter.increment(0);
+        CHECK(filter.read() == doctest::Approx(-0.1544));
+        
+        filter.increment(0);
+        CHECK(filter.read() == doctest::Approx(-0.03124));
+        
+        filter.increment(0);
+        CHECK(filter.read() == doctest::Approx(0.0897));
     }
 
     SUBCASE("Coefficient setup")

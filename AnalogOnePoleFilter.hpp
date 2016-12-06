@@ -9,10 +9,11 @@
 #ifndef GRIZZLY_ANALOGONEPOLEFILTER_HPP
 #define GRIZZLY_ANALOGONEPOLEFILTER_HPP
 
+#include <cmath>
 #include <experimental/optional>
 #include <unit/hertz.hpp>
 
-#include <dsperados/math/utility.hpp>
+#include <dsperados/math/constants.hpp>
 
 namespace dsp
 {
@@ -25,7 +26,7 @@ namespace dsp
         //! Set cut-off
         void setCutOff(unit::hertz<float> cutOff, unit::hertz<float> sampleRate)
         {
-            auto unresolvedCutOffGain = std::tan(PI<T> * cutOff / sampleRate);
+            auto unresolvedCutOffGain = std::tan(math::PI<T> * cutOff / sampleRate);
             cutOffGain = unresolvedCutOffGain / (1.0 + unresolvedCutOffGain);
         }
         

@@ -88,7 +88,7 @@ namespace dsp
         }
         
         //! Compute a sample
-        void process(const T& x)
+        void increment(const T& x)
         {
             y = x * coefficients.a0 + z1;
             
