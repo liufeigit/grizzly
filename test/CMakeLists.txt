@@ -16,7 +16,6 @@ set(SOURCES
     Convolution.cpp
     Delay.cpp
     DownSample.cpp
-    EnvelopeDetector.cpp
     FastFourierTransformOoura.cpp
     FirstOrderFilter.cpp
     GordonSmithOscillator.cpp
