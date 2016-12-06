@@ -51,7 +51,7 @@ TEST_CASE("FirstOrderFilter")
         {
             SUBCASE("with cutoff")
             {
-                lowPassOnePole(coefficients, 44100, 10000);
+                lowPassOnePole(coefficients, 44100, unit::hertz<float>(10000));
                 
                 CHECK(coefficients.a0 == doctest::Approx(0.759433464558704));
                 CHECK(coefficients.a1 == doctest::Approx(0));

@@ -52,14 +52,14 @@ namespace dsp
     }
     
     //! Set filter to low pass filtering using one pole, given a samplerate, time and and a time constant factor.
-    /*! @param timeConstantReciprocal: Affects the actual time. A factor of 1 means a step response where the output reaches to ~63% in the given time. A factor of 5 reaches to ~99%. */
+    /*! @param timeConstantFactor: Affects the actual time. A factor of 1 means a step response where the output reaches to ~63% in the given time. A factor of 5 reaches to ~99%. */
     template <typename T>
-    constexpr void lowPassOnePole(FirstOrderCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::second<float> time, float timeConstantReciprocal)
+    constexpr void lowPassOnePole(FirstOrderCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::second<float> time, float timeConstantFactor = 5.f)
     {
         if (time <= 0)
             return throughPass(coefficients);
             
-        const auto w = timeConstantReciprocal / static_cast<long double>(time * sampleRate);
+        const auto w = timeConstantFactor / static_cast<long double>(time * sampleRate);
         
         coefficients.b1 = exp(-w);
         coefficients.a0 = 1.0 - coefficients.b1;

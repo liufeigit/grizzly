@@ -19,12 +19,12 @@ set(HEADERS
 	Convolution.hpp
 	Delay.hpp
 	DownSample.hpp
+    Dynamic.hpp
 	EnvelopeDetector.hpp
     FastFourierTransform.hpp
 	FastFourierTransformBase.hpp
 	FirstOrderCoefficients.hpp
 	FirstOrderFilter.hpp
-	GainComputer.hpp
 	GordonSmithOscillator.hpp
 	HilbertTransform.hpp
 	HighFrequencyContent.hpp
@@ -36,10 +36,10 @@ set(HEADERS
     ShortTimeFourierTransform.hpp
     SpectralCentroid.hpp
     Spectrum.hpp
-    ZTransform.hpp
 	UpSample.hpp
     Waveform.hpp
-	Window.hpp)
+	Window.hpp
+    ZTransform.hpp)
 
 set(SOURCES
 	FastFourierTransformBase.cpp)
