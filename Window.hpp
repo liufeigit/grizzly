@@ -163,7 +163,7 @@ namespace dsp
     }
     
     //! Zeroth-order modified Bessel function (used for the Kaiser window)
-    double besseli0(double x)
+    static inline double besseli0(double x)
     {
         const auto x2 = x * x;
         
