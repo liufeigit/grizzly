@@ -25,7 +25,6 @@ set(SOURCES
     SpectralCentroid.cpp
     Spectrum.cpp
     Waveform.cpp
-    WaveShaper.cpp
     Window.cpp)
 
 add_executable(grizzly-test ${SOURCES})

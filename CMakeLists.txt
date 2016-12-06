@@ -38,7 +38,6 @@ set(HEADERS
     Transfer.hpp
 	UpSample.hpp
     Waveform.hpp
-	WaveShaper.hpp
 	Window.hpp)
 
 set(SOURCES
