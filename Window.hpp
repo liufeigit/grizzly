@@ -11,8 +11,9 @@
 
 #include <cmath>
 #include <dsperados/math/constants.hpp>
-#include <vector>
+#include <limits>
 #include <unit/radian.hpp>
+#include <vector>
 
 #include "Waveform.hpp"
 
@@ -161,44 +162,41 @@ namespace dsp
         return sinc;
     }
     
-    //! Helper function for Kaiser window
-    constexpr double besselizero(double x)
+    //! Zeroth-order modified Bessel function (used for the Kaiser window)
+    double besseli0(double x)
     {
-        double temp = 0;
-        double sum = 1.0;
-        double u = 1.0;
-        double halfx = x / 2.0;
-        std::size_t n = 1;
+        const auto x2 = x * x;
         
-        do
+        // These variables will be updated each iteration
+        double y = 1;
+        double s = 1;
+        int n = 1;
+        
+        // Officially this goes on until infinity, but we'll accept epsilon as
+        while (s > y * std::numeric_limits<double>::epsilon())
         {
-            temp = halfx / static_cast<double>(n);
-            u *= temp * temp;
-            sum += u;
+            s *= x2 / 4.0 / (n * n);
+            y += s;
             n++;
         }
-        while (u >= 1e-21 * sum);
         
-        return(sum);
+        return y;
     }
     
-    //! Create a symmetric Kaiser window. The Beta factor (>= 1) determines the steepness
+    //! Create a symmetric Kaiser window.
+    /*! The Beta factor (>= 1) determines the steepness */
     template <typename T>
-    std::vector<T> createSymmetricKaiserWindow(std::size_t size, double betaFactor)
+    std::vector<T> createSymmetricKaiserWindow(std::size_t size, double beta)
     {
-        std::vector<T> window(size);
-        double tmp;
-        double k1 = 1.0 / besselizero(betaFactor);
-        std::size_t k2 = 1 - (size & 1);
-        std::size_t halfSize = (size + 1) >> 1;
+        std::vector<T> kaiser(size);
         
-        for (auto i = 0; i < halfSize; ++i)
-        {
-            tmp = static_cast<double>(2 * i + k2) / (static_cast<double>(size) - 1.0);
-            window[halfSize - (1 & (!k2)) + i] = window[halfSize - 1 - i] = k1 * besselizero(betaFactor * sqrt(1.0 - tmp * tmp));
-        }
+        const auto sizeMinusOne = size - 1;
+        const T& bb = besseli0(beta);
         
-        return window;
+        for (auto n = 0; n < size; ++n)
+            kaiser[n] = besseli0(beta * std::sqrt(4 * n * (sizeMinusOne - n)) / (sizeMinusOne)) / bb;
+        
+        return kaiser;
     }
 }
 
