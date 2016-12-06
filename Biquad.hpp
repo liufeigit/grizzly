@@ -20,6 +20,21 @@ namespace dsp
     class BiquadDirectFormI
     {
     public:
+        //! Compute a sample
+        void write(const T& x)
+        {
+            y = x * coefficients.a0 + xz1 * coefficients.a1 + xz2 * coefficients.a2 - coefficients.b1 * yz1 - coefficients.b2 * yz2;
+            
+            // Update the delays
+            xz2 = xz1;
+            xz1 = x;
+            yz2 = yz1;
+            yz1 = y;
+        }
+        
+        //! Insert a new sample in the Biquad
+        T read() const { return y; }
+        
         //! Set the filter state
         void setState(const T& state)
         {
@@ -35,21 +50,6 @@ namespace dsp
         {
             setState(0);
         }
-        
-        //! Compute a sample
-        void increment(const T& x)
-        {
-            y = x * coefficients.a0 + xz1 * coefficients.a1 + xz2 * coefficients.a2 - coefficients.b1 * yz1 - coefficients.b2 * yz2;
-            
-            // Update the delays
-            xz2 = xz1;
-            xz1 = x;
-            yz2 = yz1;
-            yz1 = y;
-        }
-        
-        //! Read in the last computed value
-        T read() const { return y; }
         
     public:
         //! The coefficients to the biquad
@@ -71,6 +71,19 @@ namespace dsp
     class BiquadTransposedDirectFormII
     {
     public:
+        //! Insert a new sample in the Biquad
+        void write(const T& x)
+        {
+            y = x * coefficients.a0 + z1;
+            
+            // Update the delays
+            z1 = x * coefficients.a1 + y * -coefficients.b1 + z2;
+            z2 = x * coefficients.a2 + y * -coefficients.b2;
+        }
+        
+        //! Insert a new sample in the Biquad
+        T read() const { return y; }
+        
         //! Set the filter state
         void setState(const T& state)
         {
@@ -83,21 +96,6 @@ namespace dsp
         void reset()
         {
             setState(0);
-        }
-        
-        //! Compute a sample
-        void increment(const T& x)
-        {
-            y = x * coefficients.a0 + z1;
-            
-            // Update the delays
-            z1 = x * coefficients.a1 + y * -coefficients.b1 + z2;
-            z2 = x * coefficients.a2 + y * -coefficients.b2;
-        }
-        
-        T read() const
-        {
-            return y;
         }
         
     public:

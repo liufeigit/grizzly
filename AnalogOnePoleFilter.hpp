@@ -23,6 +23,33 @@ namespace dsp
     class AnalogOnePoleFilter
     {
     public:
+        //! Process with optional distortion for non-linear processing
+        void write(const T& x, std::experimental::optional<float> distortionFactor = std::experimental::nullopt)
+        {
+            auto integratorInput = (x - integratorState) * cutOffGain;
+            
+            lowPassOutputState = integratorInput + integratorState;
+            
+            highPassOutputState = x - lowPassOutputState;
+            
+            integratorState = lowPassOutputState + integratorInput;
+            
+            if (distortionFactor)
+                integratorState = tanh(integratorState * *distortionFactor);
+        }
+        
+        //! Read the low-pass output
+        T readLowPass() const
+        {
+            return lowPassOutputState;
+        }
+        
+        //! Read the high-pass output
+        T readHighPass() const
+        {
+            return highPassOutputState;
+        }
+        
         //! Set cut-off
         void setCutOff(unit::hertz<float> cutOff, unit::hertz<float> sampleRate)
         {
@@ -54,33 +81,6 @@ namespace dsp
         T getIntegratorState() const
         {
             return integratorState;
-        }
-        
-        //! Process with optional distortion for non-linear processing
-        void increment(const T& x, std::experimental::optional<float> distortionFactor = std::experimental::nullopt)
-        {
-            auto integratorInput = (x - integratorState) * cutOffGain;
-            
-            lowPassOutputState = integratorInput + integratorState;
-            
-            highPassOutputState = x - lowPassOutputState;
-            
-            integratorState = lowPassOutputState + integratorInput;
-            
-            if (distortionFactor)
-                integratorState = tanh(integratorState * *distortionFactor);
-        }
-        
-        //! Read the low-pass output
-        T readLowPass() const
-        {
-            return lowPassOutputState;
-        }
-        
-        //! Read the high-pass output
-        T readHighPass() const
-        {
-            return highPassOutputState;
         }
         
     private:

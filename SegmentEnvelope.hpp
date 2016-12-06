@@ -86,10 +86,7 @@ namespace dsp
         void setTime(unit::second<Time> to);
         
         //! Reset the envelope to its starting position
-        void reset()
-        {
-            setTime(0);
-        }
+        void reset() { setTime(0); }
         
     // --- Segment insertion/removal --- //
         

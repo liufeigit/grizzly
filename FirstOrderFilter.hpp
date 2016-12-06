@@ -18,6 +18,20 @@ namespace dsp
     class FirstOrderFilter
     {
     public:
+        //! Compute a sample
+        void write(const T& x)
+        {
+            // Compute the output
+            y = coefficients.a0 * x + coefficients.a1 * xz1 + coefficients.b1 * yz1;
+            
+            // Update the delays
+            xz1 = x;
+            yz1 = y;
+        }
+        
+        //! Read the last computed value
+        T read() const { return y; }
+        
         //! Set the filter state
         void setState(const T& state)
         {
@@ -31,20 +45,6 @@ namespace dsp
         {
             setState(0);
         }
-        
-        //! Compute a sample
-        void increment(const T& x)
-        {
-            // Compute the output
-            y = coefficients.a0 * x + coefficients.a1 * xz1 + coefficients.b1 * yz1;
-            
-            // Update the delays
-            xz1 = x;
-            yz1 = y;
-        }
-        
-        //! Read the last computed value
-        T read() const { return y; }
         
     public:
         //! The filter coefficients

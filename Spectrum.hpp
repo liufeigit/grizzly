@@ -135,16 +135,10 @@ namespace dsp
         //! Return the size of the spectrum
         auto size() const { return data.size(); }
         
-        //! Return iterator at the begin of the spectrum
+        // Return iterators for ranged for-loops
         auto begin() { return data.begin(); }
-        
-        //! Return iterator at the end of the spectrum
-        auto end() { return data.end(); }
-        
-        //! Return const iterator at the begin of the spectrum
         auto begin() const { return data.begin(); }
-        
-        //! Return const iterator at the end of the spectrum
+        auto end() { return data.end(); }
         auto end() const { return data.end(); }
         
         //! Return a single bin in cartesian coordinates
