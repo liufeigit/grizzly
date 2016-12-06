@@ -118,7 +118,7 @@ namespace dsp
             setTime(envelopeTime);
         }
         
-    // --- Hold point manipulation --- ///
+    // --- Hold point manipulation --- //
         
         //! Set a hold point (and enable it on default)
         void setAndEnableHoldPoint(unit::second<Time> at)
@@ -154,6 +154,14 @@ namespace dsp
         
         //! Get a segment, const
         const auto& operator[](size_t index) const { return segments[index]; }
+        
+    // --- Utility construction functions --- //
+        
+        //! Create an attack, sustain, release envelope
+        static SegmentEnvelope ar(unit::second<Time> attack, unit::second<Time> release, bool hold = true);
+        
+        //! Create an attack, decay, sustain, release envelope
+        static SegmentEnvelope adsr(unit::second<Time> attack, unit::second<Time> decay, Value sustain, unit::second<Time> release);
         
     private:
         //! Hold point
@@ -252,6 +260,23 @@ namespace dsp
             segmentTime = envelopeTime - partialTime;
             break;
         }
+    }
+    
+    template <class Value, class Time>
+    SegmentEnvelope<Value, Time> SegmentEnvelope<Value, Time>::ar(unit::second<Time> attack, unit::second<Time> release, bool hold)
+    {
+        SegmentEnvelope<Value, Time> env = {{1, attack}, {0, release}};
+        if (hold)
+            env.setAndEnableHoldPoint(attack);
+        return env;
+    }
+    
+    template <class Value, class Time>
+    SegmentEnvelope<Value, Time> SegmentEnvelope<Value, Time>::adsr(unit::second<Time> attack, unit::second<Time> decay, Value sustain, unit::second<Time> release)
+    {
+        SegmentEnvelope<Value, Time> env = {{1, attack}, {sustain, decay}, {0, release}};
+        env.setAndEnableHoldPoint(attack + decay);
+        return env;
     }
 }
 

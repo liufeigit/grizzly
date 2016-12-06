@@ -30,16 +30,6 @@ TEST_CASE("Segment Envelope")
     
     out.emplace_back(env.read());
     
-    SUBCASE("index 50 == value 2.2")
-    {
-        CHECK(out[50] == doctest::Approx(2.2));
-    }
-    
-    SUBCASE("last index has value 0.1")
-    {
-        CHECK(out.back() == doctest::Approx(0.1f));
-    }
-    
-    
-
+    CHECK(out[50] == doctest::Approx(2.2));
+    CHECK(out.back() == doctest::Approx(0.1f));
 }
