@@ -19,7 +19,7 @@
 
 namespace dsp
 {
-    //! Spectrum
+    //! Spectrum of frequency bins
     template <class T>
     class Spectrum
     {
