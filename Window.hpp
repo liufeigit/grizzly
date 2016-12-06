@@ -184,7 +184,11 @@ namespace dsp
     }
     
     //! Create an asymmetric Kaiser window.
-    /*! The Beta factor (>= 1) determines the steepness */
+    /*! @param beta: Larger beta gives lower side-lobe levels, but a wider main lobe and vice versa
+        beta of 1 ~= rectangular
+        beta of 5 ~= hamming
+        beta of 6 ~= hann
+        beta of 8.6 ~= blackman */
     template <typename T>
     std::vector<T> createKaiserWindow(std::size_t size, double beta)
     {
@@ -199,7 +203,11 @@ namespace dsp
     }
     
     //! Create a symmetric Kaiser window.
-    /*! The Beta factor (>= 1) determines the steepness */
+    /*! @param beta: Larger beta gives lower side-lobe levels, but a wider main lobe and vice versa
+        beta of 1 ~= rectangular
+        beta of 5 ~= hamming
+        beta of 6 ~= hann
+        beta of 8.6 ~= blackman */
     template <typename T>
     std::vector<T> createSymmetricKaiserWindow(std::size_t size, double beta)
     {

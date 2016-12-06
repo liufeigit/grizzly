@@ -11,9 +11,11 @@
 
 #include <cstddef>
 #include <dsperados/math/linear.hpp>
+#include <dsperados/math/normalize.hpp>
 #include <stdexcept>
 #include <vector>
 
+#include "CircularBuffer.hpp"
 #include "Window.hpp"
 
 namespace dsp
@@ -29,10 +31,10 @@ namespace dsp
         UpSample(std::size_t factor, std::size_t size);
         
         //! Upsample a single float to a vector float of size factor
-        std::vector<T> process(T x);
+        std::vector<T> process(const T& x);
         
-        //! Upsample a range of floats
-        std::vector<T> processSpan(const std::vector<T>& x);
+        //! Upsample a single float to a vector float of size factor
+        std::vector<T> operator()(const T& x) { return process(x); }
         
         //! Set the up-sampling factor and recompute the filter
         void setFactor(std::size_t factor);
@@ -44,6 +46,7 @@ namespace dsp
         auto getFilterSize() const { return filterSize; }
         
         //! Set the beta factor for shaping the Kaiser window
+        /*! See createKaiserWindow() for more information */
         void setBetaFactor(float beta);
         
     private:
@@ -57,26 +60,21 @@ namespace dsp
         //std::vector<float> kernel;
         std::size_t filterSize = 64;
         
-        //! The number of steps to hop through the filter (filterSze / factor)
-        std::size_t numberOfSteps = 16;
-        
         //! The filter kernel
         std::vector<T> filterKernel;
         
         //! Delay line for storing the input samples
-        std::vector<T> delayLine;
+        CircularBuffer<T> delayLine;
         
         //! The beta factor for shaping the Kaiser window
-        float betaFactor = 5;
-        
+        float betaFactor = 8.6;
     };
     
     template <class T>
     UpSample<T>::UpSample(std::size_t factor, std::size_t filterSize) :
         factor(factor),
         filterSize(filterSize),
-        numberOfSteps(filterSize / factor),
-        delayLine(numberOfSteps)
+        delayLine(filterSize / factor)
     {
         if (filterSize % factor != 0)
             throw std::invalid_argument("Filter size must be a multiple of the factor");
@@ -85,49 +83,24 @@ namespace dsp
     }
     
     template <class T>
-    std::vector<T> UpSample<T>::process(T x)
+    std::vector<T> UpSample<T>::process(const T& x)
     {
         // Write the input to the delay
-        delayLine.insert(delayLine.begin(), x);
-        delayLine.pop_back();
+        delayLine.emplace_back(x);
         
         // Initialize the output
         std::vector<T> output(factor);
         
         for (auto sample = 0; sample < output.size(); ++sample)
-        {
-            float temp = 0;
-            
-            math::dot(const std::vector<T>&(delayLine.data(), numberOfSteps), 1,
-                const std::vector<T>&(filterKernel.data() + sample, numberOfSteps), factor,
-                temp);
-            
-            output[sample] = temp;
-        }
+            output[sample] = math::dot(delayLine.rbegin(), 1, filterKernel.begin() + sample, factor, delayLine.size()) * factor;
         
         return output;
-    }
-    
-    template <class T>
-    std::vector<T> UpSample<T>::processSpan(const std::vector<T>& x)
-    {
-        std::vector<T> out;
-        out.reserve(factor * x.size());
-        
-        for (auto& sample : x)
-        {
-            for (auto& sample : process(sample))
-                out.emplace_back(sample);
-        }
-        
-        return out;
     }
     
     template <class T>
     void UpSample<T>::setFactor(std::size_t factor)
     {
         this->factor = factor;
-        numberOfSteps = filterSize / factor;
         recomputeFilter();
     }
     
@@ -142,16 +115,16 @@ namespace dsp
     void UpSample<T>::recomputeFilter()
     {
         // Construct the kernel
-        filterKernel = createSymmetricSincWindow(filterSize, 0.5 / factor);
+        filterKernel = createSymmetricSincWindow<T>(filterSize, 0.5 / factor);
         
         // Construct the window
-        auto window = createSymmetricKaiserWindow(filterSize, betaFactor);
+        auto window = createSymmetricKaiserWindow<T>(filterSize, betaFactor);
         
         // Multiply kernel with window
-        std::transform(filterKernel.begin(), filterKernel.end(), window.begin(), filterKernel.begin(), std::multiplies<>()):
+        std::transform(filterKernel.begin(), filterKernel.end(), window.begin(), filterKernel.begin(), std::multiplies<>());
         
         // Make integral of kernel equal to one
-        normalizeSum(filterKernel);
+        math::normalizeArea(filterKernel.begin(), filterKernel.end(), filterKernel.begin());
     }
 }
 
