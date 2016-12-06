@@ -29,13 +29,14 @@ set(HEADERS
 	HaarWaveletTransform.hpp
 	HilbertTransform.hpp
 	HighFrequencyContent.hpp
+    ImpulseResponse.hpp
 	MidSide.hpp
     Ramp.hpp
     SegmentEnvelope.hpp
     ShortTimeFourierTransform.hpp
     SpectralCentroid.hpp
     Spectrum.hpp
-    Transfer.hpp
+    ZTransform.hpp
 	UpSample.hpp
     Waveform.hpp
 	Window.hpp)

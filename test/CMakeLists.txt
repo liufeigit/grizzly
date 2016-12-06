@@ -19,13 +19,15 @@ set(SOURCES
     GordonSmithOscillator.cpp
     HilbertTransform.cpp
     HighFrequencyContent.cpp
+    ImpulseResponse.cpp
     MidSide.cpp
     Ramp.cpp
     SegmentEnvelope.cpp
     SpectralCentroid.cpp
     Spectrum.cpp
     Waveform.cpp
-    Window.cpp)
+    Window.cpp
+    ZTransform.cpp)
 
 add_executable(grizzly-test ${SOURCES})
 target_sources(grizzly-test PRIVATE ${SOURCES})
