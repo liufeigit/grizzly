@@ -78,7 +78,7 @@ namespace dsp
         if (time.value <= 0)
             return throughPass(coefficients);
             
-        const auto w = timeConstantFactor / time.value * sampleRate.value;
+        const auto w = timeConstantFactor / (time.value * sampleRate.value);
         
         coefficients.b1 = exp(-w);
         coefficients.a0 = 1.0 - coefficients.b1;
