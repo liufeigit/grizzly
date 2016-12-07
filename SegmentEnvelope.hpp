@@ -28,6 +28,7 @@
 #ifndef GRIZZLY_SEGMENT_ENVELOPE_HPP
 #define GRIZZLY_SEGMENT_ENVELOPE_HPP
 
+#include <cassert>
 #include <cstddef>
 #include <dsperados/math/utility.hpp>
 #include <dsperados/math/ease.hpp>
@@ -85,7 +86,8 @@ namespace dsp
             //! Return the eased proportion along the time axis of this axis
             double computeTimeProportion(unit::second<Time> time)
             {
-                double x = time / static_cast<double>(duration);
+                assert(duration.value != 0); // This function should never be called with a duration of 0
+                double x = time.value / static_cast<double>(duration.value);
                 return ease ? ease(x) : x;
             }
         };

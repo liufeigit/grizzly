@@ -41,13 +41,13 @@ namespace dsp
     template <typename Iterator>
     auto zTransform(Iterator begin, Iterator end)
     {
-        return [=](const unit::radian<float>& angularFrequency)
+        return [=](unit::radian<float> angularFrequency)
         {
             std::complex<float> accumulator(0, 0);
             size_t index = 0;
             
             for (auto it = begin; it != end; ++it)
-                accumulator += *it * std::polar<float>(1, -angularFrequency * index++);
+                accumulator += *it * std::polar<float>(1, -angularFrequency.value * index++);
 
             return accumulator;
         };

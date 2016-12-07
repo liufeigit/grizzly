@@ -154,9 +154,9 @@ namespace dsp
         {
             auto indexMinusHalfSize = i - halfSize;
             if (indexMinusHalfSize == 0)
-                sinc[i] = cutOff / math::PI<double>;
+                sinc[i] = cutOff.value / math::PI<double>;
             else
-                sinc[i] = sin(cutOff * indexMinusHalfSize) / (math::PI<double> * indexMinusHalfSize);
+                sinc[i] = sin(cutOff.value * indexMinusHalfSize) / (math::PI<double> * indexMinusHalfSize);
         }
 
         return sinc;
@@ -173,9 +173,9 @@ namespace dsp
         {
             auto indexMinusHalfSize = i - halfSize;
             if (indexMinusHalfSize == 0)
-                sinc[i] = cutOff / math::PI<double>;
+                sinc[i] = cutOff.value / math::PI<double>;
             else
-                sinc[i] = sin(cutOff * indexMinusHalfSize) / (math::PI<double> * indexMinusHalfSize);
+                sinc[i] = sin(cutOff.value * indexMinusHalfSize) / (math::PI<double> * indexMinusHalfSize);
         }
         
         return sinc;

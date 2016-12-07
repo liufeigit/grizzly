@@ -63,7 +63,7 @@ namespace dsp
     template <typename T>
     constexpr void lowPassOnePole(FirstOrderCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff)
     {
-        const auto w = math::TWO_PI<double> * cutOff / static_cast<long double>(sampleRate);
+        const auto w = math::TWO_PI<double> * cutOff.value / sampleRate.value;
         
         coefficients.b1 = exp(-w);
         coefficients.a0 = 1.0 - coefficients.b1;
@@ -75,10 +75,10 @@ namespace dsp
     template <typename T>
     constexpr void lowPassOnePole(FirstOrderCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::second<float> time, float timeConstantFactor = 5.f)
     {
-        if (time <= 0)
+        if (time.value <= 0)
             return throughPass(coefficients);
             
-        const auto w = timeConstantFactor / static_cast<long double>(time * sampleRate);
+        const auto w = timeConstantFactor / time.value * sampleRate.value;
         
         coefficients.b1 = exp(-w);
         coefficients.a0 = 1.0 - coefficients.b1;
@@ -89,7 +89,7 @@ namespace dsp
     template <typename T>
     constexpr void lowPassOnePoleZero(FirstOrderCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff)
     {
-        const auto w = math::TWO_PI<double> * cutOff / static_cast<long double>(sampleRate);
+        const auto w = math::TWO_PI<double> * cutOff.value / sampleRate.value;
         
         coefficients.b1 = exp(-w);
         coefficients.a0 = (1.0 - coefficients.b1) / 2;
@@ -100,7 +100,7 @@ namespace dsp
     template <typename T>
     constexpr void highPassOnePoleZero(FirstOrderCoefficients<T>& coefficients, unit::hertz<float> sampleRate, unit::hertz<float> cutOff)
     {
-        const auto w = math::TWO_PI<double> * cutOff / static_cast<long double>(sampleRate);
+        const auto w = math::TWO_PI<double> * cutOff.value / sampleRate.value;
         
         coefficients.b1 = exp(-w);
         coefficients.a0 = (1 + coefficients.b1) / 2;

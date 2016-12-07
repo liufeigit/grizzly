@@ -72,7 +72,7 @@ namespace dsp
         //! Set cut-off
         void setCutOff(unit::hertz<float> cutOff, unit::hertz<float> sampleRate)
         {
-            auto unresolvedCutOffGain = std::tan(math::PI<T> * cutOff / sampleRate);
+            auto unresolvedCutOffGain = std::tan(math::PI<T> * cutOff.value / sampleRate.value);
             cutOffGain = unresolvedCutOffGain / (1.0 + unresolvedCutOffGain);
         }
         

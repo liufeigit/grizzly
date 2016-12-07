@@ -67,9 +67,9 @@ namespace dsp
         //! Change the angle the oscillator should increment every process
         constexpr void setAngle(unit::radian<float> angle)
         {
-            epsilon = 2 * sin(angle / 2);
-            y = sin(-angle);
-            yq = cos(-angle);
+            epsilon = 2 * std::sin(angle.value / 2);
+            y = std::sin(-angle.value);
+            yq = std::cos(-angle.value);
         }
         
     private:

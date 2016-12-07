@@ -34,56 +34,56 @@
 namespace dsp
 {
     //! Compressor make-up gain estimation for a 'standard' mixing situation
-    inline static unit::decibel<float> compressorMakeUpGain(const unit::decibel<float>& threshold, float ratio)
+    inline static unit::decibel<float> compressorMakeUpGain(unit::decibel<float> threshold, float ratio)
     {
         if (ratio <= 0)
             throw std::invalid_argument("ratio <= zero");
         
-        return 0.5 * threshold * (1.0 / ratio - 1.0);
+        return 0.5f * threshold.value * (1.0f / ratio - 1.0f);
     }
     
     //! Downward compression for signals exceeding a threshold
     /*! Upward expansion is possible with a ratio lower than 1 (> 0) */
-    inline static unit::decibel<float> compressDownFactor(const unit::decibel<float>& x, const unit::decibel<float>& threshold, float ratio, const unit::decibel<float>& knee = 0.f)
+    inline static unit::decibel<float> compressDownFactor(unit::decibel<float> x, unit::decibel<float> threshold, float ratio, unit::decibel<float> knee = 0.f)
     {
         if (ratio <= 0)
             throw std::invalid_argument("ratio <= zero");
         
-        const auto slope = 1.0 / ratio - 1.0;
-        const auto halfKnee = knee * 0.5;
+        const auto slope = 1.0f / ratio - 1.0f;
+        const auto halfKnee = knee.value * 0.5f;
         
         //! Apply compression
-        if (x > threshold + halfKnee)
-            return slope * (x - threshold);
+        if (x.value > threshold.value + halfKnee)
+            return slope * (x.value - threshold.value);
         
         //! Throughput
-        if (x <= threshold - halfKnee)
+        if (x.value <= threshold.value - halfKnee)
             return 0;
         
         //! Apply compression within knee range
-        return slope * (x - threshold + halfKnee) * (x - threshold + halfKnee) / (2.0 * knee);
+        return slope * (x.value - threshold.value + halfKnee) * (x.value - threshold.value + halfKnee) / (2.0f * knee.value);
     }
     
     //! Downward expansion for signals below a threshold
     /*! Upward expansion is possible with a ratio lower than 1 (> 0) */
-    inline static unit::decibel<float> expandDownFactor(const unit::decibel<float>& x, const unit::decibel<float>& threshold, float ratio, const unit::decibel<float>& knee = 0.f)
+    inline static unit::decibel<float> expandDownFactor(unit::decibel<float> x, unit::decibel<float> threshold, float ratio, unit::decibel<float> knee = 0.f)
     {
         if (ratio <= 0)
             throw std::invalid_argument("ratio <= zero");
         
-        const auto slope = 1.0 / ratio - 1.0;
-        const auto halfKnee = knee * 0.5;
+        const auto slope = 1.0f / ratio - 1.0f;
+        const auto halfKnee = knee.value * 0.5f;
         
         //! Throughput
-        if (x >= threshold + halfKnee)
+        if (x.value >= threshold.value + halfKnee)
             return 0;
         
         //! Apply expansion
-        if (x < threshold - halfKnee)
-            return slope * (threshold - x);
+        if (x.value < threshold.value - halfKnee)
+            return slope * (threshold.value - x.value);
         
         //! Apply compression within knee range
-        return slope * (threshold + halfKnee - x) * (threshold + halfKnee - x) / (2.0 * knee);
+        return slope * (threshold.value + halfKnee - x.value) * (threshold.value + halfKnee - x.value) / (2.0f * knee.value);
     }
 }
 

@@ -101,13 +101,13 @@ namespace dsp
             {
                 auto currentValue = value;
                                
-                if (currentValue - previousValue > math::PI<T>)
+                if (currentValue.value - previousValue.value > math::PI<T>)
                     multiplier--;
-                else if (currentValue - previousValue < -math::PI<T>)
+                else if (currentValue.value - previousValue.value < -math::PI<T>)
                     multiplier++;
                
                 previousValue = currentValue;
-                return value + math::TWO_PI<T> * multiplier;
+                return value.value + math::TWO_PI<T> * multiplier;
             });
             
             return unwrappedPhases;
