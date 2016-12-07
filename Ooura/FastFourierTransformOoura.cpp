@@ -52,7 +52,7 @@ namespace dsp
         
         rdft(static_cast<int>(size), 1, data.data(), ip.data(), w.data());
         
-        for (auto i = 0; i < size / 2; ++i)
+        for (size_t i = 0; i < size / 2; ++i)
         {
             real[i] = data[i * 2];
             imaginary[i] = -data[i * 2 + 1];
@@ -69,7 +69,7 @@ namespace dsp
         
         rdft(static_cast<int>(size), 1, data.data(), ip.data(), w.data());
         
-        for (auto i = 0; i < size / 2; ++i)
+        for (size_t i = 0; i < size / 2; ++i)
         {
             real[i] = data[i * 2];
             imaginary[i] = -data[i * 2 + 1]; // Flip imaginary axis, otherwise Ooura will invert the signal
@@ -82,7 +82,7 @@ namespace dsp
     
     void FastFourierTransformOoura::inverse(const float* real, const float* imaginary, float* output)
     {
-        for (auto i = 0; i < size / 2; ++i)
+        for (size_t i = 0; i < size / 2; ++i)
         {
             data[i * 2] = real[i];
             data[i * 2 + 1] = -imaginary[i]; // Flip imaginary axis, otherwise Ooura will invert the signal
@@ -100,7 +100,7 @@ namespace dsp
     
     void FastFourierTransformOoura::inverse(const double* real, const double* imaginary, double* output)
     {
-        for (auto i = 0; i < size / 2; ++i)
+        for (size_t i = 0; i < size / 2; ++i)
         {
             data[i * 2] = real[i];
             data[i * 2 + 1] = -imaginary[i];
