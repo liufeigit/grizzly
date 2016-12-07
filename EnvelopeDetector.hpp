@@ -84,7 +84,7 @@ namespace dsp
         FirstOrderCoefficients<CoeffType> releaseCoefficients;
         
         //! Time constant factor
-        double timeConstantFactor = 5;
+        float timeConstantFactor = 5;
         
         //! The most recently computed value
         T y = 0;
@@ -139,7 +139,7 @@ namespace dsp
         FirstOrderCoefficients<CoeffType> releaseCoefficients;
         
         //! Time constant factor
-        double timeConstantFactor = 5;
+        float timeConstantFactor = 5;
         
         //! Intermediate release state
         T yRelease = 0;
@@ -209,7 +209,7 @@ namespace dsp
         FirstOrderCoefficients<CoeffType> releaseCoefficients;
         
         //! Time constant factor
-        double timeConstantFactor = 5;
+        float timeConstantFactor = 5;
         
         //! Boolian for release mode
         bool releaseToInput = true;
