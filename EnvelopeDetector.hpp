@@ -107,9 +107,9 @@ namespace dsp
         }
         
         //! Write new input to the detector
-        T write(const T& x)
+        void write(const T& x)
         {
-            yRelease = std::max(x, yRelease - releaseCoefficients.a0 * yRelease);
+            yRelease = std::max<T>(x, yRelease - releaseCoefficients.a0 * yRelease);
             y += attackCoefficients.a0 * (yRelease - y);
         }
         
@@ -167,20 +167,18 @@ namespace dsp
         //! Write new input to the detector
         void write(const T& x)
         {
-            if (x > y)
+            if (x > lowPassFilter.read())
             {
                 lowPassFilter.coefficients = attackCoefficients;
                 lowPassFilter.write(x);
-                y = lowPassFilter.read();
             } else {
                 lowPassFilter.coefficients = releaseCoefficients;
                 lowPassFilter.write(releaseToInput ? x : 0);
-                y = lowPassFilter.read();
             }
         }
         
         //! Read the last computed value
-        T read() const { return y; }
+        T read() const { return lowPassFilter.read(); }
         
         //! Set the attack time
         void setAttackTime(unit::second<float> attackTime, unit::hertz<float> sampleRate)
@@ -195,7 +193,10 @@ namespace dsp
         }
         
         //! Set envelope state
-        void setState(const T& y) { this->y = y; }
+        void setState(const T& state) { lowPassFilter.setState(state); }
+        
+        //! Reset envelope state
+        void reset() { lowPassFilter.setState(0); }
         
     private:
         //! First order filter
@@ -212,9 +213,6 @@ namespace dsp
         
         //! Boolian for release mode
         bool releaseToInput = true;
-        
-        //! The most recently computed value
-        T y = 0;
     };
     
 }
