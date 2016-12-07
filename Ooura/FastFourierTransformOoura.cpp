@@ -29,7 +29,7 @@
 #include <dsperados/math/interleave.hpp>
 
 #include "FastFourierTransformOoura.hpp"
-#include "fftsg.h"
+#include "fftsg.hpp"
 
 using namespace std;
 

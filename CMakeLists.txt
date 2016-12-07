@@ -51,7 +51,7 @@ install (FILES ${HEADERS} DESTINATION include/grizzly)
 # Ooura
 set(OOURA_HEADERS
     Ooura/FastFourierTransformOoura.hpp
-	Ooura/fftsg.h)
+	Ooura/fftsg.hpp)
 
 set(OOURA_SOURCES
 	Ooura/FastFourierTransformOoura.cpp
